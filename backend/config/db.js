@@ -5,7 +5,7 @@ const connectDb = () => {
         host: 'localhost',
         user: 'root',
         password: '',
-        database: 'student'
+        database: 'attendance_management_system'
     })
     return conn;
 }
