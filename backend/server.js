@@ -5,6 +5,8 @@ const port = process.env.PORT || 5000
 const { connectDb } = require('./config/db')
 const app = express()
 
+app.use(express.json())
+app.use(express.urlencoded({ extended: false }))
 const connection = connectDb()
 
 connection.connect((err) => {
