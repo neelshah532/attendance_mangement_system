@@ -25,6 +25,7 @@ const takeAttendance = asyncHandler(async(req, res) => {
     const { subject, date, attendance, employeeid } = req.body
 
     if (!subject || !date || !attendance || !employeeid) {
+        console.log("Will Done By Neel")
         res.send(res.json({ success: false, messege: "Please Fill Data" }))
     } else {
         var getColumnIFExsist = `SHOW COLUMNS FROM ${subject}`
