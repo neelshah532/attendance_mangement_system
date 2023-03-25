@@ -6,7 +6,7 @@ const con = connectDb()
 //@desc Get Employee
 //@PATH /ams/employees/
 
-const getEmployees = asyncHandler(async(req, res) => {
+const getAllEmployees = asyncHandler(async(req, res) => {
     res.send({ messege: "GETTING" })
 })
 
@@ -28,7 +28,7 @@ const takeAttendance = asyncHandler(async(req, res) => {
         res.send(res.json({ success: false, messege: "Please Fill Data" }))
     } else {
         var getColumnIFExsist = `SHOW COLUMNS FROM ${subject}`
-        con.query(getColumnIFExsist, (err, rows, fields) => {
+        con.query(getColumnIFExsist, (err, rows) => {
             if (err)
                 throw err
 
@@ -40,20 +40,19 @@ const takeAttendance = asyncHandler(async(req, res) => {
                 k++
                 i++
             }
-
             var checkColumn = arrayColumns.indexOf(date)
             if (checkColumn < 1) {
                 var addColumnSql = `ALTER TABLE ${subject} ADD ${date} int(10)`
                 con.query(addColumnSql, (err) => {
                     if (err)
-                        throw err
+                        res.send({ success: false, messege: "Something Went Wrong" })
                 })
             }
             for (const [enrollment, attend] of Object.entries(attendance)) {
                 var insertAttendanceSql = `UPDATE ${subject} SET ${date}=? WHERE enrollmentno=? && employeeid=?`
                 con.query(insertAttendanceSql, [attend, enrollment, employeeid], (err) => {
                     if (err)
-                        throw err
+                        res.send({ success: false, messege: "Something Went Wrong" })
                 })
             }
             res.json({ success: true, messege: "Attendance Submitted" })
@@ -78,7 +77,7 @@ const responseQueryToStudent = asyncHandler(async(req, res) => {
 module.exports = {
     employeeLogin,
     takeAttendance,
-    getEmployees,
+    getAllEmployees,
     updateStudentAttendace,
     responseQueryToStudent
 }
