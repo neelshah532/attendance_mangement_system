@@ -4,7 +4,7 @@ const con = connectDb()
 
 //@method GET
 //@desc Get Employee
-//@PATH /ams/employees/
+//@PATH /ams/employees/:id
 const getEmployeesById = asyncHandler(async(req, res) => {
 
     var getEmployeesById = "SELECT * FROM employees where employeeid=?"
@@ -42,7 +42,6 @@ const getAllEmployees = asyncHandler(async(req, res) => {
     })
 
 })
-
 
 //@method POST
 //@desc Login Employee
@@ -97,21 +96,58 @@ const takeAttendance = asyncHandler(async(req, res) => {
 //@method PUT
 //@PATH /ams/employees/attendance
 const updateStudentAttendace = asyncHandler(async(req, res) => {
-    res.send({ messege: "Update Attendance" })
+    const { subject, attend, employeeId, date } = req.body
+    if (!subject || !attend || !employeeId || !date) {
+        res.send({ success: false, messege: "Please Fill Data" })
+    } else {
+        var updateAttendanceSql = `UPDATE ${subject} SET ${date}=? WHERE enrollmentno=? && employeeid=?`
+        con.query(updateAttendanceSql, [attend, req.params.id, employeeId], (err) => {
+            if (err) {
+                res.send({ success: false, messege: "Something Went Wrong" })
+            } else
+                res.send({ success: true, messege: "Attendance Updated" })
+        })
+    }
 })
 
 //@desc Take attendance of students
 //@method POST
 //@PATH /ams/employees/query
 const responseQueryToStudent = asyncHandler(async(req, res) => {
-    res.send({ messege: "RESPONSE TO STUNDET" })
+    const { description, employeeId, enrollmentNumber, programId, subjectId, semesterId } = req.body
+
+    if (!description || !employeeId || !enrollmentNumber || !programId || !subjectId || !semesterId) {
+        res.send({ success: false, messege: "Please Fill Data" })
+    } else {
+        var sendResponseToStudent = `INSERT INTO queries(description,employeeid,enrollmentno,programid,subjectid,semesterid)values(?,?,?,?,?,?)`
+        con.query(sendResponseToStudent, [description, employeeId, enrollmentNumber, programId, subjectId, semesterId], (err) => {
+            if (err)
+                res.send({ success: false, messege: "Something Went Wrong" })
+        })
+        res.send({ success: true, messege: "Response Submitted" })
+    }
 })
 
+//@desc Take attendance of students
+//@method GET
+//@PATH /ams/employees/query/:id
+const getStudentsQuery = asyncHandler(async(req, res) => {
+    var studentsQueryDetails = "SELECT queries.description,students.firstname,students.middlename FROM queries INNER JOIN students ON queries.enrollmentno=students.enrollmentno WHERE employeeid=?;"
+    var queries = await new Promise((resolve) => {
+        con.query(studentsQueryDetails, [req.params.id], (err, result) => {
+            if (err)
+                res.send({ success: false, messege: "Something Went Wrong" })
+            resolve(result)
+        })
+    })
+    res.send({ success: true, queries })
+})
 module.exports = {
     employeeLogin,
     takeAttendance,
     getEmployeesById,
     getAllEmployees,
     updateStudentAttendace,
-    responseQueryToStudent
+    responseQueryToStudent,
+    getStudentsQuery
 }
