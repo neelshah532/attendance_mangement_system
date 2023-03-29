@@ -6,10 +6,11 @@ router.get('/', getAllEmployees)
 router.get('/:id', getEmployeesById)
 router.get('/query/:id', getStudentsQuery)
 router.get('/getStudentAttendance/:id', getStudentsAttendance)
+
 router.post('/login', employeeLogin)
-router.post('/attendance', takeAttendance)
-router.put('/attendance/:id', updateStudentAttendace)
 router.post('/query', responseQueryToStudent)
 router.post('/query/:id', getStudentsQuery)
+
+router.route('/attendance').post(takeAttendance).put(updateStudentAttendace)
 
 module.exports = router

@@ -130,17 +130,20 @@ const takeAttendance = asyncHandler(async(req, res) => {
 //@method PUT
 //@PATH /ams/employees/attendance
 const updateStudentAttendace = asyncHandler(async(req, res) => {
-    const { subject, attend, employeeId, date } = req.body
-    if (!subject || !attend || !employeeId || !date) {
+    const { subject, employeeId, date, attendance } = req.body
+    if (!attendance) {
         res.send({ success: false, messege: "Please Fill Data" })
     } else {
-        var updateAttendanceSql = `UPDATE ${subject} SET ${date}=? WHERE enrollmentno=? && employeeid=?`
-        con.query(updateAttendanceSql, [attend, req.params.id, employeeId], (err) => {
-            if (err) {
-                res.send({ success: false, messege: "Something Went Wrong" })
-            } else
-                res.send({ success: true, messege: "Attendance Updated" })
-        })
+        for (var key in attendance) {
+            console.log(attendance[key]["attend"])
+            var updateAttendanceSql = `UPDATE ${subject} SET ${date}=? WHERE enrollmentno=? && employeeid=?`
+            con.query(updateAttendanceSql, [attendance[key]["attend"], attendance[key]["enrollmentno"], employeeId], (err) => {
+                if (err) {
+                    res.send({ success: false, messege: "Something Went Wrong" })
+                }
+            })
+        }
+        res.send({ success: true, messege: "Attendance Updated" })
     }
 })
 
