@@ -1,3 +1,4 @@
+const e = require('express')
 const asyncHandler = require('express-async-handler')
 const { connectDb } = require('../config/db')
 const con = connectDb()
@@ -16,15 +17,19 @@ const getEmployeesById = asyncHandler(async(req, res) => {
         })
     })
 
-    var getSubjectsTakeByEmployee = "SELECT subjects.subjectname FROM subjects INNER JOIN divisions ON divisions.subjectid = subjects.subjectid INNER JOIN employees ON divisions.employeeid = employees.employeeid WHERE employees.employeeid= ?"
-    var getSubjects = await new Promise((resolve) => {
-        con.query(getSubjectsTakeByEmployee, [req.params.id], (err, result) => {
+    var queryToGetSubjectsTakeByEmployee = "SELECT subjects.subjectname FROM subjects INNER JOIN divisions ON divisions.subjectid = subjects.subjectid INNER JOIN employees ON divisions.employeeid = employees.employeeid WHERE employees.employeeid= ?"
+    var getAllSubjectsOfEmployee = await new Promise((resolve) => {
+        con.query(queryToGetSubjectsTakeByEmployee, [req.params.id], (err, result) => {
             if (err)
                 res.send({ success: false, messege: "Something Went Wrong" })
 
             resolve(result)
         })
     })
+    var getSubjects = []
+    for (let i in getAllSubjectsOfEmployee) {
+        getSubjects.push(getAllSubjectsOfEmployee[i]['subjectname'])
+    }
     res.send({ success: true, employee: employee, subjects: getSubjects })
 
 })
@@ -55,41 +60,70 @@ const employeeLogin = asyncHandler(async(req, res) => {
 //@PATH /ams/employees/attendance
 const takeAttendance = asyncHandler(async(req, res) => {
     const { subject, date, attendance, employeeid } = req.body
-
     if (!subject || !date || !attendance || !employeeid) {
-        res.send(res.json({ success: false, messege: "Please Fill Data" }))
-    } else {
-        var getColumnIFExsist = `SHOW COLUMNS FROM ${subject}`
-        con.query(getColumnIFExsist, (err, rows) => {
-            if (err)
-                throw err
-
-            var i = 1
-            var k = 0
-            var arrayColumns = []
-            while (i <= rows.length) {
-                arrayColumns.push(rows[k].Field)
-                k++
-                i++
-            }
-            var checkColumn = arrayColumns.indexOf(date)
-            if (checkColumn < 1) {
-                var addColumnSql = `ALTER TABLE ${subject} ADD ${date} int(10)`
-                con.query(addColumnSql, (err) => {
-                    if (err)
-                        res.send({ success: false, messege: "Something Went Wrong" })
-                })
-            }
-            for (const [enrollment, attend] of Object.entries(attendance)) {
-                var insertAttendanceSql = `UPDATE ${subject} SET ${date}=? WHERE enrollmentno=? && employeeid=?`
-                con.query(insertAttendanceSql, [attend, enrollment, employeeid], (err) => {
-                    if (err)
-                        res.send({ success: false, messege: "Something Went Wrong" })
-                })
-            }
-            res.json({ success: true, messege: "Attendance Submitted" })
-        })
+        return res.status(400).json({ success: false, messege: "Please Fill Data" })
     }
+    // Get All Students Attendance till now      
+    const getStudentsTotalAttendance = await new Promise((resolve) => {
+        con.query(`Select enrollmentno,Totalstudentattendtillnow from ${subject}`, (err, rows) => {
+            if (err) {
+                return res.status(400).json({ success: false, messege: "Something Went Wrong" })
+            }
+            var jsonData = new Array(rows)
+            var studentsTotalAttendance = {}
+            var getStudentAttendance = []
+            for (var i = 0; i < 1; i++) {
+                for (var j = 0; j < jsonData.length + 1; j++) {
+                    studentsTotalAttendance[jsonData[i][j]['enrollmentno']] = jsonData[i][j]['Totalstudentattendtillnow']
+                    getStudentAttendance.push(studentsTotalAttendance)
+                }
+            }
+            resolve(getStudentAttendance[0])
+        })
+    })
+
+    var getColumnIFExsist = `SHOW COLUMNS FROM ${subject}`
+    con.query(getColumnIFExsist, (err, rows) => {
+        if (err) {
+            return res.status(400).json({ success: false })
+        }
+        var i = 1
+        var k = 0
+        var arrayColumns = []
+
+        while (i <= rows.length) {
+            arrayColumns.push(rows[k].Field)
+            k++
+            i++
+        }
+
+        var checkColumn = arrayColumns.indexOf(date)
+        if (checkColumn < 1) {
+            var addColumnSql = `ALTER TABLE ${subject} ADD ${date} int(10)`
+            con.query(addColumnSql)
+        }
+        var getColumnsCount = "SELECT COUNT(*) FROM information_schema.columns WHERE table_name = ?"
+        con.query(getColumnsCount, [subject], (err, result) => {
+            if (err) {
+                return res.status(400).json({ success: false })
+            }
+            var jsonData = JSON.parse(JSON.stringify(result[0]))
+            var totalLectures = jsonData["COUNT(*)"] - 5
+            var result = {}
+            for (let key in attendance) {
+                result[key] = attendance[key] + getStudentsTotalAttendance[key];
+            }
+            for (let key in result) {
+                var insertAttendanceSql = `UPDATE ${subject} SET ${date}=?,TotalLecturestillnow=?,Totalstudentattendtillnow=? WHERE enrollmentno=? && employeeid=?`
+                con.query(insertAttendanceSql, [attendance[key], totalLectures, result[key], key, employeeid], (err) => {
+                    if (err) {
+                        return res.status(400).json({ success: false })
+                    }
+                })
+            }
+            return res.status(200).send({ success: true, messege: "Attendance Submitted" })
+        })
+    })
 })
 
 //@desc Update  of students
@@ -142,6 +176,34 @@ const getStudentsQuery = asyncHandler(async(req, res) => {
     })
     res.send({ success: true, queries })
 })
+
+//@desc Take attendance of students
+//@method GET
+//@PATH /ams/employees/getStudentAttendance
+const getStudentsAttendance = asyncHandler(async(req, res) => {
+    const {} = req.body
+        // var getStudentAttendance = `SELECT students.enrollmentno,students.firstname,students.middlename,students.lastname,${sub} FROM students WHERE enrollmentno=?`
+        // var getStudentData = await new Promise((resolve) => {
+        //     con.query(getStudentAttendance, [req.params.id], (err, result) => {
+        //         if (err)
+        //             res.send({ success: false, messege: "Something Went Wrong" })
+        //         var jsonData = JSON.parse(JSON.stringify(result))
+        //         console.log(jsonData)
+        //         resolve(jsonData[0])
+        //     })
+        // })
+
+    // var getColumnsCount = "SELECT COUNT(*) FROM information_schema.columns WHERE table_name = ?"
+    // var getTotalAttendence = await new Promise((resolve) => {
+    //     con.query(getColumnsCount, ['android'], (err, result) => {
+    //         if (err)
+    //             res.send({ success: false, messege: "Something Went Wrong" })
+    //         var jsonData = JSON.parse(JSON.stringify(result[0]))
+    //         resolve(jsonData["COUNT(*)"] - 3)
+    //     })
+    // })
+    res.send({ success: true, getStudentData })
+})
 module.exports = {
     employeeLogin,
     takeAttendance,
@@ -149,5 +211,6 @@ module.exports = {
     getAllEmployees,
     updateStudentAttendace,
     responseQueryToStudent,
+    getStudentsAttendance,
     getStudentsQuery
 }
