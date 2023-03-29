@@ -181,28 +181,19 @@ const getStudentsQuery = asyncHandler(async(req, res) => {
 //@method GET
 //@PATH /ams/employees/getStudentAttendance
 const getStudentsAttendance = asyncHandler(async(req, res) => {
-    const {} = req.body
-        // var getStudentAttendance = `SELECT students.enrollmentno,students.firstname,students.middlename,students.lastname,${sub} FROM students WHERE enrollmentno=?`
-        // var getStudentData = await new Promise((resolve) => {
-        //     con.query(getStudentAttendance, [req.params.id], (err, result) => {
-        //         if (err)
-        //             res.send({ success: false, messege: "Something Went Wrong" })
-        //         var jsonData = JSON.parse(JSON.stringify(result))
-        //         console.log(jsonData)
-        //         resolve(jsonData[0])
-        //     })
-        // })
-
-    // var getColumnsCount = "SELECT COUNT(*) FROM information_schema.columns WHERE table_name = ?"
-    // var getTotalAttendence = await new Promise((resolve) => {
-    //     con.query(getColumnsCount, ['android'], (err, result) => {
-    //         if (err)
-    //             res.send({ success: false, messege: "Something Went Wrong" })
-    //         var jsonData = JSON.parse(JSON.stringify(result[0]))
-    //         resolve(jsonData["COUNT(*)"] - 3)
-    //     })
-    // })
-    res.send({ success: true, getStudentData })
+    const { subject, enrollmentNumber } = req.body
+    var getStudentAttendance = `SELECT TotalLecturestillnow,Totalstudentattendtillnow FROM ${subject} WHERE employeeid=? && enrollmentno=? `
+    var getAttendance = await new Promise((resolve) => {
+        con.query(getStudentAttendance, [req.params.id, enrollmentNumber], (err, result) => {
+            if (err)
+                res.send({ success: false, messege: "Something Went Wrong" })
+            var jsonData = JSON.parse(JSON.stringify(result))
+            resolve(jsonData)
+        })
+    })
+    var percentage = (getAttendance[0]['Totalstudentattendtillnow'] / getAttendance[0]['TotalLecturestillnow']) * 100
+    console.log(percentage)
+    res.send({ success: true, lectureDetails: getAttendance, attendancePercentage: percentage })
 })
 module.exports = {
     employeeLogin,
@@ -211,6 +202,6 @@ module.exports = {
     getAllEmployees,
     updateStudentAttendace,
     responseQueryToStudent,
-    getStudentsAttendance,
-    getStudentsQuery
+    getStudentsQuery,
+    getStudentsAttendance
 }
