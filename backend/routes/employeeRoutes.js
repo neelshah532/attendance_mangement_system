@@ -10,6 +10,6 @@ router.post('/login', employeeLogin)
 router.post('/attendance', takeAttendance)
 router.put('/attendance/:id', updateStudentAttendace)
 router.post('/query', responseQueryToStudent)
-
+router.post('/query/:id', getStudentsQuery)
 
 module.exports = router
