@@ -27,7 +27,7 @@ const getStudentsById = asyncHandler(async(req, res) => {
         const getStudentsById = "SELECT * FROM students where enrollmentno=?";
         try {
             con.query(getStudentsById, [studentsId], (err, result) => {
-                res.send({ success: true, students: result })
+                res.send({ success: true, students: result[0] })
             });
         } catch (error) {
             res.send({ success: false, messege: "Something Went Wrong" })
