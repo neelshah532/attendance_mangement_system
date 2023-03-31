@@ -18,5 +18,6 @@ connection.connect((err) => {
 })
 
 app.use('/ams/employees', require('./routes/employeeRoutes'))
+app.use('/ams/students', require('./routes/studentsRoutes'))
 
 app.listen(port, () => { console.log("Server Started and Port Number = ", port) })
