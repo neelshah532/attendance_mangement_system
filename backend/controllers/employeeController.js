@@ -162,30 +162,39 @@ const updateStudentAttendace = asyncHandler(async(req, res) => {
         }
         Promise.all(promises).then((results) => {
             let finalSubtractedAttendance = []
+            console.log(attendance)
+            console.log(results)
             for (let i = 0; i < results.length; i++) {
                 const item1 = results[i];
                 const item2 = attendance.find((item) => item.enrollmentno === item1.enrollmentno);
                 if (item2) {
-                    finalSubtractedAttendance.push({
-                        enrollmentno: item1.enrollmentno,
-                        difference: item1.Totalstudentattendtillnow - item2.attend
-                    });
+                    if (item2.attend === 1) {
+                        finalSubtractedAttendance.push({
+                            enrollmentno: item1.enrollmentno,
+                            difference: item1.Totalstudentattendtillnow + 1
+                        });
+                    } else {
+                        finalSubtractedAttendance.push({
+                            enrollmentno: item1.enrollmentno,
+                            difference: item1.Totalstudentattendtillnow - 1
+                        });
+                    }
                 }
             }
+            console.log(finalSubtractedAttendance)
             for (var key in attendance) {
-                var updateAttendanceSql = `UPDATE ${subject} SET ${date}=? ,Totalstudentattendtillnow=?, WHERE enrollmentno=? && employeeid=?`
-                con.query(updateAttendanceSql, [attendance[key]["attend"], attendance[key]["enrollmentno"], employeeId], (err) => {
+                var updateAttendanceSql = `UPDATE ${subject} SET ${date}=?,Totalstudentattendtillnow=? WHERE enrollmentno=? && employeeid=?`
+                con.query(updateAttendanceSql, [attendance[key]["attend"], finalSubtractedAttendance[key]['difference'], attendance[key]["enrollmentno"], employeeId], (err) => {
                     if (err) {
-                        res.send({ success: false, messege: "Something Went Wrong" })
+                        return res.send({ success: false, messege: "Something Went Wrong" })
                     }
                 })
             }
-
+            return res.send({ success: true, messege: "Attendance Updated" });
         }).catch((err) => {
             res.send({ success: false, messege: 'Something Went Wrong' })
         })
 
-        res.send({ success: true, messege: "Attendance Updated" });
     }
 });
 
