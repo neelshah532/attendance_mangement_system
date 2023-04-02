@@ -30,7 +30,7 @@ const getEmployeesById = asyncHandler(async(req, res) => {
     for (let i in getAllSubjectsOfEmployee) {
         getSubjects.push(getAllSubjectsOfEmployee[i]["subjectname"]);
     }
-    res.send({ success: true, employee: employee, subjects: getSubjects });
+    res.send({ success: true, employee: employee[0], subjects: getSubjects });
 });
 
 //@method GET
