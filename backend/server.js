@@ -17,7 +17,8 @@ connection.connect((err) => {
     console.log("Mysql_DataBase_Connected".cyan.underline)
 })
 
-app.use('/ams/employees', require('./routes/employeeRoutes'))
 app.use('/ams/students', require('./routes/studentsRoutes'))
+app.use('/ams/employees', require('./routes/employeeTeachingRoutes'))
+app.use('/ams/admin', require('./routes/employeeNonTeachingRoutes'))
 
 app.listen(port, () => { console.log("Server Started and Port Number = ", port) })

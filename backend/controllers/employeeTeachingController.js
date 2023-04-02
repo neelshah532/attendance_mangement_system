@@ -279,6 +279,7 @@ const getStudentsAttendance = asyncHandler(async(req, res) => {
         attendancePercentage: percentage,
     });
 });
+
 module.exports = {
     employeeLogin,
     takeAttendance,
