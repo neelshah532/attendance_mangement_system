@@ -3,7 +3,7 @@ const { connectDb } = require('../config/db')
 const con = connectDb()
 
 //@method GET
-//@desc Get Employee
+//@desc Get Students
 //@PATH /ams/students/
 const studentData = asyncHandler(async(req, res) => {
     // Query MySQL for student data
@@ -19,7 +19,7 @@ const studentData = asyncHandler(async(req, res) => {
 
 
 //@method GET
-//@desc Get Employee
+//@desc Get Students
 //@PATH /ams/students/:id
 const getStudentsById = asyncHandler(async(req, res) => {
     const studentsId = req.params.id;
