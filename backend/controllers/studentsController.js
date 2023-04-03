@@ -17,6 +17,53 @@ const studentData = asyncHandler(async(req, res) => {
     })
 });
 
+const login = asyncHandler(async (req, res) => {
+    const { enrollmentno, password, email } = req.body;
+  
+    let type;
+    let tableName;
+    let data
+    if(enrollmentno){
+       type="students"
+       tableName="enrollmentno"
+       data=enrollmentno
+    }else{
+      type="employees"
+      tableName="email"
+      data=email
+    }
+  
+    con.query(`SELECT * FROM ${type} WHERE ${tableName} = ? && password=?`, [data,password], (error, studentResults) => {
+      if (error)
+        return res.send({success:false,messege:"Something Went Wrong"})
+        if(studentResults[0]){
+            res.send({ success: true, students: studentResults[0] });
+        }else{
+            res.send({ success: false, messege: "Incorrect Username or Password" });
+        }
+  
+    // con.query('SELECT * FROM students WHERE enrollmentno = ?', [username], (error, studentResults) => {
+    //   if (error) {
+    //     throw error;
+    //   }
+  
+    //   if (studentResults[0] && studentResults[0].password === password) {
+    //     res.send({success: true, messege: "Welcome student!" });
+    //   } else {
+    //     con.query('SELECT * FROM employees WHERE email = ?', [email], (error, teacherResults) => {
+    //       if (error) {
+    //         throw error;
+    //       }
+  
+    //       if (teacherResults[0] && teacherResults[0].password === password) {
+    //         res.send({ success: true, messege: "Welcome Back!" });
+    //       } else {
+    //         res.send({ success: false, messege: "Invalid username or password" });
+    //       }
+    //     });
+    //   }
+    });
+  });
 
 //@method GET
 //@desc Get Employee
@@ -38,7 +85,37 @@ const getStudentsById = asyncHandler(async(req, res) => {
 });
 
 
+const getStudentsAttendance = asyncHandler(async(req, res) => {
+    const { subject, enrollmentNumber } = req.body;
+    var getStudentAttendance = `SELECT TotalLecturestillnow,Totalstudentattendtillnow FROM ${subject} WHERE enrollmentno=? `;
+    var getAttendance = await new Promise((resolve) => {
+        con.query(
+            getStudentAttendance, [enrollmentNumber],
+            (err, result) => {
+                if (err) res.send({ success: false, messege: "Something Went Wrong" });
+                var jsonData = JSON.parse(JSON.stringify(result));
+                resolve(jsonData);
+            }
+        );
+    });
+    var percentage =
+        (getAttendance[0]["Totalstudentattendtillnow"] /
+            getAttendance[0]["TotalLecturestillnow"]) *
+        100;
+    res.send({
+        success: true,
+        lectureDetails: getAttendance,
+        attendancePercentage: percentage,
+    });
+});
+
+
+
+
 module.exports = {
     studentData,
-    getStudentsById
+    getStudentsById,
+    getStudentsAttendance,
+    login
+
 }
