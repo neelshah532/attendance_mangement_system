@@ -17,6 +17,9 @@ const studentData = asyncHandler(async(req, res) => {
     })
 });
 
+//@method POST 
+//@desc LOGIN STUDENTS | EMPLOYEES | SUPER USER
+//@PATH /ams/students/
 const login = asyncHandler(async (req, res) => {
     const { enrollmentno, password, email } = req.body;
   
@@ -33,7 +36,7 @@ const login = asyncHandler(async (req, res) => {
       data=email
     }
   
-    con.query(`SELECT * FROM ${type} WHERE ${tableName} = ? && password=?`, [data,password], (error, studentResults) => {
+    con.query(`SELECT enrollmentno FROM ${type} WHERE ${tableName} = ? && password=?`, [data,password], (error, studentResults) => {
       if (error)
         return res.send({success:false,messege:"Something Went Wrong"})
         if(studentResults[0]){
@@ -41,27 +44,6 @@ const login = asyncHandler(async (req, res) => {
         }else{
             res.send({ success: false, messege: "Incorrect Username or Password" });
         }
-  
-    // con.query('SELECT * FROM students WHERE enrollmentno = ?', [username], (error, studentResults) => {
-    //   if (error) {
-    //     throw error;
-    //   }
-  
-    //   if (studentResults[0] && studentResults[0].password === password) {
-    //     res.send({success: true, messege: "Welcome student!" });
-    //   } else {
-    //     con.query('SELECT * FROM employees WHERE email = ?', [email], (error, teacherResults) => {
-    //       if (error) {
-    //         throw error;
-    //       }
-  
-    //       if (teacherResults[0] && teacherResults[0].password === password) {
-    //         res.send({ success: true, messege: "Welcome Back!" });
-    //       } else {
-    //         res.send({ success: false, messege: "Invalid username or password" });
-    //       }
-    //     });
-    //   }
     });
   });
 
