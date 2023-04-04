@@ -274,7 +274,6 @@ const getStudentsAttendance = asyncHandler(async(req, res) => {
 });
 
 module.exports = {
-    employeeLogin,
     takeAttendance,
     getEmployeesById,
     getAllEmployees,
