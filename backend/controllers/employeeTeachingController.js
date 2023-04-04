@@ -46,13 +46,6 @@ const getAllEmployees = asyncHandler(async(req, res) => {
     });
 });
 
-//@method POST
-//@desc Login Employee
-//@PATH /ams/employees/login
-const employeeLogin = asyncHandler(async(req, res) => {
-    res.send({ messege: "Login" });
-});
-
 //@desc Take attendance of students
 //@method POST
 //@PATH /ams/employees/attendance

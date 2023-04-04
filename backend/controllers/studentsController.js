@@ -91,13 +91,9 @@ const getStudentsAttendance = asyncHandler(async(req, res) => {
     });
 });
 
-
-
-
 module.exports = {
     studentData,
     getStudentsById,
     getStudentsAttendance,
     login
-
 }
