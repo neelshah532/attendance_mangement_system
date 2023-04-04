@@ -19,7 +19,7 @@ const studentData = asyncHandler(async(req, res) => {
 
 //@method POST 
 //@desc LOGIN STUDENTS | EMPLOYEES | SUPER USER
-//@PATH /ams/students/
+//@PATH /ams/login
 const login = asyncHandler(async (req, res) => {
     const { enrollmentno, password, email } = req.body;
   
