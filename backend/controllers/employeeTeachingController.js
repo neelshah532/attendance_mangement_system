@@ -86,6 +86,7 @@ const takeAttendance = asyncHandler(async(req, res) => {
         if (err) {
             return res.status(400).json({ success: false });
         }
+
         var i = 1;
         var k = 0;
         var arrayColumns = [];
@@ -97,37 +98,68 @@ const takeAttendance = asyncHandler(async(req, res) => {
         }
 
         var checkColumn = arrayColumns.indexOf(date);
+
         if (checkColumn < 1) {
             var addColumnSql = `ALTER TABLE ${subject} ADD ${date} int(10)`;
             con.query(addColumnSql);
         }
-        var getColumnsCount =
-            "SELECT COUNT(*) FROM information_schema.columns WHERE table_name = ?";
-        con.query(getColumnsCount, [subject], (err, result) => {
-            if (err) {
-                return res.status(400).json({ success: false });
+
+
+        var checkLectureQuery = `SELECT COUNT(${date}) FROM ${subject}  WHERE employeeid=?`
+
+        con.query(checkLectureQuery, [employeeid], (err, rows) => {
+            if (err) { return res.send({ success: false, messege: "Something Went Wrong" }) }
+            let countOfData = JSON.parse(JSON.stringify(rows[0]))
+            var newDate
+
+            if (countOfData[`COUNT(${date})`] > 0) {
+                var getCurrentLecture = date.charAt(date.length - 1)
+                var newLecture = parseInt(getCurrentLecture) + 1
+                var currentDate = date.substring(0, date.length - 1);
+                newDate = currentDate + newLecture
+                var addColumnSql = `ALTER TABLE ${subject} ADD ${newDate} int(10)`;
+                con.query(addColumnSql);
             }
-            var jsonData = JSON.parse(JSON.stringify(result[0]));
-            var totalLectures = jsonData["COUNT(*)"] - 5;
-            var result = {};
-            for (let key in attendance) {
-                result[key] = attendance[key] + getStudentsTotalAttendance[key];
+
+            var addDate
+            if (newDate) {
+                addDate = newDate
+            } else {
+                addDate = date
             }
-            for (let key in result) {
-                var insertAttendanceSql = `UPDATE ${subject} SET ${date}=?,TotalLecturestillnow=?,Totalstudentattendtillnow=? WHERE enrollmentno=? && employeeid=?`;
-                con.query(
-                    insertAttendanceSql, [attendance[key], totalLectures, result[key], key, employeeid],
-                    (err) => {
-                        if (err) {
-                            return res.status(400).json({ success: false });
+
+            var getColumnsCount =
+                "SELECT COUNT(*) FROM information_schema.columns WHERE table_name = ?";
+            con.query(getColumnsCount, [subject], (err, result) => {
+                if (err) {
+                    return res.status(400).json({ success: false });
+                }
+                var jsonData = JSON.parse(JSON.stringify(result[0]));
+                var totalLectures = jsonData["COUNT(*)"] - 5;
+                var result = {};
+                for (let key in attendance) {
+                    result[key] = attendance[key] + getStudentsTotalAttendance[key];
+                }
+
+                for (let key in result) {
+                    var insertAttendanceSql = `UPDATE ${subject} SET ${addDate}=?,TotalLecturestillnow=?,Totalstudentattendtillnow=? WHERE enrollmentno=? && employeeid=?`;
+                    con.query(
+                        insertAttendanceSql, [attendance[key], totalLectures, result[key], key, employeeid],
+                        (err) => {
+                            if (err) {
+                                return res.status(400).json({ success: false });
+                            }
                         }
-                    }
-                );
-            }
-            return res
-                .status(200)
-                .send({ success: true, messege: "Attendance Submitted" });
+                    );
+                }
+
+                return res
+                    .status(200)
+                    .send({ success: true, messege: "Attendance Submitted" });
+            });
+
         });
+
     });
 });
 
