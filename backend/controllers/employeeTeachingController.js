@@ -54,7 +54,7 @@ const takeAttendance = asyncHandler(async(req, res) => {
     if (!subject || !date || !attendance || !employeeid) {
         return res
             .status(400)
-            .json({ success: false, messege: "Please Fill Data" });
+            .json({ success: false, messege: "Please Fill result" });
     }
     // Get All Students Attendance till now
     const getStudentsTotalAttendance = await new Promise((resolve) => {
@@ -68,7 +68,7 @@ const takeAttendance = asyncHandler(async(req, res) => {
                 }
                 var jsonData = new Array(rows);
                 var studentsTotalAttendance = {};
-                var getStudentAttendance = [];
+                var newData = [];
                 for (var i = 0; i < 1; i++) {
                     for (var j = 0; j < jsonData.length + 1; j++) {
                         studentsTotalAttendance[jsonData[i][j]["enrollmentno"]] =
@@ -82,6 +82,7 @@ const takeAttendance = asyncHandler(async(req, res) => {
     });
 
     var getColumnIFExsist = `SHOW COLUMNS FROM ${subject}`;
+
     con.query(getColumnIFExsist, (err, rows) => {
         if (err) {
             return res.status(400).json({ success: false });
@@ -105,18 +106,32 @@ const takeAttendance = asyncHandler(async(req, res) => {
         }
 
 
-        var checkLectureQuery = `SELECT COUNT(${date}) FROM ${subject}  WHERE employeeid=?`
+        var checkLectureQuery = `SELECT COUNT(${date}) FROM ${subject} WHERE employeeid=?`
 
         con.query(checkLectureQuery, [employeeid], (err, rows) => {
             if (err) { return res.send({ success: false, messege: "Something Went Wrong" }) }
             let countOfData = JSON.parse(JSON.stringify(rows[0]))
-            var newDate
 
+            const columnsNames = arrayColumns.slice(5, )
+            const checkDate = date.substring(0, date.length - 2)
+            console.log(columnsNames)
+            console.log(checkDate)
+            let count = 0
+            for (colNames of columnsNames) {
+                actualDates = colNames.substring(0, colNames.length - 2);
+                if (checkDate == actualDates) {
+                    count++
+                }
+            }
+            console.log(count)
+
+            var newDate
             if (countOfData[`COUNT(${date})`] > 0) {
                 var getCurrentLecture = date.charAt(date.length - 1)
-                var newLecture = parseInt(getCurrentLecture) + 1
+                var newLecture = parseInt(getCurrentLecture) + count
                 var currentDate = date.substring(0, date.length - 1);
                 newDate = currentDate + newLecture
+                console.log(newDate)
                 var addColumnSql = `ALTER TABLE ${subject} ADD ${newDate} int(10)`;
                 con.query(addColumnSql);
             }
@@ -127,7 +142,6 @@ const takeAttendance = asyncHandler(async(req, res) => {
             } else {
                 addDate = date
             }
-
             var getColumnsCount =
                 "SELECT COUNT(*) FROM information_schema.columns WHERE table_name = ?";
             con.query(getColumnsCount, [subject], (err, result) => {
@@ -163,7 +177,7 @@ const takeAttendance = asyncHandler(async(req, res) => {
     });
 });
 
-//@desc Update  of students
+//@desc Update of students Attendance
 //@method PUT
 //@PATH /ams/employees/attendance
 const updateStudentAttendace = asyncHandler(async(req, res) => {
@@ -206,7 +220,6 @@ const updateStudentAttendace = asyncHandler(async(req, res) => {
                     }
                 }
             }
-            console.log(finalSubtractedAttendance)
             for (var key in attendance) {
                 var updateAttendanceSql = `UPDATE ${subject} SET ${date}=?,Totalstudentattendtillnow=? WHERE enrollmentno=? && employeeid=?`
                 con.query(updateAttendanceSql, [attendance[key]["attend"], finalSubtractedAttendance[key]['difference'], attendance[key]["enrollmentno"], employeeId], (err) => {
@@ -217,7 +230,7 @@ const updateStudentAttendace = asyncHandler(async(req, res) => {
             }
             return res.send({ success: true, messege: "Attendance Updated" });
         }).catch((err) => {
-            res.send({ success: false, messege: 'Something Went Wrong' })
+            return res.send({ success: false, messege: 'Something Went Wrong' })
         })
 
     }
@@ -256,7 +269,7 @@ const responseQueryToStudent = asyncHandler(async(req, res) => {
                 semesterId,
             ],
             (err) => {
-                if (err) res.send({ success: false, messege: "Something Went Wrong" });
+                if (err) return res.send({ success: false, messege: "Something Went Wrong" });
             }
         );
         res.send({ success: true, messege: "Response Submitted" });
@@ -271,7 +284,7 @@ const getStudentsQuery = asyncHandler(async(req, res) => {
         "SELECT queries.description,students.firstname,students.middlename FROM queries INNER JOIN students ON queries.enrollmentno=students.enrollmentno WHERE employeeid=?;";
     var queries = await new Promise((resolve) => {
         con.query(studentsQueryDetails, [req.params.id], (err, result) => {
-            if (err) res.send({ success: false, messege: "Something Went Wrong" });
+            if (err) return res.send({ success: false, messege: "Something Went Wrong" });
             resolve(result);
         });
     });
@@ -288,7 +301,7 @@ const getStudentsAttendance = asyncHandler(async(req, res) => {
         con.query(
             getStudentAttendance, [req.params.id, enrollmentNumber],
             (err, result) => {
-                if (err) res.send({ success: false, messege: "Something Went Wrong" });
+                if (err) return res.send({ success: false, messege: "Something Went Wrong" });
                 var jsonData = JSON.parse(JSON.stringify(result));
                 resolve(jsonData);
             }
@@ -305,6 +318,84 @@ const getStudentsAttendance = asyncHandler(async(req, res) => {
     });
 });
 
+
+//@desc Get Dates of Attendance
+//@method GET
+//@PATH /ams/employees/attendancedates/:employeeid
+const getAllTakenAttendances = asyncHandler(async(req, res) => {
+    const { subject } = req.body
+    var getColumnNamesQuery = `SHOW COLUMNS FROM ${subject}`;
+    const getColumnNames = await new Promise((resolve) => {
+        con.query(getColumnNamesQuery, (err, names) => {
+            var i = 1;
+            var k = 0;
+            var arrayColumns = [];
+
+            while (i <= names.length) {
+                arrayColumns.push(names[k].Field);
+                k++;
+                i++;
+            }
+
+            const columnsNames = arrayColumns.slice(5, )
+            resolve(columnsNames)
+        })
+    })
+
+    var attendanceDates = {}
+    var dates = []
+
+    for (column of getColumnNames) {
+        lectures = column.slice(-2)
+        actualDates = column.substring(0, column.length - 2);
+        attendanceDates = {
+            [actualDates]: lectures
+        }
+        dates.push(attendanceDates)
+    }
+
+    const lectureDates = {};
+    dates.forEach(item => {
+        const key = Object.keys(item)[0];
+        const value = item[key];
+
+        if (!lectureDates.hasOwnProperty(key)) {
+            lectureDates[key] = [];
+        }
+
+        lectureDates[key].push(value);
+    });
+
+    res.send({ success: true, Dates: lectureDates })
+})
+
+//@desc Get Attendance By Date
+//@method GET
+//@PATH /ams/employees/attendance/:employeeid
+const getAttendanceByDate = asyncHandler(async(req, res) => {
+    const { date, subject } = req.body
+    var getStudentAttendance = `SELECT enrollmentno,${date} FROM ${subject} WHERE employeeid=?`;
+    var getAttendance = await new Promise((resolve) => {
+        con.query(
+            getStudentAttendance, [req.params.employeeid],
+            (err, result) => {
+                if (err) return res.send({ success: false, messege: "Something Went Wrong" });
+                var jsonData = JSON.parse(JSON.stringify(result));
+                resolve(jsonData)
+            }
+        );
+    });
+
+    const mergedData = {};
+
+    getAttendance.forEach((obj) => {
+        const { enrollmentno, '8March2023L1': value } = obj;
+        mergedData[enrollmentno] = value;
+    });
+
+    res.send({ success: true, attendance: mergedData })
+})
+
 module.exports = {
     takeAttendance,
     getEmployeesById,
@@ -313,4 +404,6 @@ module.exports = {
     responseQueryToStudent,
     getStudentsQuery,
     getStudentsAttendance,
+    getAllTakenAttendances,
+    getAttendanceByDate
 };
