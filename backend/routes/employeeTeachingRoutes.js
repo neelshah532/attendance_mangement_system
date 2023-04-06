@@ -13,7 +13,8 @@ router.post('/query/:id', getStudentsQuery)
 router.get('/attendancedates/:employeeid', getAllTakenAttendances)
 router.get('/attendance/:employeeid', getAttendanceByDate)
 
-router.route('/attendance').post(takeAttendance).put(updateStudentAttendace)
+router.post('/takeAttendance', takeAttendance)
+router.put('/updateAttendance', updateStudentAttendace)
 
 
 module.exports = router

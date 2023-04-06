@@ -48,7 +48,7 @@ const getAllEmployees = asyncHandler(async(req, res) => {
 
 //@desc Take attendance of students
 //@method POST
-//@PATH /ams/employees/attendance
+//@PATH /ams/employees/takeAttendance
 const takeAttendance = asyncHandler(async(req, res) => {
     const { subject, date, attendance, employeeid } = req.body;
     if (!subject || !date || !attendance || !employeeid) {
@@ -68,7 +68,7 @@ const takeAttendance = asyncHandler(async(req, res) => {
                 }
                 var jsonData = new Array(rows);
                 var studentsTotalAttendance = {};
-                var newData = [];
+                var getStudentAttendance = [];
                 for (var i = 0; i < 1; i++) {
                     for (var j = 0; j < jsonData.length + 1; j++) {
                         studentsTotalAttendance[jsonData[i][j]["enrollmentno"]] =
@@ -179,7 +179,7 @@ const takeAttendance = asyncHandler(async(req, res) => {
 
 //@desc Update of students Attendance
 //@method PUT
-//@PATH /ams/employees/attendance
+//@PATH /ams/employees/updateAttendance
 const updateStudentAttendace = asyncHandler(async(req, res) => {
     const { subject, employeeId, date, attendance } = req.body;
     if (!attendance) {
