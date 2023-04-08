@@ -21,30 +21,30 @@ const studentData = asyncHandler(async(req, res) => {
 //@desc LOGIN STUDENTS | EMPLOYEES | SUPER USER
 //@PATH /ams/login
 const login = asyncHandler(async(req, res) => {
-    const { enrollmentno, password, email } = req.body;
+    const { data, password, type } = req.body;
 
-    let type;
-    let tableName;
-    let data
-    if (enrollmentno) {
-        type = "students"
-        tableName = "enrollmentno"
-        data = enrollmentno
+    if (!data || !password || !type) {
+        res.send({ success: false, messege: "Please Fill Data Properly" })
     } else {
-        type = "employees"
-        tableName = "email"
-        data = email
-    }
-
-    con.query(`SELECT enrollmentno FROM ${type} WHERE ${tableName} = ? && password=?`, [data, password], (error, studentResults) => {
-        if (error)
-            return res.send({ success: false, messege: "Something Went Wrong" })
-        if (studentResults[0]) {
-            res.send({ success: true, students: studentResults[0] });
+        let columnName;
+        let id
+        if (type == "students") {
+            columnName = "enrollmentno"
+            id = "enrollmentno"
         } else {
-            res.send({ success: false, messege: "Incorrect Username or Password" });
+            columnName = "email"
+            id = "employeeid"
         }
-    });
+        con.query(`SELECT ${id} FROM ${type} WHERE ${columnName} = ? && password=?`, [data, password], (error, studentResults) => {
+            if (error)
+                return res.send({ success: false, messege: "Something Went Wrong" })
+            if (studentResults[0]) {
+                res.send({ success: true, students: studentResults[0] });
+            } else {
+                res.send({ success: false, messege: "Incorrect Username or Password" });
+            }
+        });
+    }
 });
 
 //@method GET
