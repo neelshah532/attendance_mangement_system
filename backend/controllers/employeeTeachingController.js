@@ -146,11 +146,6 @@ const takeAttendance = asyncHandler(async(req, res) => {
                 var jsonData = JSON.parse(JSON.stringify(result[0]));
                 var totalLectures = jsonData["COUNT(*)"] - 5;
 
-                // var result = {};
-
-                // console.log(attendance)
-                // console.log(getStudentsTotalAttendance)
-
                 var results = {};
                 for (const key in attendance) {
                     let sum = attendance[key];
