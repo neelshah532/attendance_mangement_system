@@ -38,11 +38,11 @@ const login = asyncHandler(async(req, res) => {
             id = "employeeid"
             dataNeed = "type"
         }
-        con.query(`SELECT ${id},${dataNeed} FROM ${type} WHERE ${columnName} = ? && password=?`, [data, password], (error, studentResults) => {
+        con.query(`SELECT ${id},${dataNeed} FROM ${type} WHERE ${columnName} = ? && password=?`, [data, password], (error, results) => {
             if (error)
                 return res.send({ success: false, messege: "Something Went Wrong" })
-            if (studentResults[0]) {
-                res.send({ success: true, students: studentResults[0] });
+            if (results[0]) {
+                res.send({ success: true, credentials: results[0] });
             } else {
                 res.send({ success: false, messege: "Incorrect Username or Password" });
             }

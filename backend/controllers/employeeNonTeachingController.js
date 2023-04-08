@@ -3,7 +3,7 @@ const { connectDb } = require("../config/db");
 const con = connectDb();
 
 const addStudent = asyncHandler(async(req, res) => {
-    const {} = req.body
+    const { enrollmentno, } = req.body
 });
 
 module.exports = { addStudent };
