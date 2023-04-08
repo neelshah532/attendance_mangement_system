@@ -51,6 +51,7 @@ const getAllEmployees = asyncHandler(async(req, res) => {
 //@PATH /ams/employees/takeAttendance
 const takeAttendance = asyncHandler(async(req, res) => {
     const { subject, date, attendance, employeeid } = req.body;
+    
     if (!subject || !date || !attendance || !employeeid) {
         return res
             .status(400)
