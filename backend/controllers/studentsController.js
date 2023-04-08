@@ -28,14 +28,17 @@ const login = asyncHandler(async(req, res) => {
     } else {
         let columnName;
         let id
+        let dataNeed
         if (type == "students") {
             columnName = "enrollmentno"
             id = "enrollmentno"
+            dataNeed = "email"
         } else {
             columnName = "email"
             id = "employeeid"
+            dataNeed = "type"
         }
-        con.query(`SELECT ${id} FROM ${type} WHERE ${columnName} = ? && password=?`, [data, password], (error, studentResults) => {
+        con.query(`SELECT ${id},${dataNeed} FROM ${type} WHERE ${columnName} = ? && password=?`, [data, password], (error, studentResults) => {
             if (error)
                 return res.send({ success: false, messege: "Something Went Wrong" })
             if (studentResults[0]) {
