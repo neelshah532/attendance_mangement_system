@@ -53,9 +53,7 @@ const takeAttendance = asyncHandler(async(req, res) => {
     const { subject, date, attendance, employeeid } = req.body;
 
     if (!subject || !date || !attendance || !employeeid) {
-        return res
-            .status(400)
-            .json({ success: false, messege: "Please Fill result" });
+        return res.json({ success: false, messege: "Please Fill result" });
     }
     // Get All Students Attendance till now
     const getStudentsTotalAttendance = await new Promise((resolve) => {
@@ -63,9 +61,7 @@ const takeAttendance = asyncHandler(async(req, res) => {
             `Select enrollmentno,Totalstudentattendtillnow from ${subject}`,
             (err, rows) => {
                 if (err) {
-                    return res
-                        .status(400)
-                        .json({ success: false, messege: "Something Went Wrong" });
+                    return res.send({ success: false, messege: "Something Went Wrong" });
                 }
                 var jsonData = new Array(rows);
                 var studentsTotalAttendance = {};
@@ -86,7 +82,7 @@ const takeAttendance = asyncHandler(async(req, res) => {
 
     con.query(getColumnIFExsist, (err, rows) => {
         if (err) {
-            return res.status(400).json({ success: false });
+            return res.json({ success: false });
         }
 
         var i = 1;
@@ -103,7 +99,10 @@ const takeAttendance = asyncHandler(async(req, res) => {
 
         if (checkColumn < 1) {
             var addColumnSql = `ALTER TABLE ${subject} ADD ${date} int(10)`;
-            con.query(addColumnSql);
+            con.query(addColumnSql, (err) => {
+                if (err)
+                    return res.send({ success: false, messege: "Something Went Wrong" })
+            });
         }
 
         var checkLectureQuery = `SELECT COUNT(${date}) FROM ${subject} WHERE employeeid=?`;
@@ -145,7 +144,7 @@ const takeAttendance = asyncHandler(async(req, res) => {
                 "SELECT COUNT(*) FROM information_schema.columns WHERE table_name = ?";
             con.query(getColumnsCount, [subject], (err, result) => {
                 if (err) {
-                    return res.status(400).json({ success: false });
+                    return res.send({ success: false });
                 }
                 var jsonData = JSON.parse(JSON.stringify(result[0]));
                 var totalLectures = jsonData["COUNT(*)"] - 5;
@@ -160,7 +159,7 @@ const takeAttendance = asyncHandler(async(req, res) => {
                         insertAttendanceSql, [attendance[key], totalLectures, result[key], key, employeeid],
                         (err) => {
                             if (err) {
-                                return res.status(400).json({ success: false });
+                                return res.send({ success: false });
                             }
                         }
                     );
