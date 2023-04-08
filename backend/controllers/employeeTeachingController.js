@@ -64,16 +64,14 @@ const takeAttendance = asyncHandler(async(req, res) => {
                     return res.send({ success: false, messege: "Something Went Wrong" });
                 }
                 var jsonData = new Array(rows);
-                var studentsTotalAttendance = {};
-                var getStudentAttendance = [];
-                for (var i = 0; i < 1; i++) {
-                    for (var j = 0; j < jsonData.length + 1; j++) {
-                        studentsTotalAttendance[jsonData[i][j]["enrollmentno"]] =
-                            jsonData[i][j]["Totalstudentattendtillnow"];
-                        getStudentAttendance.push(studentsTotalAttendance);
-                    }
-                }
-                resolve(getStudentAttendance[0]);
+
+                const getStudentAttendance = jsonData[0].map((row) => {
+                    const { enrollmentno, Totalstudentattendtillnow } = row;
+                    const obj = {};
+                    obj[enrollmentno] = Totalstudentattendtillnow;
+                    return obj;
+                });
+                resolve(getStudentAttendance);
             }
         );
     });
@@ -129,7 +127,6 @@ const takeAttendance = asyncHandler(async(req, res) => {
                 var newLecture = parseInt(getCurrentLecture) + count;
                 var currentDate = date.substring(0, date.length - 1);
                 newDate = currentDate + newLecture;
-                console.log(newDate);
                 var addColumnSql = `ALTER TABLE ${subject} ADD ${newDate} int(10)`;
                 con.query(addColumnSql);
             }
@@ -148,21 +145,26 @@ const takeAttendance = asyncHandler(async(req, res) => {
                 }
                 var jsonData = JSON.parse(JSON.stringify(result[0]));
                 var totalLectures = jsonData["COUNT(*)"] - 5;
-                var result = {};
-                for (let key in attendance) {
-                    result[key] = attendance[key] + getStudentsTotalAttendance[key];
+
+                // var result = {};
+
+                // console.log(attendance)
+                // console.log(getStudentsTotalAttendance)
+
+                var results = {};
+                for (const key in attendance) {
+                    let sum = attendance[key];
+                    for (const obj2 of getStudentsTotalAttendance) {
+                        if (obj2.hasOwnProperty(key)) {
+                            sum += obj2[key];
+                        }
+                    }
+                    results[key] = sum;
                 }
 
-                for (let key in result) {
+                for (let key in results) {
                     var insertAttendanceSql = `UPDATE ${subject} SET ${addDate}=?,TotalLecturestillnow=?,Totalstudentattendtillnow=? WHERE enrollmentno=? && employeeid=?`;
-                    con.query(
-                        insertAttendanceSql, [attendance[key], totalLectures, result[key], key, employeeid],
-                        (err) => {
-                            if (err) {
-                                return res.send({ success: false });
-                            }
-                        }
-                    );
+                    con.query(insertAttendanceSql, [attendance[key], totalLectures, results[key], key, employeeid]);
                 }
 
                 return res.send({ success: true, messege: "Attendance Submitted" });
