@@ -379,7 +379,7 @@ const getAttendanceByDate = asyncHandler(async(req, res) => {
     const mergedData = {};
 
     getAttendance.forEach((obj) => {
-        const { enrollmentno, '8March2023L1': value } = obj;
+        const { enrollmentno, [date]: value } = obj;
         mergedData[enrollmentno] = value;
     });
 

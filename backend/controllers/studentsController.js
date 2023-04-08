@@ -135,7 +135,6 @@ const monthlyAttendanceOfStudent = asyncHandler(async(req, res) => {
     });
 
     let Totalstudentattendtillnow = getAttendance[0]["Totalstudentattendtillnow"]
-    let TotalLecturestillnow = getAttendance[0]["TotalLecturestillnow"]
 
     for (let i = 0; i < getAttendance.length; i++) {
         let keysToRemove = [];
