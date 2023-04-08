@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
-const {} = require("../controllers/employeeNonTeachingController");
+const { addStudent } = require("../controllers/employeeNonTeachingController");
 
-router.post("/manageStudent/ADD");
+router.post("/manageStudent/ADD", addStudent);
+
 module.exports = router;

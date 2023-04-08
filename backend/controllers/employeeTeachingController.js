@@ -51,7 +51,7 @@ const getAllEmployees = asyncHandler(async(req, res) => {
 //@PATH /ams/employees/takeAttendance
 const takeAttendance = asyncHandler(async(req, res) => {
     const { subject, date, attendance, employeeid } = req.body;
-    
+
     if (!subject || !date || !attendance || !employeeid) {
         return res
             .status(400)
@@ -166,9 +166,7 @@ const takeAttendance = asyncHandler(async(req, res) => {
                     );
                 }
 
-                return res
-                    .status(200)
-                    .send({ success: true, messege: "Attendance Submitted" });
+                return res.send({ success: true, messege: "Attendance Submitted" });
             });
         });
     });
@@ -199,8 +197,6 @@ const updateStudentAttendace = asyncHandler(async(req, res) => {
         Promise.all(promises)
             .then((results) => {
                 let finalSubtractedAttendance = [];
-                console.log(attendance);
-                console.log(results);
                 for (let i = 0; i < results.length; i++) {
                     const item1 = results[i];
                     const item2 = attendance.find(
