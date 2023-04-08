@@ -106,7 +106,6 @@ const takeAttendance = asyncHandler(async(req, res) => {
             con.query(addColumnSql);
         }
 
-
         var checkLectureQuery = `SELECT COUNT(${date}) FROM ${subject} WHERE employeeid=?`
 
         con.query(checkLectureQuery, [employeeid], (err, rows) => {
