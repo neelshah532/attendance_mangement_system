@@ -53,7 +53,7 @@ const takeAttendance = asyncHandler(async(req, res) => {
     const { subject, date, attendance, employeeid } = req.body;
 
     if (!subject || !date || !attendance || !employeeid) {
-        return res.json({ success: false, messege: "Please Fill result" });
+        return res.send({ success: false, messege: "Please Fill result" });
     }
     // Get All Students Attendance till now
     const getStudentsTotalAttendance = await new Promise((resolve) => {
