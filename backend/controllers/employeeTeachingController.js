@@ -51,9 +51,11 @@ const getAllEmployees = asyncHandler(async(req, res) => {
 //@PATH /ams/employees/takeAttendance
 const takeAttendance = asyncHandler(async(req, res) => {
     const { subject, date, attendance, employeeid } = req.body;
-
+    
     if (!subject || !date || !attendance || !employeeid) {
-        return res.send({ success: false, messege: "Please Fill result" });
+        return res
+            .status(400)
+            .json({ success: false, messege: "Please Fill result" });
     }
     // Get All Students Attendance till now
     const getStudentsTotalAttendance = await new Promise((resolve) => {
@@ -61,7 +63,9 @@ const takeAttendance = asyncHandler(async(req, res) => {
             `Select enrollmentno,Totalstudentattendtillnow from ${subject}`,
             (err, rows) => {
                 if (err) {
-                    return res.send({ success: false, messege: "Something Went Wrong" });
+                    return res
+                        .status(400)
+                        .json({ success: false, messege: "Something Went Wrong" });
                 }
                 var jsonData = new Array(rows);
                 var studentsTotalAttendance = {};
@@ -82,7 +86,7 @@ const takeAttendance = asyncHandler(async(req, res) => {
 
     con.query(getColumnIFExsist, (err, rows) => {
         if (err) {
-            return res.json({ success: false });
+            return res.status(400).json({ success: false });
         }
 
         var i = 1;
@@ -99,52 +103,51 @@ const takeAttendance = asyncHandler(async(req, res) => {
 
         if (checkColumn < 1) {
             var addColumnSql = `ALTER TABLE ${subject} ADD ${date} int(10)`;
-            con.query(addColumnSql, (err) => {
-                if (err)
-                    return res.send({ success: false, messege: "Something Went Wrong" })
-            });
+            con.query(addColumnSql);
         }
 
-        var checkLectureQuery = `SELECT COUNT(${date}) FROM ${subject} WHERE employeeid=?`;
+
+        var checkLectureQuery = `SELECT COUNT(${date}) FROM ${subject} WHERE employeeid=?`
 
         con.query(checkLectureQuery, [employeeid], (err, rows) => {
-            if (err) {
-                return res.send({ success: false, messege: "Something Went Wrong" });
-            }
-            let countOfData = JSON.parse(JSON.stringify(rows[0]));
+            if (err) { return res.send({ success: false, messege: "Something Went Wrong" }) }
+            let countOfData = JSON.parse(JSON.stringify(rows[0]))
 
-            const columnsNames = arrayColumns.slice(5);
-            const checkDate = date.substring(0, date.length - 2);
-            let count = 0;
+            const columnsNames = arrayColumns.slice(5, )
+            const checkDate = date.substring(0, date.length - 2)
+            console.log(columnsNames)
+            console.log(checkDate)
+            let count = 0
             for (colNames of columnsNames) {
                 actualDates = colNames.substring(0, colNames.length - 2);
                 if (checkDate == actualDates) {
-                    count++;
+                    count++
                 }
             }
+            console.log(count)
 
-            var newDate;
+            var newDate
             if (countOfData[`COUNT(${date})`] > 0) {
-                var getCurrentLecture = date.charAt(date.length - 1);
-                var newLecture = parseInt(getCurrentLecture) + count;
+                var getCurrentLecture = date.charAt(date.length - 1)
+                var newLecture = parseInt(getCurrentLecture) + count
                 var currentDate = date.substring(0, date.length - 1);
-                newDate = currentDate + newLecture;
-                console.log(newDate);
+                newDate = currentDate + newLecture
+                console.log(newDate)
                 var addColumnSql = `ALTER TABLE ${subject} ADD ${newDate} int(10)`;
                 con.query(addColumnSql);
             }
 
-            var addDate;
+            var addDate
             if (newDate) {
-                addDate = newDate;
+                addDate = newDate
             } else {
-                addDate = date;
+                addDate = date
             }
             var getColumnsCount =
                 "SELECT COUNT(*) FROM information_schema.columns WHERE table_name = ?";
             con.query(getColumnsCount, [subject], (err, result) => {
                 if (err) {
-                    return res.send({ success: false });
+                    return res.status(400).json({ success: false });
                 }
                 var jsonData = JSON.parse(JSON.stringify(result[0]));
                 var totalLectures = jsonData["COUNT(*)"] - 5;
@@ -159,15 +162,19 @@ const takeAttendance = asyncHandler(async(req, res) => {
                         insertAttendanceSql, [attendance[key], totalLectures, result[key], key, employeeid],
                         (err) => {
                             if (err) {
-                                return res.send({ success: false });
+                                return res.status(400).json({ success: false });
                             }
                         }
                     );
                 }
 
-                return res.send({ success: true, messege: "Attendance Submitted" });
+                return res
+                    .status(200)
+                    .send({ success: true, messege: "Attendance Submitted" });
             });
+
         });
+
     });
 });
 
@@ -179,66 +186,54 @@ const updateStudentAttendace = asyncHandler(async(req, res) => {
     if (!attendance) {
         res.send({ success: false, messege: "Please Fill Data" });
     } else {
-        var promises = [];
+        var promises = []
         for (var key in attendance) {
             var getStudentAttendancetillnow = `Select enrollmentno,Totalstudentattendtillnow from ${subject} WHERE enrollmentno=? && employeeid=?`;
             var promise = await new Promise((resolve) => {
                 con.query(
                     getStudentAttendancetillnow, [attendance[key]["enrollmentno"], employeeId],
                     (err, results) => {
-                        var data = JSON.parse(JSON.stringify(results));
-                        resolve(data[0]);
+                        var data = JSON.parse(JSON.stringify(results))
+                        resolve(data[0])
                     }
                 );
-            });
-            promises.push(promise);
+            })
+            promises.push(promise)
         }
-        Promise.all(promises)
-            .then((results) => {
-                let finalSubtractedAttendance = [];
-                for (let i = 0; i < results.length; i++) {
-                    const item1 = results[i];
-                    const item2 = attendance.find(
-                        (item) => item.enrollmentno === item1.enrollmentno
-                    );
-                    if (item2) {
-                        if (item2.attend === 1) {
-                            finalSubtractedAttendance.push({
-                                enrollmentno: item1.enrollmentno,
-                                difference: item1.Totalstudentattendtillnow + 1,
-                            });
-                        } else {
-                            finalSubtractedAttendance.push({
-                                enrollmentno: item1.enrollmentno,
-                                difference: item1.Totalstudentattendtillnow - 1,
-                            });
-                        }
+        Promise.all(promises).then((results) => {
+            let finalSubtractedAttendance = []
+            console.log(attendance)
+            console.log(results)
+            for (let i = 0; i < results.length; i++) {
+                const item1 = results[i];
+                const item2 = attendance.find((item) => item.enrollmentno === item1.enrollmentno);
+                if (item2) {
+                    if (item2.attend === 1) {
+                        finalSubtractedAttendance.push({
+                            enrollmentno: item1.enrollmentno,
+                            difference: item1.Totalstudentattendtillnow + 1
+                        });
+                    } else {
+                        finalSubtractedAttendance.push({
+                            enrollmentno: item1.enrollmentno,
+                            difference: item1.Totalstudentattendtillnow - 1
+                        });
                     }
                 }
-                for (var key in attendance) {
-                    var updateAttendanceSql = `UPDATE ${subject} SET ${date}=?,Totalstudentattendtillnow=? WHERE enrollmentno=? && employeeid=?`;
-                    con.query(
-                        updateAttendanceSql, [
-                            attendance[key]["attend"],
-                            finalSubtractedAttendance[key]["difference"],
-                            attendance[key]["enrollmentno"],
-                            employeeId,
-                        ],
-                        (err) => {
-                            if (err) {
-                                return res.send({
-                                    success: false,
-                                    messege: "Something Went Wrong",
-                                });
-                            }
-                        }
-                    );
-                }
-                return res.send({ success: true, messege: "Attendance Updated" });
-            })
-            .catch((err) => {
-                return res.send({ success: false, messege: "Something Went Wrong" });
-            });
+            }
+            for (var key in attendance) {
+                var updateAttendanceSql = `UPDATE ${subject} SET ${date}=?,Totalstudentattendtillnow=? WHERE enrollmentno=? && employeeid=?`
+                con.query(updateAttendanceSql, [attendance[key]["attend"], finalSubtractedAttendance[key]['difference'], attendance[key]["enrollmentno"], employeeId], (err) => {
+                    if (err) {
+                        return res.send({ success: false, messege: "Something Went Wrong" })
+                    }
+                })
+            }
+            return res.send({ success: true, messege: "Attendance Updated" });
+        }).catch((err) => {
+            return res.send({ success: false, messege: 'Something Went Wrong' })
+        })
+
     }
 });
 
@@ -275,8 +270,7 @@ const responseQueryToStudent = asyncHandler(async(req, res) => {
                 semesterId,
             ],
             (err) => {
-                if (err)
-                    return res.send({ success: false, messege: "Something Went Wrong" });
+                if (err) return res.send({ success: false, messege: "Something Went Wrong" });
             }
         );
         res.send({ success: true, messege: "Response Submitted" });
@@ -291,8 +285,7 @@ const getStudentsQuery = asyncHandler(async(req, res) => {
         "SELECT queries.description,students.firstname,students.middlename FROM queries INNER JOIN students ON queries.enrollmentno=students.enrollmentno WHERE employeeid=?;";
     var queries = await new Promise((resolve) => {
         con.query(studentsQueryDetails, [req.params.id], (err, result) => {
-            if (err)
-                return res.send({ success: false, messege: "Something Went Wrong" });
+            if (err) return res.send({ success: false, messege: "Something Went Wrong" });
             resolve(result);
         });
     });
@@ -309,8 +302,7 @@ const getStudentsAttendance = asyncHandler(async(req, res) => {
         con.query(
             getStudentAttendance, [req.params.id, enrollmentNumber],
             (err, result) => {
-                if (err)
-                    return res.send({ success: false, messege: "Something Went Wrong" });
+                if (err) return res.send({ success: false, messege: "Something Went Wrong" });
                 var jsonData = JSON.parse(JSON.stringify(result));
                 resolve(jsonData);
             }
@@ -327,11 +319,12 @@ const getStudentsAttendance = asyncHandler(async(req, res) => {
     });
 });
 
+
 //@desc Get Dates of Attendance
 //@method GET
 //@PATH /ams/employees/attendancedates/:employeeid
 const getAllTakenAttendances = asyncHandler(async(req, res) => {
-    const { subject } = req.body;
+    const { subject } = req.body
     var getColumnNamesQuery = `SHOW COLUMNS FROM ${subject}`;
     const getColumnNames = await new Promise((resolve) => {
         con.query(getColumnNamesQuery, (err, names) => {
@@ -345,25 +338,25 @@ const getAllTakenAttendances = asyncHandler(async(req, res) => {
                 i++;
             }
 
-            const columnsNames = arrayColumns.slice(5);
-            resolve(columnsNames);
-        });
-    });
+            const columnsNames = arrayColumns.slice(5, )
+            resolve(columnsNames)
+        })
+    })
 
-    var attendanceDates = {};
-    var dates = [];
+    var attendanceDates = {}
+    var dates = []
 
     for (column of getColumnNames) {
-        lectures = column.slice(-2);
+        lectures = column.slice(-2)
         actualDates = column.substring(0, column.length - 2);
         attendanceDates = {
-            [actualDates]: lectures,
-        };
-        dates.push(attendanceDates);
+            [actualDates]: lectures
+        }
+        dates.push(attendanceDates)
     }
 
     const lectureDates = {};
-    dates.forEach((item) => {
+    dates.forEach(item => {
         const key = Object.keys(item)[0];
         const value = item[key];
 
@@ -374,33 +367,35 @@ const getAllTakenAttendances = asyncHandler(async(req, res) => {
         lectureDates[key].push(value);
     });
 
-    res.send({ success: true, Dates: lectureDates });
-});
+    res.send({ success: true, Dates: lectureDates })
+})
 
 //@desc Get Attendance By Date
 //@method GET
 //@PATH /ams/employees/attendance/:employeeid
 const getAttendanceByDate = asyncHandler(async(req, res) => {
-    const { date, subject } = req.body;
+    const { date, subject } = req.body
     var getStudentAttendance = `SELECT enrollmentno,${date} FROM ${subject} WHERE employeeid=?`;
     var getAttendance = await new Promise((resolve) => {
-        con.query(getStudentAttendance, [req.params.employeeid], (err, result) => {
-            if (err)
-                return res.send({ success: false, messege: "Something Went Wrong" });
-            var jsonData = JSON.parse(JSON.stringify(result));
-            resolve(jsonData);
-        });
+        con.query(
+            getStudentAttendance, [req.params.employeeid],
+            (err, result) => {
+                if (err) return res.send({ success: false, messege: "Something Went Wrong" });
+                var jsonData = JSON.parse(JSON.stringify(result));
+                resolve(jsonData)
+            }
+        );
     });
 
     const mergedData = {};
 
     getAttendance.forEach((obj) => {
-        const { enrollmentno, [date]: value } = obj;
+        const { enrollmentno, '8March2023L1': value } = obj;
         mergedData[enrollmentno] = value;
     });
 
-    res.send({ success: true, attendance: mergedData });
-});
+    res.send({ success: true, attendance: mergedData })
+})
 
 module.exports = {
     takeAttendance,
@@ -411,5 +406,5 @@ module.exports = {
     getStudentsQuery,
     getStudentsAttendance,
     getAllTakenAttendances,
-    getAttendanceByDate,
+    getAttendanceByDate
 };
