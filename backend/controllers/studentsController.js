@@ -6,7 +6,6 @@ const con = connectDb()
 //@desc Get Students
 //@PATH /ams/students/
 const studentData = asyncHandler(async(req, res) => {
-    // Query MySQL for student data
     const query = `SELECT enrollmentno,firstname,middlename,lastname FROM students`;
     con.query(query, (err, result) => {
         if (err) {
@@ -51,7 +50,7 @@ const login = asyncHandler(async(req, res) => {
 });
 
 //@method GET
-//@desc Get Students
+//@desc Get Students By ID
 //@PATH /ams/students/:id
 const getStudentsById = asyncHandler(async(req, res) => {
     const studentsId = req.params.id;
@@ -69,7 +68,9 @@ const getStudentsById = asyncHandler(async(req, res) => {
     }
 });
 
-
+//@method GET 
+//@desc GET students Attendance
+//@PATH /ams/getStudentAttendance/:id
 const getStudentsAttendance = asyncHandler(async(req, res) => {
     const { subject, enrollmentNumber } = req.body;
     var getStudentAttendance = `SELECT TotalLecturestillnow,Totalstudentattendtillnow FROM ${subject} WHERE enrollmentno=? `;
@@ -94,6 +95,9 @@ const getStudentsAttendance = asyncHandler(async(req, res) => {
     });
 });
 
+//@method GET 
+//@desc GET students Monthly Attendance
+//@PATH /ams/getStudentAttendanceByMonth/:id
 const monthlyAttendanceOfStudent = asyncHandler(async(req, res) => {
     const { subject, month } = req.body
 
@@ -135,7 +139,6 @@ const monthlyAttendanceOfStudent = asyncHandler(async(req, res) => {
     });
 
     let Totalstudentattendtillnow = getAttendance[0]["Totalstudentattendtillnow"]
-    let TotalLecturestillnow = getAttendance[0]["TotalLecturestillnow"]
 
     for (let i = 0; i < getAttendance.length; i++) {
         let keysToRemove = [];
