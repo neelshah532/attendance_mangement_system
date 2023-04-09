@@ -280,6 +280,35 @@ const getStudentsAttendance = asyncHandler(async(req, res) => {
     });
 });
 
+
+
+//@desc Get Attendance By Date
+//@method GET
+//@PATH /ams/employees/attendance/:employeeid
+const getAttendanceByDate = asyncHandler(async(req, res) => {
+    const { date, subject } = req.body
+    var getStudentAttendance = `SELECT enrollmentno,${date} FROM ${subject} WHERE employeeid=?`;
+    var getAttendance = await new Promise((resolve) => {
+        con.query(
+            getStudentAttendance, [req.params.employeeid],
+            (err, result) => {
+                if (err) return res.send({ success: false, messege: "Something Went Wrong" });
+                var jsonData = JSON.parse(JSON.stringify(result));
+                resolve(jsonData)
+            }
+        );
+    });
+
+    const mergedData = {};
+
+    getAttendance.forEach((obj) => {
+        const { enrollmentno, '8March2023L1': value } = obj;
+        mergedData[enrollmentno] = value;
+    });
+
+    res.send({ success: true, attendance: mergedData })
+})
+
 module.exports = {
     employeeLogin,
     takeAttendance,
@@ -289,4 +318,5 @@ module.exports = {
     responseQueryToStudent,
     getStudentsQuery,
     getStudentsAttendance,
+    getAttendanceByDate
 };
