@@ -111,11 +111,98 @@ const getStudentsAttendance = asyncHandler(async(req, res) => {
 
 
 
+// const getStudentsBySubjectTypeAndDivision = asyncHandler(async (req, res) => {
+//     // const enrollmentno = req.params.enrollmentno;
+//     // const subjectType = req.params.subjectType;
+//     // const divisionClass = req.params.divisionClass;
+//     const { subject, enrollmentno, subjectType, division } = req.body;
+//     let query, values;
+  
+//     if (subjectType === 'elective') {
+//       query = `SELECT * FROM ${subject}`;
+//     } else if (subjectType === 'regular') {
+//       query = `SELECT * FROM ${subject} WHERE division = ?`;
+//       values = [division];
+//     } else {
+//       res.send({ success: false, message: 'Invalid subject type' });
+//       return;
+//     }
+  
+//     connection.query(query, values, (error, results, fields) => {
+//       if (error) {
+//         throw error;
+//       }
+  
+//       res.send({success:true, results: results});
+//     });
+//   });
+
+
+// display studetns by subject type and division (elective or regular)
+const getStudentsBySubjectTypeAndDivision = asyncHandler(async (req, res) => {
+    const { subject, subjectType, division } = req.body;
+
+  let query;
+  if (subjectType === 'elective') {
+    query = `SELECT * FROM ${subject}`;
+  } else if (subjectType === 'regular') {
+    if (!division) {
+      res.send({ success: false, message: 'Division is required for regular subjects' });
+      return;
+    }
+    query = `SELECT * FROM students WHERE division = ?`;
+  } else {
+    res.send({ success: false, message: 'Invalid subject type' });
+    return;
+  }
+
+  con.query(query, [division], (error, results, fields) => {
+    if (error) {
+      throw error;
+    }
+    res.send({success:true,results: results});
+  });
+});
+
+// display all students divison wise
+
+const getStudentsByDivision = asyncHandler(async (req, res) => {
+    const { division } = req.params;
+  
+    const query = `SELECT * FROM students WHERE division = ?`;
+    const values = [division];
+  
+    con.query(query, values, (error, results) => {
+      if (error) {
+        return res.send({ success: false, messege: 'Failed to retrieve students from the database', error });
+      }
+  
+      res.send({
+        success: true,
+        students: results
+      });
+    });
+  });
+
+//   const getStudentsByDivision1 = asyncHandler(async (req, res) => {
+//     const { division } = req.params;
+  
+//     const query = `SELECT * FROM students WHERE division = ?`;
+  
+//     con.query(query, [division], (error, results, fields) => {
+//       if (error) throw error;
+//       res.json(results);
+//     });
+//   });
+  
 
 module.exports = {
     studentData,
     getStudentsById,
     getStudentsAttendance,
-    login
+    login,
+    getStudentsByDivision,
+    // getStudentsByDivision1
+    getStudentsBySubjectTypeAndDivision
 
 }
