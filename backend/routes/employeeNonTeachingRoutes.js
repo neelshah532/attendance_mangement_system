@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const { addStudent, updateStudent, addEmployee, updateEmployee, deleteData } = require("../controllers/employeeNonTeachingController");
+const { addStudent, updateStudent, addEmployee, updateEmployee, deleteData, addSubjects, updateSubjects, deleteSubject, getSubjects } = require("../controllers/employeeNonTeachingController");
 const { studentData, getStudentsAttendance, monthlyAttendanceOfStudent } = require("../controllers/studentsController");
 const { getAllEmployees, updateStudentAttendance, getAllTakenAttendances, getAttendanceByDate } = require("../controllers/employeeTeachingController");
 
@@ -31,6 +31,14 @@ router.put('/getAttendanceByDate/:employeeid', getAttendanceByDate)
 
 router.get('/getStudentMonthlyAttendance/:studentid', monthlyAttendanceOfStudent)
 
+// Subjects
 
+router.post('/subjects/getSubjects', getSubjects)
+
+router.post('/subjects/add', addSubjects)
+
+router.put('/subjects/update/:id', updateSubjects)
+
+router.delete('/subjects/delete/:id', deleteSubject)
 
 module.exports = router;

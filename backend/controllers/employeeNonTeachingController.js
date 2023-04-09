@@ -105,10 +105,73 @@ const deleteData = asyncHandler(async(req, res) => {
     })
 })
 
+//@method POST 
+//@desc ADD Subjects
+//@PATH /ams/admin/subjects/add
+const addSubjects = asyncHandler(async(req, res) => {
+    const { type, subjectName, semesterId } = req.body
+    if (!type || !subjectName || !semesterId)
+        return res.send({ success: true, messege: "Please Fill Proper Data" })
+
+    var addSubjectQuery = "INSERT INTO subjects(type,subjectName,semesterid)VALUES(?,?,?)"
+    con.query(addSubjectQuery, [type, subjectName, semesterId], (err) => {
+        if (err) return res.send({ success: true, messege: "Something Went Wrong" })
+
+        res.send({ success: true, messege: "Subject Added" })
+    })
+})
+
+//@method PUT 
+//@desc UPDATE Subjects
+//@PATH /ams/admin/subjects/update
+const updateSubjects = asyncHandler(async(req, res) => {
+    const { type, subjectName, semesterId } = req.body
+    if (!type || !subjectName || !semesterId)
+        return res.send({ success: true, messege: "Please Fill Proper Data" })
+
+    var updateSubjectQuery = "UPDATE subjects SET type=?,subjectName=?,semesterid=?"
+    con.query(updateSubjectQuery, [type, subjectName, semesterId], (err) => {
+        if (err) return res.send({ success: true, messege: "Something Went Wrong" })
+
+        res.send({ success: true, messege: "Subject Updated" })
+    })
+})
+
+//@method DELETE 
+//@desc DELETE Subjects
+//@PATH /ams/admin/subjects/delete/:subid
+const deleteSubject = asyncHandler(async(req, res) => {
+    if (!req.params.id)
+        return res.send({ success: true, messege: "Subject Not Selected" })
+
+    var deleteSubjectQuery = "DELETE FROM subjects WHERE subjectid=?"
+    con.query(deleteSubjectQuery, [req.params.id], (err) => {
+        if (err) return res.send({ success: true, messege: "Something Went Wrong" })
+
+        res.send({ success: true, messege: "Subject Deleted" })
+    })
+})
+
+//@method GET 
+//@desc get All Subjects
+//@PATH /ams/admin/subjects/getSubjects
+const getSubjects = asyncHandler(async(req, res) => {
+    var getSubjectsQuery = "SELECT * FROM subjects"
+    con.query(getSubjectsQuery, (err, subjects) => {
+        if (err) return res.send({ success: true, messege: "Something Went Wrong" })
+
+        res.send({ success: true, subjects: subjects })
+    })
+})
+
 module.exports = {
     addStudent,
     updateStudent,
     deleteData,
     addEmployee,
-    updateEmployee
+    updateEmployee,
+    addSubjects,
+    updateSubjects,
+    deleteSubject,
+    getSubjects
 };
