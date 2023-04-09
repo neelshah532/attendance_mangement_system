@@ -17,53 +17,38 @@ const studentData = asyncHandler(async(req, res) => {
     })
 });
 
-const login = asyncHandler(async (req, res) => {
-    const { enrollmentno, password, email } = req.body;
-  
-    let type;
-    let tableName;
-    let data
-    if(enrollmentno){
-       type="students"
-       tableName="enrollmentno"
-       data=enrollmentno
-    }else{
-      type="employees"
-      tableName="email"
-      data=email
-    }
-  
-    con.query(`SELECT * FROM ${type} WHERE ${tableName} = ? && password=?`, [data,password], (error, studentResults) => {
-      if (error)
-        return res.send({success:false,messege:"Something Went Wrong"})
-        if(studentResults[0]){
-            res.send({ success: true, students: studentResults[0] });
-        }else{
-            res.send({ success: false, messege: "Incorrect Username or Password" });
+//@method POST 
+//@desc LOGIN STUDENTS | EMPLOYEES | SUPER USER
+//@PATH /ams/login
+const login = asyncHandler(async(req, res) => {
+    const { data, password, type } = req.body;
+
+    if (!data || !password || !type) {
+        res.send({ success: false, messege: "Please Fill Data Properly" })
+    } else {
+        let columnName;
+        let id
+        let dataNeed
+        if (type == "students") {
+            columnName = "enrollmentno"
+            id = "enrollmentno"
+            dataNeed = "email"
+        } else {
+            columnName = "email"
+            id = "employeeid"
+            dataNeed = "type"
         }
-  
-    // con.query('SELECT * FROM students WHERE enrollmentno = ?', [username], (error, studentResults) => {
-    //   if (error) {
-    //     throw error;
-    //   }
-  
-    //   if (studentResults[0] && studentResults[0].password === password) {
-    //     res.send({success: true, messege: "Welcome student!" });
-    //   } else {
-    //     con.query('SELECT * FROM employees WHERE email = ?', [email], (error, teacherResults) => {
-    //       if (error) {
-    //         throw error;
-    //       }
-  
-    //       if (teacherResults[0] && teacherResults[0].password === password) {
-    //         res.send({ success: true, messege: "Welcome Back!" });
-    //       } else {
-    //         res.send({ success: false, messege: "Invalid username or password" });
-    //       }
-    //     });
-    //   }
-    });
-  });
+        con.query(`SELECT ${id},${dataNeed} FROM ${type} WHERE ${columnName} = ? && password=?`, [data, password], (error, results) => {
+            if (error)
+                return res.send({ success: false, messege: "Something Went Wrong" })
+            if (results[0]) {
+                res.send({ success: true, credentials: results[0] });
+            } else {
+                res.send({ success: false, messege: "Incorrect Username or Password" });
+            }
+        });
+    }
+});
 
 //@method GET
 //@desc Get Students
@@ -109,100 +94,64 @@ const getStudentsAttendance = asyncHandler(async(req, res) => {
     });
 });
 
+const monthlyAttendanceOfStudent = asyncHandler(async(req, res) => {
+    const { subject, month } = req.body
 
+    var getColumnNamesQuery = `SHOW COLUMNS FROM ${subject}`;
+    const getColumnNames = await new Promise((resolve) => {
+        con.query(getColumnNamesQuery, (err, names) => {
+            var i = 1;
+            var k = 0;
+            var arrayColumns = [];
 
-// const getStudentsBySubjectTypeAndDivision = asyncHandler(async (req, res) => {
-//     // const enrollmentno = req.params.enrollmentno;
-//     // const subjectType = req.params.subjectType;
-//     // const divisionClass = req.params.divisionClass;
-//     const { subject, enrollmentno, subjectType, division } = req.body;
-//     let query, values;
-  
-//     if (subjectType === 'elective') {
-//       query = `SELECT * FROM ${subject}`;
-//     } else if (subjectType === 'regular') {
-//       query = `SELECT * FROM ${subject} WHERE division = ?`;
-//       values = [division];
-//     } else {
-//       res.send({ success: false, message: 'Invalid subject type' });
-//       return;
-//     }
-  
-//     connection.query(query, values, (error, results, fields) => {
-//       if (error) {
-//         throw error;
-//       }
-  
-//       res.send({success:true, results: results});
-//     });
-//   });
+            while (i <= names.length) {
+                arrayColumns.push(names[k].Field);
+                k++;
+                i++;
+            }
 
-
-// display studetns by subject type and division (elective or regular)
-const getStudentsBySubjectTypeAndDivision = asyncHandler(async (req, res) => {
-    const { subject, subjectType, division } = req.body;
-
-  let query;
-  if (subjectType === 'elective') {
-    query = `SELECT * FROM ${subject}`;
-  } else if (subjectType === 'regular') {
-    if (!division) {
-      res.send({ success: false, message: 'Division is required for regular subjects' });
-      return;
+            const columnsNames = arrayColumns.slice(5, )
+            resolve(columnsNames)
+        })
+    })
+    let countMonth = 0
+    for (var attendance of getColumnNames) {
+        let d = JSON.stringify(attendance)
+        if (d.includes(month)) {
+            countMonth++
+        }
     }
-    query = `SELECT * FROM students WHERE division = ?`;
-  } else {
-    res.send({ success: false, message: 'Invalid subject type' });
-    return;
-  }
 
-  con.query(query, [division], (error, results, fields) => {
-    if (error) {
-      throw error;
-    }
-    res.send({success:true,results: results});
-  });
-});
-
-// display all students divison wise
-
-const getStudentsByDivision = asyncHandler(async (req, res) => {
-    const { division } = req.params;
-  
-    const query = `SELECT * FROM students WHERE division = ?`;
-    const values = [division];
-  
-    con.query(query, values, (error, results) => {
-      if (error) {
-        return res.send({ success: false, messege: 'Failed to retrieve students from the database', error });
-      }
-  
-      res.send({
-        success: true,
-        students: results
-      });
+    var getStudentAttendance = `SELECT * FROM ${subject} WHERE enrollmentno=? `;
+    var getAttendance = await new Promise((resolve) => {
+        con.query(
+            getStudentAttendance, [req.params.id],
+            (err, result) => {
+                if (err) res.send({ success: false, messege: "Something Went Wrong" });
+                var jsonData = JSON.parse(JSON.stringify(result));
+                resolve(jsonData);
+            }
+        );
     });
-  });
 
-//   const getStudentsByDivision1 = asyncHandler(async (req, res) => {
-//     const { division } = req.params;
-  
-//     const query = `SELECT * FROM students WHERE division = ?`;
-  
-//     con.query(query, [division], (error, results, fields) => {
-//       if (error) throw error;
-//       res.json(results);
-//     });
-//   });
-  
+    let Totalstudentattendtillnow = getAttendance[0]["Totalstudentattendtillnow"]
+
+    for (let i = 0; i < getAttendance.length; i++) {
+        let keysToRemove = [];
+        for (let key in getAttendance[i]) {
+            if (!key.includes(month)) {
+                keysToRemove.push(key);
+            }
+        }
+        keysToRemove.forEach(key => delete getAttendance[i][key]);
+    }
+
+
 
 module.exports = {
     studentData,
     getStudentsById,
     getStudentsAttendance,
-    login,
-    getStudentsByDivision,
-    // getStudentsByDivision1
-    getStudentsBySubjectTypeAndDivision
+    login
 
 }

@@ -1,17 +1,30 @@
-const express = require('express')
-const router = express.Router()
-const { employeeLogin, getEmployeesById, takeAttendance, getAllEmployees, responseQueryToStudent, updateStudentAttendace, getStudentsQuery, getStudentsAttendance } = require('../controllers/employeeTeachingController')
+const express = require("express");
+const router = express.Router();
+const {
+    getEmployeesById,
+    takeAttendance,
+    getAllEmployees,
+    responseQueryToStudent,
+    updateStudentAttendace,
+    getStudentsQuery,
+    getStudentsAttendance,
+    getAllTakenAttendances,
+    getAttendanceByDate,
+} = require("../controllers/employeeTeachingController");
 
-router.get('/', getAllEmployees)
-router.get('/:id', getEmployeesById)
-router.get('/query/:id', getStudentsQuery)
-router.get('/getStudentAttendance/:id', getStudentsAttendance)
+router.get("/", getAllEmployees);
+router.get("/:id", getEmployeesById);
+router.get("/query/:id", getStudentsQuery);
+router.get("/getStudentAttendance/:id", getStudentsAttendance);
 
-router.post('/login', employeeLogin)
-router.post('/query', responseQueryToStudent)
-router.post('/query/:id', getStudentsQuery)
+router.post("/query", responseQueryToStudent);
 
-router.route('/attendance').post(takeAttendance).put(updateStudentAttendace)
+router.get("/attendance/:employeeid", getAllTakenAttendances);
 
+router.get("/attendancedates/:employeeid", getAttendanceByDate);
 
-module.exports = router
+router.post("/takeAttendance", takeAttendance);
+
+router.put("/updateAttendance", updateStudentAttendace);
+
+module.exports = router;
