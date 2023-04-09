@@ -49,22 +49,66 @@ const updateStudent = asyncHandler(async(req, res) => {
     })
 })
 
+//@method POST 
+//@desc addEmployee
+//@PATH /ams/admin/manageEmployee/add
+const addEmployee = asyncHandler(async(req, res) => {
+    const { firstName, middleName, lastName, type, gender, email, phone, password, flatNo, area, city, state, pincode } = req.body
+    if (!firstName || !middleName || !lastName || !type || !gender || !email || !phone || !password || !flatNo || !area || !city || !state || !pincode)
+        return res.send({ success: false, messege: "Please Fill Proper Data" })
+
+    var addStudentQuery = `INSERT INTO employees(firstName, middleName, lastName,type, gender, email, phone, password, flatNo, area, city, state, pincode)VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?)`
+    con.query(addStudentQuery, [enrollmentNo, firstName, middleName, lastName, type, gender, email, phone, password, flatNo, area, city, state, pincode], (err) => {
+        if (err) return res.send({ success: false, messege: "Something Went Wrong" })
+
+        res.send({ success: true, messege: "Employee Record Inserted" })
+    })
+})
+
+//@method PUT 
+//@desc updateEmployee
+//@PATH /ams/admin/manageEmployee/update/:id
+const updateEmployee = asyncHandler(async(req, res) => {
+    const { firstName, middleName, lastName, type, gender, email, phone, password, flatNo, area, city, state, pincode } = req.body
+    if (!firstName || !middleName || !lastName || !type || !gender || !email || !phone || !password || !flatNo || !area || !city || !state || !pincode)
+        return res.send({ success: false, messege: "Please Fill Proper Data" })
+
+    var updateStudentQuery = "UPDATE employees SET firstName=?, middleName=?, lastName=?, type=?, gender=?, email=?, phone=?, password=?, flatNo=?, area=?, city=?, state=?, pincode=? WHERE employeeid=?"
+
+    con.query(updateStudentQuery, [firstName, middleName, lastName, type, gender, email, phone, password, flatNo, area, city, state, pincode, req.params.id], (err) => {
+        if (err) return res.send({ success: false, messege: "Something Went Wrong" })
+
+        res.send({ success: true, messege: "Employee Record Updated" })
+    })
+})
+
 //@method DELETE 
-//@desc deleteStudents
-//@PATH /ams/admin/manageStudent/delete/:id
-const deleteStudent = asyncHandler(async(req, res) => {
-    if (!req.params.id)
+//@desc deleteData Both Student || Employee
+//@PATH /ams/admin/manage/delete/:id
+const deleteData = asyncHandler(async(req, res) => {
+    const { type } = req.body
+    if (!req.params.id || !type)
         return res.send({ success: false, messege: "Student Not Selected" })
-    var deleteStudentQuery = "DELETE FROM students WHERE enrollmentno=?"
+
+    let id
+    if (type == "students") {
+        id = "enrollmentno"
+    } else {
+        id = "employeeid"
+    }
+    var deleteStudentQuery = `DELETE FROM ${type} WHERE ${id}=?`
+
     con.query(deleteStudentQuery, [req.params.id], (err) => {
         if (err)
             return res.send({ success: false, messege: err })
-        res.send({ success: true, messege: "Student Record Deleted" })
+        res.send({ success: true, messege: "Record Deleted" })
     })
 })
 
 module.exports = {
     addStudent,
     updateStudent,
-    deleteStudent
+    deleteData,
+    addEmployee,
+    updateEmployee
 };
