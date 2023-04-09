@@ -146,22 +146,12 @@ const monthlyAttendanceOfStudent = asyncHandler(async(req, res) => {
         keysToRemove.forEach(key => delete getAttendance[i][key]);
     }
 
-    var percentage =
-        (Totalstudentattendtillnow / countMonth) *
-        100;
 
-    res.send({
-        success: true,
-        TotalNumberOfLectures: countMonth,
-        studentAttendLecture: Totalstudentattendtillnow,
-        attendancePercentage: percentage,
-    });
-})
 
 module.exports = {
     studentData,
     getStudentsById,
     getStudentsAttendance,
-    login,
-    monthlyAttendanceOfStudent
+    login
+
 }
