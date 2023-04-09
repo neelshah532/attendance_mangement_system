@@ -5,7 +5,7 @@ const {
     takeAttendance,
     getAllEmployees,
     responseQueryToStudent,
-    updateStudentAttendace,
+    updateStudentAttendance,
     getStudentsQuery,
     getStudentsAttendance,
     getAllTakenAttendances,
@@ -15,6 +15,7 @@ const {
 router.get("/", getAllEmployees);
 router.get("/:id", getEmployeesById);
 router.get("/query/:id", getStudentsQuery);
+
 router.get("/getStudentAttendance/:id", getStudentsAttendance);
 
 router.post("/query", responseQueryToStudent);
@@ -25,6 +26,6 @@ router.get("/attendancedates/:employeeid", getAttendanceByDate);
 
 router.post("/takeAttendance", takeAttendance);
 
-router.put("/updateAttendance", updateStudentAttendace);
+router.put("/updateAttendance", updateStudentAttendance);
 
 module.exports = router;

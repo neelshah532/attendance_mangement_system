@@ -97,7 +97,7 @@ const getStudentsAttendance = asyncHandler(async(req, res) => {
 
 //@method GET 
 //@desc GET students Monthly Attendance
-//@PATH /ams/getStudentAttendanceByMonth/:id
+//@PATH /ams//getStudentAttendanceByMonth/:id
 const monthlyAttendanceOfStudent = asyncHandler(async(req, res) => {
     const { subject, month } = req.body
 

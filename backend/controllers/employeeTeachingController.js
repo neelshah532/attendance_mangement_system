@@ -170,7 +170,7 @@ const takeAttendance = asyncHandler(async(req, res) => {
 //@desc Update of students Attendance
 //@method PUT
 //@PATH /ams/employees/updateAttendance
-const updateStudentAttendace = asyncHandler(async(req, res) => {
+const updateStudentAttendance = asyncHandler(async(req, res) => {
     const { subject, employeeId, date, attendance } = req.body;
     if (!attendance) {
         res.send({ success: false, messege: "Please Fill Data" });
@@ -379,7 +379,7 @@ const getAttendanceByDate = asyncHandler(async(req, res) => {
     const mergedData = {};
 
     getAttendance.forEach((obj) => {
-        const { enrollmentno, '8March2023L1': value } = obj;
+        const { enrollmentno, [date]: value } = obj;
         mergedData[enrollmentno] = value;
     });
 
@@ -390,7 +390,7 @@ module.exports = {
     takeAttendance,
     getEmployeesById,
     getAllEmployees,
-    updateStudentAttendace,
+    updateStudentAttendance,
     responseQueryToStudent,
     getStudentsQuery,
     getStudentsAttendance,
