@@ -146,7 +146,7 @@ const monthlyAttendanceOfStudent = asyncHandler(async(req, res) => {
         keysToRemove.forEach(key => delete getAttendance[i][key]);
     }
 
-
+});
 
 module.exports = {
     studentData,
