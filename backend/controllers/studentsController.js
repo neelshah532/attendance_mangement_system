@@ -154,4 +154,6 @@ module.exports = {
     getStudentsAttendance,
     login
 
+    login
+
 }
