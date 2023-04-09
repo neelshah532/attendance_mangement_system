@@ -1,0 +1,23 @@
+{
+    "name": "attendance_mangement_system",
+    "version": "1.0.0",
+    "description": "server for ams",
+    "main": "server.js",
+    "scripts": {
+        "start": "backend/server.js",
+        "server": "nodemon backend/server.js"
+    },
+    "author": "Vaibhav Kodinariya",
+    "license": "ISC",
+    "dependencies": {
+        "colors": "^1.4.0",
+        "cors": "^2.8.5",
+        "dotenv": "^16.0.3",
+        "express": "^4.18.2",
+        "express-async-handler": "^1.2.0",
+        "mysql": "^2.18.1"
+    },
+    "devDependencies": {
+        "nodemon": "^2.0.22"
+    }
+}
