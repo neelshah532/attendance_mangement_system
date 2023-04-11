@@ -16,13 +16,13 @@ router.get("/", getAllEmployees);
 router.get("/:id", getEmployeesById);
 router.get("/query/:id", getStudentsQuery);
 
-router.get("/getStudentAttendance/:id", getStudentsAttendance);
+router.get("/getStudentAttendance/:id/:subject/:enrollmentNo", getStudentsAttendance);
 
 router.post("/query", responseQueryToStudent);
 
-router.get("/attendance/:employeeid", getAllTakenAttendances);
+router.get("/attendance/:employeeid/:subject", getAllTakenAttendances);
 
-router.get("/attendancedates/:employeeid", getAttendanceByDate);
+router.get("/attendancedates/:employeeid/:date/:subject", getAttendanceByDate);
 
 router.post("/takeAttendance", takeAttendance);
 

@@ -285,14 +285,17 @@ const getStudentsQuery = asyncHandler(async(req, res) => {
 //@method GET
 //@PATH /ams/employees/getStudentAttendance
 const getStudentsAttendance = asyncHandler(async(req, res) => {
-    const { subject, enrollmentNumber } = req.body;
-    var getStudentAttendance = `SELECT TotalLecturestillnow,Totalstudentattendtillnow FROM ${subject} WHERE employeeid=? && enrollmentno=? `;
+    if (!req.params)
+        return res.send({ success: false, messege: "Please Send Proper Data" })
+
+    var getStudentAttendance = `SELECT TotalLecturestillnow,Totalstudentattendtillnow FROM ${req.params.subject} WHERE employeeid=? && enrollmentno=? `;
     var getAttendance = await new Promise((resolve) => {
         con.query(
-            getStudentAttendance, [req.params.id, enrollmentNumber],
+            getStudentAttendance, [req.params.id, req.params.enrollmentNo],
             (err, result) => {
                 if (err) return res.send({ success: false, messege: "Something Went Wrong" });
                 var jsonData = JSON.parse(JSON.stringify(result));
+                console.log(jsonData)
                 resolve(jsonData);
             }
         );
@@ -313,7 +316,10 @@ const getStudentsAttendance = asyncHandler(async(req, res) => {
 //@method GET
 //@PATH /ams/employees/attendancedates/:employeeid
 const getAllTakenAttendances = asyncHandler(async(req, res) => {
-    const { subject } = req.body
+    if (!req.params)
+        return res.send({ success: false, messege: "Please Send Data Properly" })
+
+    const { subject } = req.params
     var getColumnNamesQuery = `SHOW COLUMNS FROM ${subject}`;
     const getColumnNames = await new Promise((resolve) => {
         con.query(getColumnNamesQuery, (err, names) => {
@@ -332,38 +338,46 @@ const getAllTakenAttendances = asyncHandler(async(req, res) => {
         })
     })
 
-    var attendanceDates = {}
-    var dates = []
-
-    for (column of getColumnNames) {
-        lectures = column.slice(-2)
-        actualDates = column.substring(0, column.length - 2);
-        attendanceDates = {
-            [actualDates]: lectures
-        }
-        dates.push(attendanceDates)
+    var promises = []
+    for (var date of getColumnNames) {
+        var checkNullDataQuery = `SELECT ${date} FROM ${subject} WHERE employeeid=?`
+        var promise = await new Promise((resolve) => {
+            con.query(checkNullDataQuery, [req.params.employeeid], (err, counter) => {
+                resolve(counter)
+            })
+        })
+        promises.push(promise)
     }
 
-    const lectureDates = {};
-    dates.forEach(item => {
-        const key = Object.keys(item)[0];
-        const value = item[key];
+    const lectureByDate = {};
 
-        if (!lectureDates.hasOwnProperty(key)) {
-            lectureDates[key] = [];
-        }
-
-        lectureDates[key].push(value);
+    promises.forEach((arr) => {
+        arr.forEach((obj) => {
+            const key = obj && Object.keys(obj)[0];
+            if (key && obj[key]) {
+                const date = key.substring(0, key.length - 2);
+                const subKey = key.substring(key.length - 2);
+                if (!lectureByDate[date]) {
+                    lectureByDate[date] = [];
+                }
+                if (!lectureByDate[date].includes(subKey)) {
+                    lectureByDate[date].push(subKey);
+                }
+            }
+        });
     });
 
-    res.send({ success: true, Dates: lectureDates })
+    res.send({ success: true, Dates: lectureByDate })
 })
 
 //@desc Get Attendance By Date
 //@method GET
 //@PATH /ams/employees/attendance/:employeeid
 const getAttendanceByDate = asyncHandler(async(req, res) => {
-    const { date, subject } = req.body
+    if (!req.params)
+        return res.send({ success: false, messege: "Please Send Data Properly" })
+
+    const { date, subject } = req.params
     var getStudentAttendance = `SELECT enrollmentno,${date} FROM ${subject} WHERE employeeid=?`;
     var getAttendance = await new Promise((resolve) => {
         con.query(
