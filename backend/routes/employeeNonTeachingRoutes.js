@@ -21,7 +21,7 @@ router.get("/manageEmployee/get", getAllEmployees);
 router.delete("/manage/delete/:id", deleteData);
 
 // Attendances
-router.get('/getStudentsAttendance', getStudentsAttendance)
+router.get('/getStudentsAttendance/:id', getStudentsAttendance)
 
 router.put('/updateStudentAttendance', updateStudentAttendance)
 
