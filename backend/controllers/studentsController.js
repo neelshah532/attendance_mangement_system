@@ -73,10 +73,10 @@ const getStudentsById = asyncHandler(async(req, res) => {
 //@PATH /ams/getStudentAttendance/:id
 const getStudentsAttendance = asyncHandler(async(req, res) => {
     const { subject, enrollmentNumber } = req.body;
-    var getStudentAttendance = `SELECT TotalLecturestillnow,Totalstudentattendtillnow FROM ${subject} WHERE enrollmentno=? `;
+    var getStudentAttendance = `SELECT TotalLecturestillnow,Totalstudentattendtillnow FROM ${subject} WHERE employeeid=? && enrollmentno=? `;
     var getAttendance = await new Promise((resolve) => {
         con.query(
-            getStudentAttendance, [enrollmentNumber],
+            getStudentAttendance, [req.params.id, enrollmentNumber],
             (err, result) => {
                 if (err) res.send({ success: false, messege: "Something Went Wrong" });
                 var jsonData = JSON.parse(JSON.stringify(result));
@@ -162,29 +162,23 @@ const monthlyAttendanceOfStudent = asyncHandler(async(req, res) => {
     });
 })
 
-
-
-// display studetns by subject type and division (elective or regular)
-// display all students divison wise
-
-const getStudentsByDivision = asyncHandler(async (req, res) => {
+const getStudentsByDivision = asyncHandler(async(req, res) => {
     const { division } = req.params;
-  
+
     const query = `SELECT * FROM students WHERE division = ?`;
     const values = [division];
-  
-    con.query(query, values, (error, results) => {
-      if (error) {
-        return res.send({ success: false, messege: 'Failed to retrieve students from the database', error });
-      }
-  
-      res.send({
-        success: true,
-        students: results
-      });
-    });
-  });
 
+    con.query(query, values, (error, results) => {
+        if (error) {
+            return res.send({ success: false, messege: 'Failed to retrieve students from the database', error });
+        }
+
+        res.send({
+            success: true,
+            students: results
+        });
+    });
+});
 
 module.exports = {
     studentData,
@@ -192,7 +186,5 @@ module.exports = {
     getStudentsAttendance,
     login,
     monthlyAttendanceOfStudent,
-    getStudentsBySubjectTypeAndDivision,
     getStudentsByDivision
-
 }
