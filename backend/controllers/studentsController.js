@@ -73,10 +73,10 @@ const getStudentsById = asyncHandler(async(req, res) => {
 //@PATH /ams/getStudentAttendance/:id
 const getStudentsAttendance = asyncHandler(async(req, res) => {
     const { subject, enrollmentNumber } = req.body;
-    var getStudentAttendance = `SELECT TotalLecturestillnow,Totalstudentattendtillnow FROM ${subject} WHERE enrollmentno=? `;
+    var getStudentAttendance = `SELECT TotalLecturestillnow,Totalstudentattendtillnow FROM ${subject} WHERE employeeid=? && enrollmentno=? `;
     var getAttendance = await new Promise((resolve) => {
         con.query(
-            getStudentAttendance, [enrollmentNumber],
+            getStudentAttendance, [req.params.id, enrollmentNumber],
             (err, result) => {
                 if (err) res.send({ success: false, messege: "Something Went Wrong" });
                 var jsonData = JSON.parse(JSON.stringify(result));
