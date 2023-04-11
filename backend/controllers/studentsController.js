@@ -4,7 +4,7 @@ const con = connectDb()
 
 //@method GET
 //@desc Get Students
-//@PATH /ams/students/
+//@PATH /ams/students
 const studentData = asyncHandler(async(req, res) => {
     const query = `SELECT enrollmentno,firstname,middlename,lastname FROM students`;
     con.query(query, (err, result) => {
@@ -70,13 +70,13 @@ const getStudentsById = asyncHandler(async(req, res) => {
 
 //@method GET 
 //@desc GET students Attendance
-//@PATH /ams/getStudentAttendance/:id
-const getStudentsAttendance = asyncHandler(async(req, res) => {
-    const { subject, enrollmentNumber } = req.body;
-    var getStudentAttendance = `SELECT TotalLecturestillnow,Totalstudentattendtillnow FROM ${subject} WHERE employeeid=? && enrollmentno=? `;
-    var getAttendance = await new Promise((resolve) => {
+//@PATH /ams/students/getAttendance
+const attendanceOfStudent = asyncHandler(async(req, res) => {
+    const { subject, enrollmentNumber } = req.params;
+    var getStudentAttendance = `SELECT TotalLecturestillnow,Totalstudentattendtillnow FROM ${subject} WHERE enrollmentno=? `;
+    var attendance = await new Promise((resolve) => {
         con.query(
-            getStudentAttendance, [req.params.id, enrollmentNumber],
+            getStudentAttendance, [enrollmentNumber],
             (err, result) => {
                 if (err) res.send({ success: false, messege: "Something Went Wrong" });
                 var jsonData = JSON.parse(JSON.stringify(result));
@@ -85,12 +85,12 @@ const getStudentsAttendance = asyncHandler(async(req, res) => {
         );
     });
     var percentage =
-        (getAttendance[0]["Totalstudentattendtillnow"] /
-            getAttendance[0]["TotalLecturestillnow"]) *
+        (attendance[0]["Totalstudentattendtillnow"] /
+            attendance[0]["TotalLecturestillnow"]) *
         100;
     res.send({
         success: true,
-        lectureDetails: getAttendance,
+        lectureDetails: attendance,
         attendancePercentage: percentage,
     });
 });
@@ -99,8 +99,10 @@ const getStudentsAttendance = asyncHandler(async(req, res) => {
 //@desc GET students Monthly Attendance
 //@PATH /ams//getStudentAttendanceByMonth/:id
 const monthlyAttendanceOfStudent = asyncHandler(async(req, res) => {
-    const { subject, month } = req.body
+    if (!req.params)
+        return res.send({ success: false, messege: "Please Fill Data Properly" })
 
+    const { subject, month } = req.params
     var getColumnNamesQuery = `SHOW COLUMNS FROM ${subject}`;
     const getColumnNames = await new Promise((resolve) => {
         con.query(getColumnNamesQuery, (err, names) => {
@@ -125,7 +127,6 @@ const monthlyAttendanceOfStudent = asyncHandler(async(req, res) => {
             countMonth++
         }
     }
-
     var getStudentAttendance = `SELECT * FROM ${subject} WHERE enrollmentno=? `;
     var getAttendance = await new Promise((resolve) => {
         con.query(
@@ -183,7 +184,7 @@ const getStudentsByDivision = asyncHandler(async(req, res) => {
 module.exports = {
     studentData,
     getStudentsById,
-    getStudentsAttendance,
+    attendanceOfStudent,
     login,
     monthlyAttendanceOfStudent,
     getStudentsByDivision
