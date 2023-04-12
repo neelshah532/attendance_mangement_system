@@ -37,11 +37,11 @@ const login = asyncHandler(async(req, res) => {
             id = "employeeid"
             dataNeed = "type"
         }
-        con.query(`SELECT ${id},${dataNeed} FROM ${type} WHERE ${columnName} = ? && password=?`, [data, password], (error, results) => {
+        con.query(`SELECT ${id},${dataNeed},firstname,middlename,lastname FROM ${type} WHERE ${columnName} = ? && password=?`, [data, password], (error, results) => {
             if (error)
                 return res.send({ success: false, messege: "Something Went Wrong" })
             if (results[0]) {
-                var id, usertype
+                var id, firstname, middlename, lastname, usertype, email
                 if (type == "students") {
                     id = results[0]['enrollmentno']
                     usertype = "student"
@@ -49,7 +49,11 @@ const login = asyncHandler(async(req, res) => {
                     id = results[0]['employeeid']
                     usertype = results[0]['type']
                 }
-                res.send({ success: true, credentials: { id, usertype } })
+                firstname = results[0]['firstname']
+                middlename = results[0]['middlename']
+                lastname = results[0]['lastname']
+                email = results[0]['email']
+                res.send({ success: true, credentials: { id, firstname, middlename, lastname, email, usertype } })
             } else {
                 res.send({ success: false, messege: "Incorrect Username or Password" });
             }
