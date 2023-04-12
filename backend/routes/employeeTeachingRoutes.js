@@ -13,7 +13,9 @@ const {
 } = require("../controllers/employeeTeachingController");
 
 router.get("/", getAllEmployees);
+
 router.get("/:id", getEmployeesById);
+
 router.get("/query/:id", getStudentsQuery);
 
 router.get("/getStudentAttendance/:id/:subject/:enrollmentNo", getStudentsAttendance);
