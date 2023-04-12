@@ -168,25 +168,27 @@ const getSubjects = asyncHandler(async(req, res) => {
 //@desc ALLOCATE SUBJECTS TO EMPLOYEES
 //@PATH /ams/admin/allocateSubjects
 const allocateSubjectsToEmployee = asyncHandler(async(req, res) => {
-    const { subject, division, employeefirst, employeeMiddle, employeeLast } = req.body
+    const { subjects, division, employeeid } = req.body
 
-    var getSelectedSubjectQuery = "SELECT subjectid FROM subjects WHERE subjectname=?"
-    const subjectID = await new Promise((resolve) => {
-        con.query(getSelectedSubjectQuery, [subject], (err, id) => {
-            resolve(id)
+    const subjectID = []
+    for (var subject of subjects) {
+        var id = await new Promise((resolve) => {
+            var getSelectedSubjectQuery = "SELECT subjectid FROM subjects WHERE subjectname=?"
+            con.query(getSelectedSubjectQuery, [subject], (err, id) => {
+                resolve(id[0])
+            })
         })
-    })
+        subjectID.push(id)
+    }
 
-    // var getSelectedEmployeeQuery = "SELECT employeeid FROM employees WHERE firstname=? && middlename=? && lastname=?"
-    // const employeeID = await new Promise((resolve) => {
-    //     con.query(getSelectedEmployeeQuery, [employeefirst, employeeMiddle, employeeLast], (err, id) => {
-    //         resolve(id)
-    //     })
-    // })
+    for (let i = 0; i < subjectID.length && i < division.length; i++) {
+        const div = division[i];
+        const subId = subjectID[i];
+        var addDivisionQuery = "INSERT INTO divisions(divisionname,employeeid,subjectid)VALUES(?,?,?)"
+        con.query(addDivisionQuery, [div, employeeid, subId.subjectid])
+    }
 
-    // var addDivisionQuery = "INSERT INTO divisions(divisionname,employeeid,subjectid)VALUES(?,?,?)"
-    // con.query(addDivisionQuery, [division, employeeID[0]['employeeid'], subjectID[0]['subjectid']])
-
+    res.send({ success: true, messege: "Subject Allocated to Employee" })
 })
 
 module.exports = {

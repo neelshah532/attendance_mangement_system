@@ -42,6 +42,6 @@ router.put('/subjects/update/:id', updateSubjects)
 router.delete('/subjects/delete/:id', deleteSubject)
 
 // Allocate Subjects to Employees
-// router.post('/allocateSubjects', allocateSubjectsToEmployee)
+router.post('/allocateSubjects', allocateSubjectsToEmployee)
 
 module.exports = router;
