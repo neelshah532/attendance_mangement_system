@@ -41,7 +41,15 @@ const login = asyncHandler(async(req, res) => {
             if (error)
                 return res.send({ success: false, messege: "Something Went Wrong" })
             if (results[0]) {
-                res.send({ success: true, credentials: results[0] });
+                var id, usertype
+                if (type == "students") {
+                    id = results[0]['enrollmentno']
+                    usertype = "student"
+                } else {
+                    id = results[0]['employeeid']
+                    usertype = results[0]['type']
+                }
+                res.send({ success: true, credentials: { id, usertype } })
             } else {
                 res.send({ success: false, messege: "Incorrect Username or Password" });
             }
