@@ -109,7 +109,7 @@ const deleteData = asyncHandler(async(req, res) => {
 //@desc ADD Subjects
 //@PATH /ams/admin/subjects/add
 const addSubjects = asyncHandler(async(req, res) => {
-    const { type, subjectName, semesterId } = req.body
+    const { type, subjectName } = req.body
     if (!type || !subjectName || !semesterId)
         return res.send({ success: true, messege: "Please Fill Proper Data" })
 
@@ -164,6 +164,31 @@ const getSubjects = asyncHandler(async(req, res) => {
     })
 })
 
+//@method POST 
+//@desc ALLOCATE SUBJECTS TO EMPLOYEES
+//@PATH /ams/admin/allocateSubjects
+const allocateSubjectsToEmployee = asyncHandler(async(req, res) => {
+    const { subject, division, employeefirst, employeeMiddle, employeeLast } = req.body
+
+    var getSelectedSubjectQuery = "SELECT subjectid FROM subjects WHERE subjectname=?"
+    const subjectID = await new Promise((resolve) => {
+        con.query(getSelectedSubjectQuery, [subject], (err, id) => {
+            resolve(id)
+        })
+    })
+
+    // var getSelectedEmployeeQuery = "SELECT employeeid FROM employees WHERE firstname=? && middlename=? && lastname=?"
+    // const employeeID = await new Promise((resolve) => {
+    //     con.query(getSelectedEmployeeQuery, [employeefirst, employeeMiddle, employeeLast], (err, id) => {
+    //         resolve(id)
+    //     })
+    // })
+
+    // var addDivisionQuery = "INSERT INTO divisions(divisionname,employeeid,subjectid)VALUES(?,?,?)"
+    // con.query(addDivisionQuery, [division, employeeID[0]['employeeid'], subjectID[0]['subjectid']])
+
+})
+
 module.exports = {
     addStudent,
     updateStudent,
@@ -173,5 +198,6 @@ module.exports = {
     addSubjects,
     updateSubjects,
     deleteSubject,
-    getSubjects
+    getSubjects,
+    allocateSubjectsToEmployee
 };
