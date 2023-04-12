@@ -295,7 +295,6 @@ const getStudentsAttendance = asyncHandler(async(req, res) => {
             (err, result) => {
                 if (err) return res.send({ success: false, messege: "Something Went Wrong" });
                 var jsonData = JSON.parse(JSON.stringify(result));
-                console.log(jsonData)
                 resolve(jsonData);
             }
         );
@@ -306,7 +305,7 @@ const getStudentsAttendance = asyncHandler(async(req, res) => {
         100;
     res.send({
         success: true,
-        lectureDetails: getAttendance,
+        lectureDetails: getAttendance[0],
         attendancePercentage: percentage,
     });
 });
