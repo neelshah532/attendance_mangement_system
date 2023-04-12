@@ -41,7 +41,7 @@ const login = asyncHandler(async(req, res) => {
             if (error)
                 return res.send({ success: false, messege: "Something Went Wrong" })
             if (results[0]) {
-                var id, firstname, middlename, lastname, usertype, email
+                var id, usertype
                 if (type == "students") {
                     id = results[0]['enrollmentno']
                     usertype = "student"
@@ -49,11 +49,7 @@ const login = asyncHandler(async(req, res) => {
                     id = results[0]['employeeid']
                     usertype = results[0]['type']
                 }
-                firstname = results[0]['firstname']
-                middlename = results[0]['middlename']
-                lastname = results[0]['lastname']
-                email = results[0]['email']
-                res.send({ success: true, credentials: { id, firstname, middlename, lastname, email, usertype } })
+                res.send({ success: true, credentials: { id, usertype } })
             } else {
                 res.send({ success: false, messege: "Incorrect Username or Password" });
             }
