@@ -19,7 +19,7 @@ router.post('/getStudentsByDivision/:division', getStudentsByDivision)
 
 router.get('/getDailyAttendance/:subject/:id', getDailyAttendance)
 
-router.get('/querues/:id', getQuery)
+router.get('/queries/:id', getQuery)
 
 
 module.exports = router
