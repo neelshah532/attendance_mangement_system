@@ -399,6 +399,25 @@ const getAttendanceByDate = asyncHandler(async(req, res) => {
     res.send({ success: true, attendance: mergedData })
 })
 
+
+const getEmployeesSubjects = asyncHandler(async(req, res) => {
+    if (!req.params.id)
+        return res.send({ success: false, messege: "Please Send Data Properly" })
+    var queryToGetSubjectsTakeByEmployee =
+        "SELECT subjects.subjectname FROM subjects INNER JOIN divisions ON divisions.subjectid = subjects.subjectid INNER JOIN employees ON divisions.employeeid = employees.employeeid WHERE employees.employeeid= ?";
+    con.query(
+        queryToGetSubjectsTakeByEmployee, [req.params.id],
+        (err, result) => {
+            if (err) res.send({ success: false, messege: "Something Went Wrong" });
+            var getSubjects = [];
+            for (let i in result) {
+                getSubjects.push(result[i]["subjectname"]);
+            }
+            res.send({ success: true, subjects: getSubjects })
+        }
+    );
+
+})
 module.exports = {
     takeAttendance,
     getEmployeesById,
@@ -408,5 +427,6 @@ module.exports = {
     getStudentsQuery,
     getStudentsAttendance,
     getAllTakenAttendances,
-    getAttendanceByDate
+    getAttendanceByDate,
+    getEmployeesSubjects
 };
