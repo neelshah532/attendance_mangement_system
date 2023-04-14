@@ -2,7 +2,7 @@ const express = require('express')
 const router = express.Router()
 const { studentData, attendanceOfStudent } = require('../controllers/studentsController')
 const { getAllEmployees } = require('../controllers/employeeTeachingController')
-const { deleteData } = require('../controllers/employeeNonTeachingController')
+const { deleteData, getAllQuery } = require('../controllers/employeeNonTeachingController')
 
 //View Student
 router.get('/getStudents', studentData)
@@ -14,6 +14,6 @@ router.get('/getEmployees', getAllEmployees)
 
 router.delete('/deleteData/:id/:type', deleteData)
 
-router.get('/queries', deleteData)
+router.get('/queries', getAllQuery)
 
 module.exports = router

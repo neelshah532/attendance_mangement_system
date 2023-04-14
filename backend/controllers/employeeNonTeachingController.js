@@ -219,6 +219,21 @@ const addProgram = asyncHandler(async(req, res) => {
     res.send({ success: true, messege: "Program Added" })
 })
 
+//@desc Take attendance of students
+//@method GET
+//@PATH /ams/employees/query/:id
+const getAllQuery = asyncHandler(async(req, res) => {
+    var studentsQueryDetails =
+        "SELECT students.enrollmentno,subjects.subjectname,queries.description,employees.firstname,employees.middlename FROM queries INNER JOIN students ON queries.enrollmentno=students.enrollmentno INNER JOIN subjects ON queries.subjectid=subjects.subjectid INNER JOIN employees ON queries.employeeid=employees.employeeid";
+    var queries = await new Promise((resolve) => {
+        con.query(studentsQueryDetails, (err, result) => {
+            if (err) return res.send({ success: false, messege: "Something Went Wrong" });
+            resolve(result);
+        });
+    });
+    res.send({ success: true, queries });
+});
+
 //@method POST 
 //@desc ADD PROGRAM
 //@PATH /ams/admin/manageProgram/delete/:id
@@ -247,5 +262,6 @@ module.exports = {
     getSubjects,
     allocateSubjectsToEmployee,
     addProgram,
-    deleteProgram
+    deleteProgram,
+    getAllQuery
 };
