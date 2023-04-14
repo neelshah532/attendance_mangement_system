@@ -208,6 +208,21 @@ const getDailyAttendance = asyncHandler(async(req, res) => {
     })
 })
 
+//@desc Take attendance of students
+//@method GET
+//@PATH /ams/students/query/:id
+const getQuery = asyncHandler(async(req, res) => {
+    var studentsQueryDetails =
+        "SELECT queries.description,students.firstname,students.middlename FROM queries INNER JOIN students ON queries.enrollmentno=students.enrollmentno WHERE enrollmentno=?;";
+    var queries = await new Promise((resolve) => {
+        con.query(studentsQueryDetails, [req.params.id], (err, result) => {
+            if (err) return res.send({ success: false, messege: "Something Went Wrong" });
+            resolve(result);
+        });
+    });
+    res.send({ success: true, queries });
+});
+
 module.exports = {
     studentData,
     getStudentsById,
@@ -215,5 +230,6 @@ module.exports = {
     login,
     monthlyAttendanceOfStudent,
     getStudentsByDivision,
-    getDailyAttendance
+    getDailyAttendance,
+    getQuery
 }

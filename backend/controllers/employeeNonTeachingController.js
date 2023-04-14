@@ -192,6 +192,9 @@ const allocateSubjectsToEmployee = asyncHandler(async(req, res) => {
     res.send({ success: true, messege: "Subject Allocated to Employee" })
 })
 
+//@method POST 
+//@desc ADD PROGRAM
+//@PATH /ams/admin/manageProgram/add
 const addProgram = asyncHandler(async(req, res) => {
     const { programname, numberOfSemester } = req.body
     if (!programname || !numberOfSemester)
@@ -216,6 +219,9 @@ const addProgram = asyncHandler(async(req, res) => {
     res.send({ success: true, messege: "Program Added" })
 })
 
+//@method POST 
+//@desc ADD PROGRAM
+//@PATH /ams/admin/manageProgram/delete/:id
 const deleteProgram = asyncHandler(async(req, res) => {
     if (!req.params)
         return res.send({ success: false, messege: "Send Proper Data" })
