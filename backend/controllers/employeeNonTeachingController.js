@@ -191,6 +191,43 @@ const allocateSubjectsToEmployee = asyncHandler(async(req, res) => {
     res.send({ success: true, messege: "Subject Allocated to Employee" })
 })
 
+const addProgram = asyncHandler(async(req, res) => {
+    const { programname, numberOfSemester } = req.body
+    if (!programname || !numberOfSemester)
+        return res.send({ success: false, messege: "Please Send Proper Data" })
+
+    var addProgramQuery = "INSERT INTO programs(programename)VALUES(?)"
+    var lastInsertedId = await new Promise((resolve) => {
+        con.query(addProgramQuery, [programname], (err, result) => {
+            if (err)
+                return res.send({ success: false, messege: "Something Went Wrong" })
+
+            resolve(result.insertId)
+        })
+    })
+
+    var i = 1
+    while (i <= numberOfSemester) {
+        var addSemesterQuery = "INSERT INTO semesters(semestername,programid)VALUES(?,?)"
+        con.query(addSemesterQuery, [`Semester ${i}`, lastInsertedId])
+        i++
+    }
+    res.send({ success: true, messege: "Program Added" })
+})
+
+const deleteProgram = asyncHandler(async(req, res) => {
+    if (!req.params)
+        return res.send({ success: false, messege: "Send Proper Data" })
+
+    var deleteProgram = "DELETE FROM programs WHERE programid=?"
+    con.query(deleteProgram, [req.params.id], (err) => {
+        if (err)
+            return res.send({ success: false, messege: "Something Went Wrong" })
+
+        res.send({ success: true, messege: "Program Deleted" })
+    })
+})
+
 module.exports = {
     addStudent,
     updateStudent,
@@ -201,5 +238,7 @@ module.exports = {
     updateSubjects,
     deleteSubject,
     getSubjects,
-    allocateSubjectsToEmployee
+    allocateSubjectsToEmployee,
+    addProgram,
+    deleteProgram
 };

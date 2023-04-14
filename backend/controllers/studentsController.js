@@ -171,6 +171,9 @@ const monthlyAttendanceOfStudent = asyncHandler(async(req, res) => {
     });
 })
 
+//@method GET 
+//@desc GET students By Division
+//@PATH /ams/getStudentsByDivision/:division
 const getStudentsByDivision = asyncHandler(async(req, res) => {
     const { division } = req.params;
 
@@ -189,11 +192,28 @@ const getStudentsByDivision = asyncHandler(async(req, res) => {
     });
 });
 
+//@method GET 
+//@desc GET students By Division
+//@PATH /ams/getDailyAttendance/:id
+const getDailyAttendance = asyncHandler(async(req, res) => {
+    if (!req.params)
+        return res.send({ success: false, messege: "Send Proper Data" })
+
+    var getDailyAttendanceQuery = `SELECT * FROM ${req.params.subject} WHERE enrollmentno=?`
+    con.query(getDailyAttendanceQuery, [req.params.id], (err, result) => {
+        if (err)
+            return res.send({ success: false, messege: "Something Went Wrong" })
+
+        res.send({ success: true, dailtAttendance: result })
+    })
+})
+
 module.exports = {
     studentData,
     getStudentsById,
     attendanceOfStudent,
     login,
     monthlyAttendanceOfStudent,
-    getStudentsByDivision
+    getStudentsByDivision,
+    getDailyAttendance
 }

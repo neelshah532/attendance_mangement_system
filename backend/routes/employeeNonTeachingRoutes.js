@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const { addStudent, updateStudent, addEmployee, updateEmployee, deleteData, addSubjects, updateSubjects, deleteSubject, getSubjects, allocateSubjectsToEmployee } = require("../controllers/employeeNonTeachingController");
+const { addStudent, updateStudent, addEmployee, updateEmployee, deleteData, addSubjects, updateSubjects, deleteSubject, getSubjects, allocateSubjectsToEmployee, addProgram, deleteProgram } = require("../controllers/employeeNonTeachingController");
 const { getStudentsQuery, getAllEmployees, updateStudentAttendance, getAllTakenAttendances, getAttendanceByDate } = require("../controllers/employeeTeachingController");
 const { studentData, attendanceOfStudent, monthlyAttendanceOfStudent } = require('../controllers/studentsController')
 
@@ -46,6 +46,11 @@ router.post('/allocateSubjects', allocateSubjectsToEmployee)
 
 // queries
 router.get("/query/:id", getStudentsQuery);
+
+// program
+router.post("/manageProgram/add", addProgram);
+
+router.delete("/manageProgram/delete/:id", deleteProgram);
 
 
 module.exports = router;

@@ -1,6 +1,6 @@
 const express = require('express')
 const router = express.Router()
-const { studentData, getStudentsById, login, monthlyAttendanceOfStudent, getStudentsByDivision, attendanceOfStudent } = require('../controllers/studentsController')
+const { studentData, getStudentsById, login, monthlyAttendanceOfStudent, getStudentsByDivision, attendanceOfStudent, getDailyAttendance } = require('../controllers/studentsController')
 const { responseQueryToStudent } = require('../controllers/employeeTeachingController')
 
 router.get('/', studentData)
@@ -16,6 +16,8 @@ router.get('/getStudentAttendanceByMonth/:id/:subject/:month', monthlyAttendance
 router.post('/responseToEmployee', responseQueryToStudent)
 
 router.post('/getStudentsByDivision/:division', getStudentsByDivision)
+
+router.get('/getDailyAttendance/:subject/:id', getDailyAttendance)
 
 
 module.exports = router
