@@ -86,9 +86,10 @@ const updateEmployee = asyncHandler(async(req, res) => {
 //@desc deleteData Both Student || Employee
 //@PATH /ams/admin/manage/delete/:id
 const deleteData = asyncHandler(async(req, res) => {
-    const { type } = req.body
-    if (!req.params.id || !type)
+    if (!req.params.id)
         return res.send({ success: false, messege: "Student Not Selected" })
+
+    const { type } = req.params.type
 
     let id
     if (type == "students") {

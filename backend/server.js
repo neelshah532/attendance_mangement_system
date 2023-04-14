@@ -25,4 +25,6 @@ app.use('/ams/employees', require('./routes/employeeTeachingRoutes'))
 
 app.use('/ams/admin', require('./routes/employeeNonTeachingRoutes'))
 
+app.use('/ams/superUser', require('./routes/superUser'))
+
 app.listen(port, () => { console.log("Server Started and Port Number = ", port) })
