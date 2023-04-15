@@ -11,6 +11,7 @@ const {
     getAllTakenAttendances,
     getAttendanceByDate,
     getEmployeesSubjects,
+    getStudentsByDivision
 } = require("../controllers/employeeTeachingController");
 
 router.get("/", getAllEmployees);
@@ -32,5 +33,7 @@ router.post("/takeAttendance", takeAttendance);
 router.put("/updateAttendance", updateStudentAttendance);
 
 router.get('/getEmployeesSubjects/:id', getEmployeesSubjects)
+
+router.get('/getStudentsByDivision/:subject/:id', getStudentsByDivision)
 
 module.exports = router;

@@ -173,27 +173,6 @@ const monthlyAttendanceOfStudent = asyncHandler(async(req, res) => {
 
 //@method GET 
 //@desc GET students By Division
-//@PATH /ams/getStudentsByDivision/:division
-const getStudentsByDivision = asyncHandler(async(req, res) => {
-    const { division } = req.params;
-
-    const query = `SELECT * FROM students WHERE division = ?`;
-    const values = [division];
-
-    con.query(query, values, (error, results) => {
-        if (error) {
-            return res.send({ success: false, messege: 'Failed to retrieve students from the database', error });
-        }
-
-        res.send({
-            success: true,
-            students: results
-        });
-    });
-});
-
-//@method GET 
-//@desc GET students By Division
 //@PATH /ams/getDailyAttendance/:id
 const getDailyAttendance = asyncHandler(async(req, res) => {
     if (!req.params)
@@ -229,7 +208,6 @@ module.exports = {
     attendanceOfStudent,
     login,
     monthlyAttendanceOfStudent,
-    getStudentsByDivision,
     getDailyAttendance,
     getQuery
 }

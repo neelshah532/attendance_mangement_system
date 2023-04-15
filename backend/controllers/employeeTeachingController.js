@@ -280,6 +280,24 @@ const getStudentsQuery = asyncHandler(async(req, res) => {
     res.send({ success: true, queries });
 });
 
+//@method GET 
+//@desc GET students By Division
+//@PATH /ams/getStudentsByDivision/:division
+const getStudentsByDivision = asyncHandler(async(req, res) => {
+    const { subject, id } = req.params;
+    const selectDataQuery = `SELECT ${subject}.enrollmentno,students.firstname,students.middlename,students.lastname FROM ${subject} INNER JOIN students ON ${subject}.enrollmentno=students.enrollmentno WHERE ${subject}.employeeid=?`;
+    con.query(selectDataQuery, [id], (error, results) => {
+        if (error)
+            return res.send({ success: false, messege: 'Failed to retrieve students from the database', error });
+
+        res.send({
+            success: true,
+            students: results
+        });
+    });
+});
+
+
 //@desc Take attendance of students
 //@method GET
 //@PATH /ams/employees/getStudentAttendance
@@ -428,4 +446,5 @@ module.exports = {
     getAllTakenAttendances,
     getAttendanceByDate,
     getEmployeesSubjects,
+    getStudentsByDivision
 };
