@@ -182,6 +182,16 @@ const allocateSubjectsToEmployee = asyncHandler(async(req, res) => {
         subjectID.push(id)
     }
 
+    for (let i = 0; i < subjects.length && i < division.length; i++) {
+        var div = division[i];
+        var sub = subjects[i];
+        var updateQuery = `UPDATE ${sub} INNER JOIN students ON ${sub}.enrollmentno = students.enrollmentno SET ${sub}.employeeid = ? WHERE students.division=?`
+        con.query(updateQuery, [employeeid, div], (err) => {
+            if (err)
+                throw err
+        })
+    }
+
     for (let i = 0; i < subjectID.length && i < division.length; i++) {
         const div = division[i];
         const subId = subjectID[i];
