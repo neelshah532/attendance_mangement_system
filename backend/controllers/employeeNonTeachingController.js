@@ -13,6 +13,8 @@ const addStudent = asyncHandler(async(req, res) => {
     var semesterSubjectsQuery = `SELECT subjects.subjectname FROM subjects INNER JOIN semesters ON subjects.semesterid=semesters.semesterid WHERE semesters.semestername=? && subjects.type=?`
     var getStudentSubjects = await new Promise((resolve) => {
         con.query(semesterSubjectsQuery, [semester, 'Regular'], (err, results) => {
+            if (err)
+                return res.send({ success: false, messege: "Something Went Wrong" })
             const subjectNames = results.map(item => item.subjectname);
             resolve(subjectNames)
         })
@@ -58,11 +60,9 @@ const addEmployee = asyncHandler(async(req, res) => {
         return res.send({ success: false, messege: "Please Fill Proper Data" })
 
     var addStudentQuery = `INSERT INTO employees(firstName, middleName, lastName,type, gender, email, phone, password, flatNo, area, city, state, pincode)VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?)`
-    con.query(addStudentQuery, [enrollmentNo, firstName, middleName, lastName, type, gender, email, phone, password, flatNo, area, city, state, pincode], (err) => {
-        if (err) return res.send({ success: false, messege: "Something Went Wrong" })
+    con.query(addStudentQuery, [enrollmentNo, firstName, middleName, lastName, type, gender, email, phone, password, flatNo, area, city, state, pincode])
 
-        res.send({ success: true, messege: "Employee Record Inserted" })
-    })
+    res.send({ success: true, messege: "Employee Record Inserted" })
 })
 
 //@method PUT 
