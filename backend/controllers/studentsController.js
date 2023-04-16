@@ -215,7 +215,7 @@ const getStudentSubjects = asyncHandler(async(req, res) => {
         });
     });
 
-    var semesterSubjectsQuery = `SELECT subjects.subjectid,subjects.subjectname FROM subjects INNER JOIN semesters ON subjects.semesterid=semesters.semesterid WHERE semesters.semestername=? && subjects.type=?`
+    var semesterSubjectsQuery = `SELECT semesters.semesterid,subjects.subjectid,subjects.subjectname FROM subjects INNER JOIN semesters ON subjects.semesterid=semesters.semesterid WHERE semesters.semestername=? && subjects.type=?`
     var getStudentSubjects = await new Promise((resolve) => {
         con.query(semesterSubjectsQuery, [semester[0]['semester'], 'Regular'], (err, results) => {
             if (err)
@@ -223,7 +223,7 @@ const getStudentSubjects = asyncHandler(async(req, res) => {
             resolve(results)
         })
     })
-    res.send({ success: true, subjects: getStudentSubjects, semesterid: semester[0]['semester'] });
+    res.send({ success: true, subjects: getStudentSubjects });
 });
 
 //@desc Get Student Subjects
