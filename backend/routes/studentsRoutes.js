@@ -13,7 +13,7 @@ router.get('/attend/:subject/:enrollmentNumber', attendanceOfStudent)
 
 router.get('/getStudentAttendanceByMonth/:id/:subject/:month', monthlyAttendanceOfStudent)
 
-router.post('/responseToEmployee', responseQueryToStudent)
+router.post('/queries', responseQueryToStudent)
 
 router.get('/getDailyAttendance/:subject/:id', getDailyAttendance)
 

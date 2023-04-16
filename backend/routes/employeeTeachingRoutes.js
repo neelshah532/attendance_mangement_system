@@ -22,7 +22,7 @@ router.get("/queries/:id", getStudentsQuery);
 
 router.get("/getStudentAttendance/:id/:subject/:enrollmentNo", getStudentsAttendance);
 
-router.post("/query", responseQueryToStudent);
+router.post("/queries", responseQueryToStudent);
 
 router.get("/attendance/:employeeid/:subject", getAllTakenAttendances);
 
