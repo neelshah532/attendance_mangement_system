@@ -233,7 +233,7 @@ const getEmployeesBySubject = asyncHandler(async(req, res) => {
     if (!req.params)
         return res.send({ success: false, messege: "Please Send Proper Data" })
 
-    var getEmployeesQuery = `SELECT employees.firstname,employees.middlename,employees.lastname FROM employees INNER JOIN divisions ON divisions.employeeid=employees.employeeid WHERE divisions.subjectid = ?`
+    var getEmployeesQuery = `SELECT employees.employeeid,employees.firstname,employees.middlename,employees.lastname FROM employees INNER JOIN divisions ON divisions.employeeid=employees.employeeid WHERE divisions.subjectid = ?`
     var getEmployees = await new Promise((resolve) => {
         con.query(getEmployeesQuery, [req.params.subjectid], (err, results) => {
             if (err)
