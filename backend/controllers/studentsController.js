@@ -202,6 +202,48 @@ const getQuery = asyncHandler(async(req, res) => {
     res.send({ success: true, queries });
 });
 
+//@desc Get Student Subjects
+//@method GET
+//@PATH /ams/students/getSubjects/:id
+const getStudentSubjects = asyncHandler(async(req, res) => {
+    var studentsQueryDetails =
+        "SELECT semester FROM students WHERE enrollmentno=?";
+    var semester = await new Promise((resolve) => {
+        con.query(studentsQueryDetails, [req.params.id], (err, result) => {
+            if (err) return res.send({ success: false, messege: "Something Went Wrong" });
+            resolve(result);
+        });
+    });
+
+    var semesterSubjectsQuery = `SELECT subjects.subjectid,subjects.subjectname FROM subjects INNER JOIN semesters ON subjects.semesterid=semesters.semesterid WHERE semesters.semestername=? && subjects.type=?`
+    var getStudentSubjects = await new Promise((resolve) => {
+        con.query(semesterSubjectsQuery, [semester[0]['semester'], 'Regular'], (err, results) => {
+            if (err)
+                return res.send({ success: false, messege: "Something Went Wrong" })
+            resolve(results)
+        })
+    })
+    res.send({ success: true, subjects: getStudentSubjects });
+});
+
+//@desc Get Student Subjects
+//@method GET
+//@PATH /ams/students/getEmployeesBySubjects/:subject
+const getEmployeesBySubject = asyncHandler(async(req, res) => {
+    if (!req.params)
+        return res.send({ success: false, messege: "Please Send Proper Data" })
+
+    var getEmployeesQuery = `SELECT employees.firstname,employees.middlename,employees.lastname FROM employees INNER JOIN divisions ON divisions.employeeid=employees.employeeid WHERE divisions.subjectid = ?`
+    var getEmployees = await new Promise((resolve) => {
+        con.query(getEmployeesQuery, [req.params.subjectid], (err, results) => {
+            if (err)
+                return res.send({ success: false, messege: "Something Went Wrong" })
+            resolve(results)
+        })
+    })
+    res.send({ success: true, employees: getEmployees });
+});
+
 module.exports = {
     studentData,
     getStudentsById,
@@ -209,5 +251,7 @@ module.exports = {
     login,
     monthlyAttendanceOfStudent,
     getDailyAttendance,
-    getQuery
+    getQuery,
+    getStudentSubjects,
+    getEmployeesBySubject
 }

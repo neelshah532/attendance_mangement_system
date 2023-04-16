@@ -416,7 +416,9 @@ const getAttendanceByDate = asyncHandler(async(req, res) => {
     res.send({ success: true, attendance: mergedData })
 })
 
-
+//@desc Get Employees Subjects
+//@method GET
+//@PATH /ams/employees/getEmployeesSubjects/:id
 const getEmployeesSubjects = asyncHandler(async(req, res) => {
     if (!req.params.id)
         return res.send({ success: false, messege: "Please Send Data Properly" })
@@ -435,6 +437,7 @@ const getEmployeesSubjects = asyncHandler(async(req, res) => {
     );
 
 })
+
 module.exports = {
     takeAttendance,
     getEmployeesById,
