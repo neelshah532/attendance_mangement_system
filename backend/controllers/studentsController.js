@@ -223,7 +223,7 @@ const getStudentSubjects = asyncHandler(async(req, res) => {
             resolve(results)
         })
     })
-    res.send({ success: true, subjects: getStudentSubjects });
+    res.send({ success: true, subjects: getStudentSubjects, semesterid: semester[0]['semester'] });
 });
 
 //@desc Get Student Subjects
