@@ -98,7 +98,7 @@ const attendanceOfStudent = asyncHandler(async(req, res) => {
         100;
     res.send({
         success: true,
-        lectureDetails: attendance,
+        lectureDetails: attendance[0],
         attendancePercentage: percentage,
     });
 });
@@ -178,13 +178,60 @@ const getDailyAttendance = asyncHandler(async(req, res) => {
     if (!req.params)
         return res.send({ success: false, messege: "Send Proper Data" })
 
-    var getDailyAttendanceQuery = `SELECT * FROM ${req.params.subject} WHERE enrollmentno=?`
-    con.query(getDailyAttendanceQuery, [req.params.id], (err, result) => {
-        if (err)
-            return res.send({ success: false, messege: "Something Went Wrong" })
+    var studentsSemesterQueryDetails =
+        "SELECT semester FROM students WHERE enrollmentno=?";
+    var semester = await new Promise((resolve) => {
+        con.query(studentsSemesterQueryDetails, [req.params.id], (err, result) => {
+            if (err) return res.send({ success: false, messege: "Something Went Wrong" });
+            resolve(result);
+        });
+    });
 
-        res.send({ success: true, dailtAttendance: result })
+    var semesterSubjectsQuery = `SELECT subjects.subjectname FROM subjects INNER JOIN semesters ON subjects.semesterid=semesters.semesterid WHERE semesters.semestername=? && subjects.type=?`
+    var getStudentSubjects = await new Promise((resolve) => {
+        con.query(semesterSubjectsQuery, [semester[0]['semester'], 'Regular'], (err, results) => {
+            if (err)
+                return res.send({ success: false, messege: "Something Went Wrong" })
+            var getSubjects = [];
+            for (let i in results) {
+                getSubjects.push(results[i]["subjectname"]);
+            }
+            resolve(getSubjects)
+        })
     })
+
+    var getAllSubjectAttendance = []
+    for (var subject of getStudentSubjects) {
+        var promise = await new Promise((resolve) => {
+            var getDailyAttendanceQuery = `SELECT * FROM ${subject} WHERE enrollmentno=?`
+            con.query(getDailyAttendanceQuery, [req.params.id], (err, data) => {
+                resolve(data)
+            })
+        })
+        getAllSubjectAttendance.push(promise)
+    }
+
+    const keysToRemove = ['id', 'employeeid', 'enrollmentno', 'TotalLecturestillnow', 'Totalstudentattendtillnow'];
+
+    const modifiedData = getAllSubjectAttendance.map(arr => arr.map(obj => {
+        keysToRemove.forEach(key => delete obj[key]);
+        if (Object.keys(obj).length === 0) return null; // add this check to remove empty objects
+        return obj;
+    }).filter(obj => obj !== null));
+
+    const Data = modifiedData.map(arr => arr.map(obj => {
+        keysToRemove.forEach(key => delete obj[key]);
+        return obj;
+    })).filter(obj => Object.keys(obj).length !== 0)
+
+    const newArray = modifiedData.map((element, index) => {
+        const newObject = {};
+        newObject[getStudentSubjects[index]] = element[0];
+        return newObject;
+    });
+
+
+    res.send({ success: true, dailyAttendance: newArray })
 })
 
 //@desc Take attendance of students

@@ -15,7 +15,7 @@ router.get('/getStudentAttendanceByMonth/:id/:subject/:month', monthlyAttendance
 
 router.post('/queries', responseQueryToStudent)
 
-router.get('/getDailyAttendance/:subject/:id', getDailyAttendance)
+router.get('/getDailyAttendance/:id', getDailyAttendance)
 
 router.get('/queries/:id', getQuery)
 
