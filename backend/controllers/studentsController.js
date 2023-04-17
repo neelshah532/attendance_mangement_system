@@ -219,17 +219,11 @@ const getDailyAttendance = asyncHandler(async(req, res) => {
         return obj;
     }).filter(obj => obj !== null));
 
-    const Data = modifiedData.map(arr => arr.map(obj => {
-        keysToRemove.forEach(key => delete obj[key]);
-        return obj;
-    })).filter(obj => Object.keys(obj).length !== 0)
-
     const newArray = modifiedData.map((element, index) => {
         const newObject = {};
         newObject[getStudentSubjects[index]] = element[0];
         return newObject;
     });
-
 
     res.send({ success: true, dailyAttendance: newArray })
 })

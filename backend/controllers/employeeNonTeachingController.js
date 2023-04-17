@@ -192,12 +192,12 @@ const allocateSubjectsToEmployee = asyncHandler(async(req, res) => {
         })
     }
 
-    for (let i = 0; i < subjectID.length && i < division.length; i++) {
-        const div = division[i];
-        const subId = subjectID[i];
-        var addDivisionQuery = "INSERT INTO divisions(divisionname,employeeid,subjectid)VALUES(?,?,?)"
-        con.query(addDivisionQuery, [div, employeeid, subId.subjectid])
-    }
+    // for (let i = 0; i < subjectID.length && i < division.length; i++) {
+    //     const div = division[i];
+    //     const subId = subjectID[i];
+    //     var addDivisionQuery = "INSERT INTO divisions(divisionname,employeeid,subjectid)VALUES(?,?,?)"
+    //     con.query(addDivisionQuery, [div, employeeid, subId.subjectid])
+    // }
 
     res.send({ success: true, messege: "Subject Allocated to Employee" })
 })
