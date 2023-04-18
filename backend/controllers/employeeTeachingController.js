@@ -394,7 +394,7 @@ const getAttendanceByDate = asyncHandler(async(req, res) => {
         return res.send({ success: false, messege: "Please Send Data Properly" })
 
     const { date, subject } = req.params
-    var getStudentAttendance = `SELECT enrollmentno,${date} FROM ${subject} WHERE employeeid=?`;
+    var getStudentAttendance = `SELECT students.firstname,students.middlename,students.lastname,students.enrollmentno,${date} FROM ${subject} INNER JOIN students ON ${subject}.enrollmentno=students.enrollmentno WHERE employeeid=? `;
     var getAttendance = await new Promise((resolve) => {
         con.query(
             getStudentAttendance, [req.params.employeeid],
@@ -406,14 +406,7 @@ const getAttendanceByDate = asyncHandler(async(req, res) => {
         );
     });
 
-    const mergedData = {};
-
-    getAttendance.forEach((obj) => {
-        const { enrollmentno, [date]: value } = obj;
-        mergedData[enrollmentno] = value;
-    });
-
-    res.send({ success: true, attendance: mergedData })
+    res.send({ success: true, attendance: getAttendance })
 })
 
 //@desc Get Employees Subjects
