@@ -270,7 +270,7 @@ const responseQueryToStudent = asyncHandler(async(req, res) => {
 //@PATH /ams/employees/query/:id
 const getStudentsQuery = asyncHandler(async(req, res) => {
     var studentsQueryDetails =
-        "SELECT subjects.subjectname,queries.description,students.firstname,students.middlename FROM queries INNER JOIN students ON queries.enrollmentno=students.enrollmentno INNER JOIN subjects ON queries.subjectid=subjects.subjectid WHERE employeeid=?";
+        "SELECT subjects.subjectname,queries.description,students.firstname,students.middlename,students.lastname FROM queries INNER JOIN students ON queries.enrollmentno=students.enrollmentno INNER JOIN subjects ON queries.subjectid=subjects.subjectid WHERE employeeid=?";
     var queries = await new Promise((resolve) => {
         con.query(studentsQueryDetails, [req.params.id], (err, result) => {
             if (err) return res.send({ success: false, messege: "Something Went Wrong" });
