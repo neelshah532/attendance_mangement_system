@@ -172,7 +172,7 @@ const takeAttendance = asyncHandler(async(req, res) => {
 //@PATH /ams/employees/updateAttendance
 const updateStudentAttendance = asyncHandler(async(req, res) => {
     const { subject, employeeId, date, attendance } = req.body;
-    if (!attendance) {
+    if (!subject || !employeeId || !date) {
         res.send({ success: false, messege: "Please Fill Data" });
     } else {
         var promises = []
