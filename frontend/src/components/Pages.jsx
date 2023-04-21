@@ -17,7 +17,7 @@ function Pages() {
     <>
       <Routes>
         <Route exact path={"/Login"} element={<Login/>} />
-        <Route exact path={"/Home"} element={<Home/>} />
+        <Route exact path={"/"} element={<Home/>} />
         <Route exact path={"/AddProgram"} element={<AddProgram/>} />
         <Route exact path={"/AddSubject"} element={<AddSubject/>} />
         <Route exact path={"/AddStudent"} element={<AddStudent/>} />
