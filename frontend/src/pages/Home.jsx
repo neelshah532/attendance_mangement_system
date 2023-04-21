@@ -4,7 +4,6 @@ import curveBackground from "../images/Rectangle 9.png";
 import { useNavigate } from "react-router-dom";
 import icon1 from "../images/Collaborator Male.png";
 import icon2 from "../images/Todo List.png";
-import icon3 from "../images/Calendar.png";
 import icon4 from "../images/Diploma.png";
 import icon5 from "../images/Book Shelf.png";
 import icon6 from "../images/faq.png";

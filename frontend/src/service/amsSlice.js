@@ -12,7 +12,17 @@ export const amsSlice = createApi({
                 headers: { 'Content-type': 'application/json; charset=UTF-8' }
             }),
         })
-    })
+    }),
+    // endpoints: (builder) => ({
+    //     loginUser: builder.mutation({
+    //         query: (user) => ({
+    //             url: '/login',
+    //             method: 'POST',
+    //             body: user,
+    //             headers: { 'Content-type': 'application/json; charset=UTF-8' }
+    //         }),
+    //     })
+    // })
 })
 
 export const {

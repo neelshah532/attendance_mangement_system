@@ -10,6 +10,8 @@ import { useNavigate } from "react-router-dom";
 
 function Manage() {
   const navigate=useNavigate()
+  
+
   return (
     <Box bg="#1A237E" h="100vh" w="206vh" overflow="hidden">
         <Image src={background} alt="Logo" w="691dp" h="100vh" mx="auto" mt="5dp"  opacity={0.5}/>

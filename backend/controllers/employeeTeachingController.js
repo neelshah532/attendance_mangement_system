@@ -311,20 +311,28 @@ const getStudentsAttendance = asyncHandler(async(req, res) => {
             getStudentAttendance, [req.params.id, req.params.enrollmentNo],
             (err, result) => {
                 if (err) return res.send({ success: false, messege: "Something Went Wrong" });
-                var jsonData = JSON.parse(JSON.stringify(result));
-                resolve(jsonData);
+                if (result === undefined) {
+                    resolve(null);
+                } else {
+                    var jsonData = JSON.parse(JSON.stringify(result));
+                    resolve(jsonData);
+                }
             }
         );
     });
-    var percentage =
-        (getAttendance[0]["Totalstudentattendtillnow"] /
-            getAttendance[0]["TotalLecturestillnow"]) *
-        100;
-    res.send({
-        success: true,
-        lectureDetails: getAttendance[0],
-        attendancePercentage: percentage,
-    });
+    if (getAttendance == null) {
+        res.send({ success: false })
+    } else {
+        var percentage =
+            (getAttendance[0]["Totalstudentattendtillnow"] /
+                getAttendance[0]["TotalLecturestillnow"]) *
+            100;
+        res.send({
+            success: true,
+            lectureDetails: getAttendance[0],
+            attendancePercentage: percentage,
+        });
+    }
 });
 
 
@@ -366,7 +374,6 @@ const getAllTakenAttendances = asyncHandler(async(req, res) => {
     }
 
     const lectureByDate = {};
-
     promises.forEach((arr) => {
         arr.forEach((obj) => {
             const key = obj && Object.keys(obj)[0];

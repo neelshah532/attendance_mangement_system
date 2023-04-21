@@ -87,20 +87,32 @@ const attendanceOfStudent = asyncHandler(async(req, res) => {
             getStudentAttendance, [enrollmentNumber],
             (err, result) => {
                 if (err) res.send({ success: false, messege: "Something Went Wrong" });
-                var jsonData = JSON.parse(JSON.stringify(result));
-                resolve(jsonData);
+                console.log(result)
+                if (result === undefined) {
+                    resolve(null)
+                } else {
+                    var jsonData = JSON.parse(JSON.stringify(result));
+                    resolve(jsonData);
+                }
             }
         );
     });
-    var percentage =
-        (attendance[0]["Totalstudentattendtillnow"] /
-            attendance[0]["TotalLecturestillnow"]) *
-        100;
-    res.send({
-        success: true,
-        lectureDetails: attendance[0],
-        attendancePercentage: percentage,
-    });
+
+    if (attendance == null) {
+        res.send({
+            success: false
+        });
+    } else {
+        var percentage =
+            (attendance[0]["Totalstudentattendtillnow"] /
+                attendance[0]["TotalLecturestillnow"]) *
+            100;
+        res.send({
+            success: true,
+            lectureDetails: attendance[0],
+            attendancePercentage: percentage,
+        });
+    }
 });
 
 //@method GET 
@@ -112,63 +124,74 @@ const monthlyAttendanceOfStudent = asyncHandler(async(req, res) => {
 
     const { subject, month } = req.params
     var getColumnNamesQuery = `SHOW COLUMNS FROM ${subject}`;
+
     const getColumnNames = await new Promise((resolve) => {
         con.query(getColumnNamesQuery, (err, names) => {
-            var i = 1;
-            var k = 0;
-            var arrayColumns = [];
+            if (names === undefined) {
+                resolve(null)
+            } else {
+                var i = 1;
+                var k = 0;
+                var arrayColumns = [];
 
-            while (i <= names.length) {
-                arrayColumns.push(names[k].Field);
-                k++;
-                i++;
+                while (i <= names.length) {
+                    arrayColumns.push(names[k].Field);
+                    k++;
+                    i++;
+                }
+
+                const columnsNames = arrayColumns.slice(5, )
+                resolve(columnsNames)
             }
-
-            const columnsNames = arrayColumns.slice(5, )
-            resolve(columnsNames)
         })
     })
-    let countMonth = 0
-    for (var attendance of getColumnNames) {
-        let d = JSON.stringify(attendance)
-        if (d.includes(month)) {
-            countMonth++
-        }
-    }
-    var getStudentAttendance = `SELECT * FROM ${subject} WHERE enrollmentno=? `;
-    var getAttendance = await new Promise((resolve) => {
-        con.query(
-            getStudentAttendance, [req.params.id],
-            (err, result) => {
-                if (err) res.send({ success: false, messege: "Something Went Wrong" });
-                var jsonData = JSON.parse(JSON.stringify(result));
-                resolve(jsonData);
-            }
-        );
-    });
 
-    let Totalstudentattendtillnow = getAttendance[0]["Totalstudentattendtillnow"]
-
-    for (let i = 0; i < getAttendance.length; i++) {
-        let keysToRemove = [];
-        for (let key in getAttendance[i]) {
-            if (!key.includes(month)) {
-                keysToRemove.push(key);
+    if (getColumnNames == null) {
+        res.send({
+            success: false
+        })
+    } else {
+        for (var attendance of getColumnNames) {
+            let d = JSON.stringify(attendance)
+            if (d.includes(month)) {
+                countMonth++
             }
         }
-        keysToRemove.forEach(key => delete getAttendance[i][key]);
+        var getStudentAttendance = `SELECT * FROM ${subject} WHERE enrollmentno=? `;
+        var getAttendance = await new Promise((resolve) => {
+            con.query(
+                getStudentAttendance, [req.params.id],
+                (err, result) => {
+                    if (err) res.send({ success: false, messege: "Something Went Wrong" });
+                    var jsonData = JSON.parse(JSON.stringify(result));
+                    resolve(jsonData);
+                }
+            );
+        });
+
+        let Totalstudentattendtillnow = getAttendance[0]["Totalstudentattendtillnow"]
+
+        for (let i = 0; i < getAttendance.length; i++) {
+            let keysToRemove = [];
+            for (let key in getAttendance[i]) {
+                if (!key.includes(month)) {
+                    keysToRemove.push(key);
+                }
+            }
+            keysToRemove.forEach(key => delete getAttendance[i][key]);
+        }
+
+        var percentage =
+            (Totalstudentattendtillnow / countMonth) *
+            100;
+
+        res.send({
+            success: true,
+            TotalNumberOfLectures: countMonth,
+            studentAttendLecture: Totalstudentattendtillnow,
+            attendancePercentage: percentage,
+        });
     }
-
-    var percentage =
-        (Totalstudentattendtillnow / countMonth) *
-        100;
-
-    res.send({
-        success: true,
-        TotalNumberOfLectures: countMonth,
-        studentAttendLecture: Totalstudentattendtillnow,
-        attendancePercentage: percentage,
-    });
 })
 
 //@method GET 
