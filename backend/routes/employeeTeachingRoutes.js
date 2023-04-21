@@ -16,7 +16,7 @@ const {
 
 router.get("/:type", getAllEmployees);
 
-router.get("/:id", getEmployeesById);
+router.get("/getEmployeeProfile/:id", getEmployeesById);
 
 router.get("/queries/:id", getStudentsQuery);
 
