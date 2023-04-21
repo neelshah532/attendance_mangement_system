@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { useLoginUserMutation } from "../service/amsSlice";
 import { redirect, useNavigate } from "react-router-dom";
+import { useLoginUserMutation } from "../service/amsSlice";
 import {
   Box,
   Button,
@@ -19,6 +19,7 @@ import logo from "../images/logo.png";
 import bglogo from "../images/Group 85.png";
 
 function Login({setIsLoggedIn}) {
+
   const navigate = useNavigate();
   const [user, setCredentials] = useState({
     data: "",
@@ -28,7 +29,7 @@ function Login({setIsLoggedIn}) {
 
   const { data, password } = user;
 
-  const [loginUser, { isLoading }] = useLoginUserMutation();
+  const [loginUser,{ isLoading }] = useLoginUserMutation()
 
   const toast = useToast();
 
@@ -44,6 +45,7 @@ function Login({setIsLoggedIn}) {
 
   const onLogin = (e) => {
     e.preventDefault();
+
     if (!user.data || !user.password) {
       toast({
         title: "Please Fill All Details",

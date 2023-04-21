@@ -15,9 +15,9 @@ export const amsSlice = createApi({
     }),
     endpoints: (builder) => ({
         getAllEmployees: builder.query({
-            query: () => '/employees/NonTeaching',
+            query: () => '/employees/Teaching',
         }),
-    })
+    }),
 })
 
 export const {

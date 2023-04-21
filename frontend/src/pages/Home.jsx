@@ -7,7 +7,6 @@ import icon2 from "../images/Todo List.png";
 import icon4 from "../images/Diploma.png";
 import icon5 from "../images/Book Shelf.png";
 import icon6 from "../images/faq.png";
-
 function Home(){
   const navigate=useNavigate()
   return (
@@ -47,7 +46,7 @@ function Home(){
             w="226px"
             h="170px"
             borderRadius="10px"
-            onClick={()=>{navigate('/Manage')}}
+            onClick={()=>{ navigate('/Manage')} }
           >
             <Image
               src={icon1}
