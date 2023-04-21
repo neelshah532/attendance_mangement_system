@@ -13,18 +13,14 @@ export const amsSlice = createApi({
             }),
         })
     }),
-    // endpoints: (builder) => ({
-    //     loginUser: builder.mutation({
-    //         query: (user) => ({
-    //             url: '/login',
-    //             method: 'POST',
-    //             body: user,
-    //             headers: { 'Content-type': 'application/json; charset=UTF-8' }
-    //         }),
-    //     })
-    // })
+    endpoints: (builder) => ({
+        getAllEmployees: builder.query({
+            query: () => '/employees/NonTeaching',
+        }),
+    })
 })
 
 export const {
-    useLoginUserMutation
+    useLoginUserMutation,
+    useGetAllEmployeesQuery
 } = amsSlice

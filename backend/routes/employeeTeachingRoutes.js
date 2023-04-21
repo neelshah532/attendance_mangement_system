@@ -14,7 +14,7 @@ const {
     getStudentsByDivision
 } = require("../controllers/employeeTeachingController");
 
-router.get("/", getAllEmployees);
+router.get("/:type", getAllEmployees);
 
 router.get("/:id", getEmployeesById);
 

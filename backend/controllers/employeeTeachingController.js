@@ -38,8 +38,8 @@ const getEmployeesById = asyncHandler(async(req, res) => {
 //@PATH /ams/employees/
 const getAllEmployees = asyncHandler(async(req, res) => {
     var getAllEmployees =
-        "SELECT employeeid, firstname,middlename,lastname,gender,email FROM employees";
-    con.query(getAllEmployees, (err, result) => {
+        "SELECT employeeid, firstname,middlename,lastname,gender,email FROM employees WHERE type=?";
+    con.query(getAllEmployees, [req.params.type], (err, result) => {
         if (err) res.send({ success: false, messege: "Something Went Wrong" });
 
         res.send({ success: true, employees: result });
