@@ -8,6 +8,7 @@ import {
   Text,
   Button,
   HStack,
+  Link
 } from "@chakra-ui/react";
 
 function ViewTeacher() {
@@ -94,8 +95,8 @@ function ViewTeacher() {
                     >
                       MCA
                     </Text>
-
-                    <Button
+                    <Link
+                      href="/AddTeacher"
                       type="submit"
                       bg="#1A237E"
                       color="white"
@@ -108,7 +109,7 @@ function ViewTeacher() {
                       fontSize={18}
                     >
                       Update
-                    </Button>
+                    </Link>
                     <Button
                       type="submit"
                       bg="#1A237E"
