@@ -55,12 +55,12 @@ const updateStudent = asyncHandler(async(req, res) => {
 //@desc addEmployee
 //@PATH /ams/admin/manageEmployee/add
 const addEmployee = asyncHandler(async(req, res) => {
-    const { firstName, middleName, lastName, type, gender, email, phone, password, flatNo, area, city, state, pincode } = req.body
-    if (!firstName || !middleName || !lastName || !type || !gender || !email || !phone || !password || !flatNo || !area || !city || !state || !pincode)
+    const { firstname, middlename, lastname, type, gender, email, phone, password, flatno, area, city, state, pincode } = req.body
+    if (!firstname || !middlename || !lastname || !type || !gender || !email || !phone || !password || !flatno || !area || !city || !state || !pincode)
         return res.send({ success: false, messege: "Please Fill Proper Data" })
 
-    var addStudentQuery = `INSERT INTO employees(firstName, middleName, lastName,type, gender, email, phone, password, flatNo, area, city, state, pincode)VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?)`
-    con.query(addStudentQuery, [enrollmentNo, firstName, middleName, lastName, type, gender, email, phone, password, flatNo, area, city, state, pincode])
+    var addStudentQuery = `INSERT INTO employees(firstname, middlename, lastname,type, gender, email, phone, password, flatno, area, city, state, pincode)VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?)`
+    con.query(addStudentQuery, [firstname, middlename, lastname, type, gender, email, phone, password, flatno, area, city, state, pincode])
 
     res.send({ success: true, messege: "Employee Record Inserted" })
 })

@@ -18,6 +18,13 @@ export const amsSlice = createApi({
                 body: details,
             }),
         }),
+        addEmployee: builder.mutation({
+            query: (details) => ({
+                url: '/admin/manageEmployee/ADD',
+                method: 'POST',
+                body: details,
+            }),
+        }),
         getAllEmployees: builder.query({
             query: () => '/employees/Teaching',
         }),
@@ -32,5 +39,6 @@ export const {
     useLoginMutation,
     useGetAllEmployeesQuery,
     useGetAllDetailsEmployeesQuery,
-    useUpdateEmployeeMutation
+    useUpdateEmployeeMutation,
+    useAddEmployeeMutation
 } = amsSlice

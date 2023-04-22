@@ -14,16 +14,15 @@ import {
 import { Radio, RadioGroup } from "@chakra-ui/react";
 import background from "../images/background.png";
 import curveBackground from "../images/Rectangle 9.png";
-import { useLocation } from "react-router-dom";
-import { useGetAllDetailsEmployeesQuery } from "../service/amsSlice";
 import { useState } from "react";
-import { skipToken } from "@reduxjs/toolkit/dist/query";
+import {useAddEmployeeMutation} from '../service/amsSlice'
+import { useToast } from "@chakra-ui/react";
 
 function UpdateTeacher() {
   const [show, setShow] = useState(false);
   const handleClick = () => setShow(!show);
-  const location = useLocation();
-
+  const [selected,setSelected]=useState('')
+  const toast =useToast()
   const [employee, setEmployeeDetails] = useState({
     firstname: "",
     middlename: "",
@@ -56,8 +55,14 @@ function UpdateTeacher() {
     password,
   } = employee;
 
-  const genderSelector = (e) => {
-    const updateGender = e.target.value;
+  const [addEmployee,{isLoading}]=useAddEmployeeMutation()
+
+  const handleGenderChange = (value) => {
+    setSelected(value);
+    setEmployeeDetails((prevState) => ({
+      ...prevState,
+      gender: value,
+    }));
   };
 
   const onChange = (e) => {
@@ -66,6 +71,30 @@ function UpdateTeacher() {
       [e.target.name]: e.target.value,
     }));
   };
+
+  const onAddData=(e)=>{
+    e.preventDefault()
+    console.log(employee)
+    addEmployee(employee).unwrap().then((response)=>{
+      if(response.success==true){
+        toast({
+          title: response.messege,
+          status: "success",
+          duration: 9000,
+          isClosable: true,
+          colorScheme: "blue",
+        });
+      }else{
+        toast({
+          title: response.messege,
+          status: "warning",
+          duration: 9000,
+          isClosable: true,
+          colorScheme: "blue",
+        });
+      }
+    })
+  }
 
   return (
     <>
@@ -188,9 +217,7 @@ function UpdateTeacher() {
                   >
                     Gender
                     <RadioGroup
-                      onChange={(e) => {
-                        genderSelector(e);
-                      }}
+                      onChange={(value) => handleGenderChange(value)}
                       value={gender}
                     >
                       <Radio value="male" m={1}>
@@ -329,8 +356,8 @@ function UpdateTeacher() {
             borderRadius={50}
             fontSize={20}
             mb="-110px"
-          >
-            UPDATE
+            onClick={onAddData}>
+            ADD
           </Button>
         </Box>
       </Box>
