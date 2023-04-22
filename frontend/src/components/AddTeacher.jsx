@@ -95,7 +95,9 @@ function UpdateTeacher() {
       }
     })
   }
-
+  if(isLoading){
+    return <h1>Loading..</h1>
+  }
   return (
     <>
       <Box bg="#1A237E" h="100vh" w="206vh" overflow="hidden">

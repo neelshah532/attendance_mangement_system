@@ -31,7 +31,12 @@ export const amsSlice = createApi({
         getAllDetailsEmployees: builder.query({
             query: (id) => `/employees/getEmployeeProfile/${id}`,
         }),
-
+        deleteEmployee: builder.mutation({
+            query: ({ id, type }) => ({
+                url: `/admin/manage/delete/${id}/${type}`,
+                method: 'DELETE',
+            }),
+        }),
     }),
 })
 
@@ -40,5 +45,6 @@ export const {
     useGetAllEmployeesQuery,
     useGetAllDetailsEmployeesQuery,
     useUpdateEmployeeMutation,
+    useDeleteEmployeeMutation,
     useAddEmployeeMutation
 } = amsSlice

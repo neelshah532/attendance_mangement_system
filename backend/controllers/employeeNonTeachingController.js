@@ -89,15 +89,13 @@ const deleteData = asyncHandler(async(req, res) => {
     if (!req.params.id)
         return res.send({ success: false, messege: "Student Not Selected" })
 
-    const { type } = req.params.type
-
-    let id
-    if (type == "students") {
+    var id
+    if (req.params.type == "students") {
         id = "enrollmentno"
     } else {
         id = "employeeid"
     }
-    var deleteStudentQuery = `DELETE FROM ${type} WHERE ${id}=?`
+    var deleteStudentQuery = `DELETE FROM ${req.params.type} WHERE ${id}=?`
 
     con.query(deleteStudentQuery, [req.params.id], (err) => {
         if (err)
