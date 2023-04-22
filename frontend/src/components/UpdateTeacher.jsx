@@ -5,7 +5,6 @@ import {
   Stack,
   Input,
   Text,
-  Select,
   Button,
   Grid,
   InputRightElement,
@@ -18,18 +17,27 @@ import { useLocation } from "react-router-dom";
 import { useGetAllDetailsEmployeesQuery } from "../service/amsSlice";
 import { useState } from "react";
 import { skipToken } from "@reduxjs/toolkit/dist/query";
+import { useUpdateEmployeeMutation } from "../service/amsSlice";
+import { useToast } from "@chakra-ui/react";
 
 function UpdateTeacher() {
   const [show, setShow] = useState(false);
   const handleClick = () => setShow(!show);
+  const [updateEmployee,{isLoading:isUpdateLoding}] = useUpdateEmployeeMutation()
   const location = useLocation();
+  const toast =useToast()
+  const {
+    data,
+    isSuccess,
+    isLoading: isDetailsLoading,
+  } = useGetAllDetailsEmployeesQuery(location.state.id);
 
   const [employee, setEmployeeDetails] = useState({
-    firstname: "",
-    middlename: "",
-    lastname: "",
+    firstName: "",
+    middleName: "",
+    lastName: "",
     type: "",
-    flatno: "",
+    flatNo: "",
     area: "",
     city: "",
     state: "",
@@ -56,17 +64,58 @@ function UpdateTeacher() {
     password,
   } = employee;
 
-  const genderSelector = (e) => {
-    const updateGender = e.target.value;
-  };
+  const [selected,setSelected]=useState(employee.gender)
 
-  const onChange = (e) => {
+  const onChange = (e,value) => {
+    setSelected(value)
     setEmployeeDetails((prevState) => ({
       ...prevState,
       [e.target.name]: e.target.value,
     }));
   };
 
+  const handleGenderChange = (value) => {
+    setSelected(value);
+    setEmployeeDetails((prevState) => ({
+      ...prevState,
+      gender: value,
+    }));
+  };
+
+  useEffect(() => {
+    setEmployeeDetails(isSuccess ? data.employee : skipToken);
+    setSelected(isSuccess ? data.employee.gender : skipToken);
+  }, [data]);
+
+  const onUpdate = (e) => {
+    e.preventDefault()
+    updateEmployee(employee).unwrap().then((response)=>{
+      if(response.success==true){
+        toast({
+          title: response.messege,
+          status: "success",
+          duration: 9000,
+          isClosable: true,
+          colorScheme: "blue",
+        })
+      }else{
+        toast({
+          title: response.messege,
+          status: "warning",
+          duration: 9000,
+          isClosable: true,
+          colorScheme: "blue",
+        });
+      }
+    })
+  };
+
+  if (isDetailsLoading) {
+    return <h1>Loading..</h1>;
+  }
+  if(isUpdateLoding){
+    return <h1>Loading</h1>
+  }
   return (
     <>
       <Box bg="#1A237E" h="100vh" w="206vh" overflow="hidden">
@@ -114,7 +163,7 @@ function UpdateTeacher() {
             pb={50}
             left="40%"
           >
-            Add Teaching Staff
+            Update Teaching Staff
           </Text>
           <Grid
             templateColumns={{
@@ -140,8 +189,9 @@ function UpdateTeacher() {
                   color="#1A237E"
                   w={250}
                   onChange={onChange}
-                  value={firstname}
+                  defaultValue={firstname}
                 />
+
                 <Input
                   type="text"
                   focusBorderColor="#1A237E"
@@ -152,7 +202,7 @@ function UpdateTeacher() {
                   w={250}
                   onChange={onChange}
                   name="middlename"
-                  value={middlename}
+                  defaultValue={middlename}
                 />
                 <Input
                   type="text"
@@ -164,7 +214,7 @@ function UpdateTeacher() {
                   w={250}
                   onChange={onChange}
                   name="lastname"
-                  value={lastname}
+                  defaultValue={lastname}
                 />
                 <Input
                   type="text"
@@ -174,7 +224,7 @@ function UpdateTeacher() {
                   fontFamily={"noto-serif"}
                   color="#1A237E"
                   w={250}
-                  value={type}
+                  defaultValue={type}
                   name="type"
                   onChange={onChange}
                 />
@@ -188,10 +238,9 @@ function UpdateTeacher() {
                   >
                     Gender
                     <RadioGroup
-                      onChange={(e) => {
-                        genderSelector(e);
-                      }}
-                      value={gender}
+                      name="gender"
+                      onChange={(value) => handleGenderChange(value)}
+                      value={selected}
                     >
                       <Radio value="male" m={1}>
                         Male
@@ -220,7 +269,7 @@ function UpdateTeacher() {
                   w={250}
                   name="flatno"
                   onChange={onChange}
-                  value={flatno}
+                  defaultValue={flatno}
                 />
                 <Input
                   type="text"
@@ -232,7 +281,7 @@ function UpdateTeacher() {
                   w={250}
                   name="area"
                   onChange={onChange}
-                  value={area}
+                  defaultValue={area}
                 />
                 <Input
                   type="text"
@@ -244,7 +293,7 @@ function UpdateTeacher() {
                   w={250}
                   name="city"
                   onChange={onChange}
-                  value={city}
+                  defaultValue={city}
                 />
                 <Input
                   type="text"
@@ -256,7 +305,7 @@ function UpdateTeacher() {
                   w={250}
                   name="state"
                   onChange={onChange}
-                  value={state}
+                  defaultValue={state}
                 />
               </Stack>
               <Stack>
@@ -269,7 +318,7 @@ function UpdateTeacher() {
                   color="#1A237E"
                   name="pincode"
                   onChange={onChange}
-                  value={pincode}
+                  defaultValue={pincode}
                 />
                 <Input
                   type="tel"
@@ -281,7 +330,7 @@ function UpdateTeacher() {
                   w={250}
                   name="phone"
                   onChange={onChange}
-                  value={phone}
+                  defaultValue={phone}
                 />
                 <Input
                   type="email"
@@ -292,7 +341,7 @@ function UpdateTeacher() {
                   color="#1A237E"
                   name="email"
                   onChange={onChange}
-                  value={email}
+                  defaultValue={email}
                 />
                 <InputGroup>
                   <Input
@@ -304,7 +353,7 @@ function UpdateTeacher() {
                     color="#1A237E"
                     name="password"
                     onChange={onChange}
-                    value={password}
+                    defaultValue={password}
                   />
                   <InputRightElement width="4.5rem">
                     <Button h="1.75rem" size="sm" onClick={handleClick}>
@@ -329,6 +378,7 @@ function UpdateTeacher() {
             borderRadius={50}
             fontSize={20}
             mb="-110px"
+            onClick={onUpdate}
           >
             UPDATE
           </Button>

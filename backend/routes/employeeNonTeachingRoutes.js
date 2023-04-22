@@ -7,14 +7,14 @@ const { studentData, attendanceOfStudent, monthlyAttendanceOfStudent } = require
 // Students
 router.post("/manageStudent/ADD", addStudent);
 
-router.put("/manageStudent/update/:id", updateStudent);
+router.put("/manageStudent/update", updateStudent);
 
 router.get("/manageStudent/get", studentData);
 
 // Employees
 router.post("/manageEmployee/ADD", addEmployee);
 
-router.put("/manageEmployee/update/:id", updateEmployee);
+router.put("/manageEmployee/update", updateEmployee);
 
 router.get("/manageEmployee/get", getAllEmployees);
 

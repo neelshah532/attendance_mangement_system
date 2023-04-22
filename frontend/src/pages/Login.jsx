@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { redirect, useNavigate } from "react-router-dom";
-import { useLoginUserMutation } from "../service/amsSlice";
+import { useLoginMutation } from "../service/amsSlice";
 import {
   Box,
   Button,
@@ -14,13 +14,12 @@ import {
 } from "@chakra-ui/react";
 
 import { useToast } from "@chakra-ui/react";
-
 import logo from "../images/logo.png";
 import bglogo from "../images/Group 85.png";
 
-function Login({setIsLoggedIn}) {
-
+function Login({ setIsLoggedIn }) {
   const navigate = useNavigate();
+
   const [user, setCredentials] = useState({
     data: "",
     password: "",
@@ -29,7 +28,7 @@ function Login({setIsLoggedIn}) {
 
   const { data, password } = user;
 
-  const [loginUser,{ isLoading }] = useLoginUserMutation()
+  const [login, { isLoading, error }] = useLoginMutation();
 
   const toast = useToast();
 
@@ -65,11 +64,11 @@ function Login({setIsLoggedIn}) {
         });
       } else {
         if (user.data.includes("admin")) {
-          const result = loginUser(user);
+          const result =login(user);
           result.unwrap().then((response) => {
             if (response.success == true) {
-                sessionStorage.setItem("user",JSON.stringify(response.credentials))
-                setIsLoggedIn(true);
+              sessionStorage.setItem("user",JSON.stringify(response.credentials))
+              setIsLoggedIn(true)
             } else {
               toast({
                 title: response.messege,
