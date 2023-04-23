@@ -7,7 +7,7 @@ const { deleteData, getAllQuery } = require('../controllers/employeeNonTeachingC
 //View Student
 router.get('/getStudents', studentData)
 
-router.get('/subjectAttendance/:subject/:enrollmentNumber', attendanceOfStudent)
+router.get('/attend/:subject/:enrollmentNumber', attendanceOfStudent)
 
 //View Employee
 router.get('/getEmployees', getAllEmployees)
