@@ -39,6 +39,13 @@ export const amsSlice = createApi({
                 body: details,
             }),
         }),
+        addSubject: builder.mutation({
+            query: (details) => ({
+                url: '/admin/subjects/add',
+                method: 'POST',
+                body: details,
+            }),
+        }),
         getAllEmployees: builder.query({
             query: () => '/employees/Teaching',
         }),
@@ -51,9 +58,18 @@ export const amsSlice = createApi({
         getDetailsOfStudent: builder.query({
             query: (id) => `/students/getStudent/${id}`,
         }),
+        getAllSubjects: builder.query({
+            query: () => `/admin/subjects/getSubjects`,
+        }),
         deleteData: builder.mutation({
             query: ({ id, type }) => ({
                 url: `/admin/manage/delete/${id}/${type}`,
+                method: 'DELETE',
+            }),
+        }),
+        deleteSubject: builder.mutation({
+            query: ({ subjectname, id }) => ({
+                url: `/admin/subjects/delete/${subjectname}/${id}`,
                 method: 'DELETE',
             }),
         }),
@@ -70,5 +86,8 @@ export const {
     useGetAllStudentBySemesterAndDivisionQuery,
     useGetDetailsOfStudentQuery,
     useUpdateStudentMutation,
-    useAddStudentMutation
+    useAddStudentMutation,
+    useGetAllSubjectsQuery,
+    useDeleteSubjectMutation,
+    useAddSubjectMutation
 } = amsSlice

@@ -74,19 +74,6 @@ function Home(){
             </Text>
           </Box>
           
-          <Box bg="#D9D9D9" w="226px" h="170px" borderRadius="10px" onClick={()=>{navigate('/ManagePrograme')}}>
-            <Image
-              src={icon4}
-              alt="Icon 4"
-              w="100px"
-              h="100px"
-              mx="auto"
-              mt="35px"
-            />
-            <Text p="10" color="#1A237E" fontSize="md">
-              Manage Programme
-            </Text>
-          </Box>
           <Box bg="#D9D9D9" w="226px" h="170px" borderRadius="10px" onClick={()=>{navigate('/ManageSubject')}}>
             <Image
               src={icon5}

@@ -65,14 +65,13 @@ router.get(
 );
 
 // Subjects
-
 router.get("/subjects/getSubjects", getSubjects);
 
 router.post("/subjects/add", addSubjects);
 
 router.put("/subjects/update/:id", updateSubjects);
 
-router.delete("/subjects/delete/:id", deleteSubject);
+router.delete("/subjects/delete/:subject/:id", deleteSubject);
 
 // Allocate Subjects to Employees
 router.post("/allocateSubjects", allocateSubjectsToEmployee);
@@ -83,6 +82,7 @@ router.get("/query/:id", getStudentsQuery);
 router.get("/getAllqueries", getAllQuery);
 
 // program
+
 router.post("/manageProgram/add", addProgram);
 
 router.delete("/manageProgram/delete/:id", deleteProgram);
