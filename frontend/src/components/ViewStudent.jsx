@@ -48,16 +48,13 @@ function ViewStudent({ division, semester }) {
             colorScheme: "blue",
           });
         }
-        if (isEmployeeDeleteLoading) {
+        if (isStudentDeleteLoading) {
           return <h1>Loading...</h1>;
         }
       });
   };
 
   if (isLoading) {
-    return <h1>Loading...</h1>;
-  }
-  if (isStudentDeleteLoading) {
     return <h1>Loading...</h1>;
   }
 
