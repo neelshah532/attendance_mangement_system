@@ -81,7 +81,7 @@ function Manage() {
             Add Student
             </Text>
           </Box>
-          <Box bg="#D9D9D9" w="226px" h="170px" borderRadius="10px" onClick={()=>{navigate('/ViewStudent')}}>
+          <Box bg="#D9D9D9" w="226px" h="170px" borderRadius="10px" onClick={()=>{navigate('/SelectDetails')}}>
             <Image src={icon4} alt="Icon 4" w="100px" h="100px" mx="auto" mt="35px" />
             <Text 
             ml="2"

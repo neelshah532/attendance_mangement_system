@@ -18,6 +18,13 @@ export const amsSlice = createApi({
                 body: details,
             }),
         }),
+        updateStudent: builder.mutation({
+            query: (details) => ({
+                url: '/admin/manageStudent/update',
+                method: 'PUT',
+                body: details,
+            }),
+        }),
         addEmployee: builder.mutation({
             query: (details) => ({
                 url: '/admin/manageEmployee/ADD',
@@ -30,6 +37,12 @@ export const amsSlice = createApi({
         }),
         getAllDetailsEmployees: builder.query({
             query: (id) => `/employees/getEmployeeProfile/${id}`,
+        }),
+        getAllStudentBySemesterAndDivision: builder.query({
+            query: ({ division, semester }) => `/admin/manageStudent/get/${division}/${semester}`,
+        }),
+        getDetailsOfStudent: builder.query({
+            query: (id) => `/students/getStudent/${id}`,
         }),
         deleteEmployee: builder.mutation({
             query: ({ id, type }) => ({
@@ -46,5 +59,8 @@ export const {
     useGetAllDetailsEmployeesQuery,
     useUpdateEmployeeMutation,
     useDeleteEmployeeMutation,
-    useAddEmployeeMutation
+    useAddEmployeeMutation,
+    useGetAllStudentBySemesterAndDivisionQuery,
+    useGetDetailsOfStudentQuery,
+    useUpdateStudentMutation
 } = amsSlice

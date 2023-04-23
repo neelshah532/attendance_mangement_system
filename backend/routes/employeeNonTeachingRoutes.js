@@ -33,7 +33,7 @@ router.post("/manageStudent/ADD", addStudent);
 
 router.put("/manageStudent/update", updateStudent);
 
-router.get("/manageStudent/get", studentData);
+router.get("/manageStudent/get/:division/:semester", studentData);
 
 // Employees
 router.post("/manageEmployee/ADD", addEmployee);

@@ -38,13 +38,13 @@ const addStudent = asyncHandler(async(req, res) => {
 //@desc updateStudents
 //@PATH /ams/admin/manageStudent/update/:id
 const updateStudent = asyncHandler(async(req, res) => {
-    const { studentid, firstName, middleName, lastName, dob, gender, email, phone, password, flatNo, area, city, state, pincode, division, semester, programid } = req.body
-    if (!employeeid || !firstName || !middleName || !lastName || !dob || !gender || !email || !phone || !password || !flatNo || !area || !city || !state || !pincode || !division || !semester || !programid)
+    const { enrollmentno, firstname, middlename, lastname, dob, gender, email, phone, password, flatno, area, city, state, pincode, division, semester, programid } = req.body
+    if (!enrollmentno || !firstname || !middlename || !lastname || !dob || !gender || !email || !phone || !password || !flatno || !area || !city || !state || !pincode || !division || !semester || !programid)
         return res.send({ success: false, messege: "Please Fill Proper Data" })
 
-    var updateStudentQuery = "UPDATE students SET firstName=?, middleName=?, lastName=?, dob=?, gender=?, email=?, phone=?, password=?, flatNo=?, area=?, city=?, state=?, pincode=?, division=?, semester=?, programid=? WHERE enrollmentno=?"
+    var updateStudentQuery = "UPDATE students SET firstname=?, middlename=?, lastname=?, dob=?, gender=?, email=?, phone=?, password=?, flatno=?, area=?, city=?, state=?, pincode=?, division=?, semester=?, programid=? WHERE enrollmentno=?"
 
-    con.query(updateStudentQuery, [firstName, middleName, lastName, dob, gender, email, phone, password, flatNo, area, city, state, pincode, division, semester, programid, studentid], (err) => {
+    con.query(updateStudentQuery, [firstname, middlename, lastname, dob, gender, email, phone, password, flatno, area, city, state, pincode, division, semester, programid, enrollmentno], (err) => {
         if (err) return res.send({ success: false, messege: "Something Went Wrong" })
 
         res.send({ success: true, messege: "Student Data Updated" })
