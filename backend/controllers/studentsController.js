@@ -6,8 +6,8 @@ const con = connectDb()
 //@desc Get Students
 //@PATH /ams/students
 const studentData = asyncHandler(async(req, res) => {
-    const query = `SELECT enrollmentno,firstname,middlename,lastname FROM students`;
-    con.query(query, (err, result) => {
+    const query = `SELECT enrollmentno,firstname,middlename,lastname FROM students WHERE division=? && semester=?`;
+    con.query(query, [req.params.division, req.params.semester], (err, result) => {
         if (err) {
             res.send({ success: false, messege: "Something Went Wrong" })
         } else {
