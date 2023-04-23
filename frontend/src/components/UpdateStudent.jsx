@@ -37,7 +37,6 @@ function AddStudent() {
     phone: "",
     email: "",
     password: "",
-    semester: "",
     division: "",
     semester:""
   });

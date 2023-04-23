@@ -6,8 +6,8 @@ const con = connectDb();
 //@desc addStudents
 //@PATH /ams/admin/manageStudent/add
 const addStudent = asyncHandler(async(req, res) => {
-    const { enrollmentNo, firstName, middleName, lastName, dob, gender, email, phone, password, flatNo, area, city, state, pincode, division, semester, programid } = req.body
-    if (!enrollmentNo || !firstName || !middleName || !lastName || !dob || !gender || !email || !phone || !password || !flatNo || !area || !city || !state || !pincode || !division || !semester || !programid)
+    const { enrollmentno, firstname, middlename, lastname, dob, gender, email, phone, password, flatno, area, city, state, pincode, division, semester, programid } = req.body
+    if (!enrollmentno || !firstname || !middlename || !lastname || !dob || !gender || !email || !phone || !password || !flatno || !area || !city || !state || !pincode || !division || !semester || !programid)
         return res.send({ success: false, messege: "Please Fill Proper Data" })
 
     var semesterSubjectsQuery = `SELECT subjects.subjectname FROM subjects INNER JOIN semesters ON subjects.semesterid=semesters.semesterid WHERE semesters.semestername=? && subjects.type=?`
@@ -20,14 +20,14 @@ const addStudent = asyncHandler(async(req, res) => {
         })
     })
 
-    var addStudentQuery = `INSERT INTO students(enrollmentNo, firstName, middleName, lastName, dob, gender, email, phone, password, flatNo, area, city, state, pincode, division, semester, programid)VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)`
-    con.query(addStudentQuery, [enrollmentNo, firstName, middleName, lastName, dob, gender, email, phone, password, flatNo, area, city, state, pincode, division, semester, programid], (err) => {
+    var addStudentQuery = `INSERT INTO students(enrollmentno, firstname, middlename, lastname, dob, gender, email, phone, password, flatno, area, city, state, pincode, division, semester, programid)VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)`
+    con.query(addStudentQuery, [enrollmentno, firstname, middlename, lastname, dob, gender, email, phone, password, flatno, area, city, state, pincode, division, semester, programid], (err) => {
         if (err) return res.send({ success: false, messege: "Something Went Wrong" })
     })
 
     for (subject of getStudentSubjects) {
         var addStudentIntoSubjectTableQuery = `INSERT INTO ${subject}(enrollmentno,TotalLecturestillnow,Totalstudentattendtillnow)VALUES(?,?,?)`
-        con.query(addStudentIntoSubjectTableQuery, [enrollmentNo, 0, 0]);
+        con.query(addStudentIntoSubjectTableQuery, [enrollmentno, 0, 0]);
     }
 
     res.send({ success: true, messege: "Student Inserted" })
