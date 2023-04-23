@@ -1,5 +1,8 @@
 import background from "../images/background.png"; // replace with your own image
-import { useGetAllEmployeesQuery,useDeleteEmployeeMutation } from "../service/amsSlice";
+import {
+  useGetAllEmployeesQuery,
+  useDeleteDataMutation,
+} from "../service/amsSlice";
 import { useNavigate } from "react-router-dom";
 import { useToast } from "@chakra-ui/react";
 import {
@@ -16,42 +19,45 @@ import { useEffect } from "react";
 
 function ViewTeacher() {
   const { data, isLoading } = useGetAllEmployeesQuery();
-  const [deleteEmployee,{isLoading : isEmployeeDeleteLoading}] = useDeleteEmployeeMutation();
-  const toast = useToast()
+  const [deleteData, { isLoading: isEmployeeDeleteLoading }] =
+    useDeleteDataMutation();
+  const toast = useToast();
 
-  const deleteEmployeeData = (e,id)=>{
-    e.preventDefault()
-    const type="employees"
-    deleteEmployee({id,type}).unwrap().then((response)=>{
-      if(response.success==true){
-        toast({
-          title: response.messege,
-          status: "warning",
-          duration: 9000,
-          isClosable: true,
-          colorScheme: "blue",
-        });
-      }else{
-        toast({
-          title: response.messege,
-          status: "warning",
-          duration: 9000,
-          isClosable: true,
-          colorScheme: "blue",
-        });
-      }
-      if(isEmployeeDeleteLoading){
-        return <h1>Loading...</h1>;
-      }
-    })
-  }
+  const deleteEmployeeData = (e, id) => {
+    e.preventDefault();
+    const type = "employees";
+    deleteData({ id, type })
+      .unwrap()
+      .then((response) => {
+        if (response.success == true) {
+          toast({
+            title: response.messege,
+            status: "warning",
+            duration: 9000,
+            isClosable: true,
+            colorScheme: "blue",
+          });
+        } else {
+          toast({
+            title: response.messege,
+            status: "warning",
+            duration: 9000,
+            isClosable: true,
+            colorScheme: "blue",
+          });
+        }
+        if (isEmployeeDeleteLoading) {
+          return <h1>Loading...</h1>;
+        }
+      });
+  };
 
   const navigate = useNavigate();
 
   if (isLoading) {
     return <h1>Loading...</h1>;
   }
-  
+
   return (
     <Box bg="#1A237E" h="100vh" w="206vh" overflow="hidden">
       <Image
@@ -160,7 +166,9 @@ function ViewTeacher() {
                   p={3}
                   h={10}
                   fontSize={18}
-                  onClick={(e)=>{deleteEmployeeData(e,items.employeeid)}}
+                  onClick={(e) => {
+                    deleteEmployeeData(e, items.employeeid);
+                  }}
                 >
                   Delete
                 </Button>

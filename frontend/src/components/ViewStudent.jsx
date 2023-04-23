@@ -9,18 +9,58 @@ import {
   Select,
 } from "@chakra-ui/react";
 import background from "../images/background.png"; // replace with your own image
-import { useGetAllStudentBySemesterAndDivisionQuery } from "../service/amsSlice";
+import {
+  useGetAllStudentBySemesterAndDivisionQuery,
+  useDeleteDataMutation,
+} from "../service/amsSlice";
 import { useNavigate } from "react-router-dom";
-
+import { useToast } from "@chakra-ui/react";
 function ViewStudent({ division, semester }) {
   const navigate = useNavigate();
+  const toast=useToast();
+  const [deleteData, { isLoading: isStudentDeleteLoading }] =
+    useDeleteDataMutation();
   const { data, isLoading } = useGetAllStudentBySemesterAndDivisionQuery({
     division,
     semester,
   });
+
+  const deleteStudentData = (e, id) => {
+    e.preventDefault();
+    const type = "students";
+    deleteData({ id, type })
+      .unwrap()
+      .then((response) => {
+        if (response.success == true) {
+          toast({
+            title: response.messege,
+            status: "success",
+            duration: 9000,
+            isClosable: true,
+            colorScheme: "blue",
+          });
+        } else {
+          toast({
+            title: response.messege,
+            status: "warning",
+            duration: 9000,
+            isClosable: true,
+            colorScheme: "blue",
+          });
+        }
+        if (isEmployeeDeleteLoading) {
+          return <h1>Loading...</h1>;
+        }
+      });
+  };
+
   if (isLoading) {
     return <h1>Loading...</h1>;
   }
+  if (isStudentDeleteLoading) {
+    return <h1>Loading...</h1>;
+  }
+
   return (
     <Box
       maxW={{ base: "90%", sm: "80%", md: "300vh" }}
@@ -92,7 +132,11 @@ function ViewStudent({ division, semester }) {
                 h={10}
                 fontSize={18}
                 name="update"
-                onClick={()=>{navigate('/UpdateStudent',{state:{id:items.enrollmentno}})}}
+                onClick={() => {
+                  navigate("/UpdateStudent", {
+                    state: { id: items.enrollmentno },
+                  });
+                }}
               >
                 Update
               </Button>
@@ -108,6 +152,9 @@ function ViewStudent({ division, semester }) {
                 h={10}
                 fontSize={18}
                 p={3}
+                onClick={(e) => {
+                  deleteStudentData(e, items.enrollmentno);
+                }}
               >
                 Delete
               </Button>

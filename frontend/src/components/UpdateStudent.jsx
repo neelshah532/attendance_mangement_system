@@ -153,6 +153,9 @@ function AddStudent() {
   if (isDetailsLoading) {
     return <h1>Loading...</h1>;
   }
+  if(isStudentUpdateLoading){
+    return <h1>Loading...</h1>;
+  }
   return (
     <Box bg="#1A237E" h="100vh" w="206vh" overflow="hidden">
       <Image src={background} alt="Logo" h="100vh" mx="auto" mt="5dp" />
