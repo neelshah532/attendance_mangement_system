@@ -52,12 +52,12 @@ router.get(
 
 router.put("/updateStudentAttendance", updateStudentAttendance);
 
-router.put(
+router.get(
     "/getAllTakenAttendance/:employeeid/:subject",
     getAllTakenAttendances
 );
 
-router.put("/getAttendanceByDate/:employeeid", getAttendanceByDate);
+router.get("/getAttendanceByDate/:employeeid", getAttendanceByDate);
 
 router.get(
     "/getStudentMonthlyAttendance/:id/:subject/:month",
