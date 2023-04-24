@@ -1,4 +1,4 @@
-import background from "../images/background.png"; // replace with your own image
+import bg from "../images/background.png"; // replace with your own image
 import {
   useGetAllEmployeesQuery,
   useDeleteDataMutation,
@@ -16,6 +16,7 @@ import {
   Link,
 } from "@chakra-ui/react";
 import { useEffect } from "react";
+import background from "../images/animation.gif";
 
 function ViewTeacher() {
   const { data, isLoading } = useGetAllEmployeesQuery();
@@ -47,7 +48,17 @@ function ViewTeacher() {
           });
         }
         if (isEmployeeDeleteLoading) {
-          return <h1>Loading...</h1>;
+          return (
+            <Box bg="white" h="100vh" w="223vh" overflow="hidden">
+              <Image
+                src={background}
+                alt="loader"
+                h="100vh"
+                ml="27%"
+                mt="5dp"
+              />
+            </Box>
+          );
         }
       });
   };
@@ -55,19 +66,16 @@ function ViewTeacher() {
   const navigate = useNavigate();
 
   if (isLoading) {
-    return <h1>Loading...</h1>;
+    return (
+      <Box bg="white" h="100vh" w="223vh" overflow="hidden">
+        <Image src={background} alt="loader" h="100vh" ml="27%" mt="5dp" />
+      </Box>
+    );
   }
 
   return (
     <Box bg="#1A237E" h="100vh" w="206vh" overflow="hidden">
-      <Image
-        src={background}
-        alt="Logo"
-        h="100vh"
-        mx="auto"
-        mt="5dp"
-        opacity={0.5}
-      />
+      <Image src={bg} alt="Logo" h="100vh" mx="auto" mt="5dp" opacity={0.5} />
 
       <Box
         maxW={{ base: "90%", sm: "80%", md: "250vh" }}

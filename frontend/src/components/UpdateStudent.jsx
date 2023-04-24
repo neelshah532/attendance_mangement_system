@@ -12,7 +12,7 @@ import {
   InputGroup,
 } from "@chakra-ui/react";
 import { Radio, RadioGroup } from "@chakra-ui/react";
-import background from "../images/background.png";
+import bg from "../images/background.png";
 import curveBackground from "../images/Rectangle 9.png";
 import { useLocation } from "react-router-dom";
 import { useToast } from "@chakra-ui/react";
@@ -20,6 +20,7 @@ import { useState } from "react";
 import { useGetDetailsOfStudentQuery } from "../service/amsSlice";
 import { useEffect } from "react";
 import { useUpdateStudentMutation } from "../service/amsSlice";
+import background from "../images/animation.gif"
 
 function AddStudent() {
   const [students, setStudentsDetails] = useState({
@@ -150,14 +151,22 @@ function AddStudent() {
   };
 
   if (isDetailsLoading) {
-    return <h1>Loading...</h1>;
+    return (
+      <Box bg="white" h="100vh" w="223vh" overflow="hidden">
+        <Image src={background} alt="loader" h="100vh" ml="27%" mt="5dp" />
+      </Box>
+    );
   }
   if(isStudentUpdateLoading){
-    return <h1>Loading...</h1>;
+    return (
+      <Box bg="white" h="100vh" w="223vh" overflow="hidden">
+        <Image src={background} alt="loader" h="100vh" ml="27%" mt="5dp" />
+      </Box>
+    );
   }
   return (
     <Box bg="#1A237E" h="100vh" w="206vh" overflow="hidden">
-      <Image src={background} alt="Logo" h="100vh" mx="auto" mt="5dp" />
+      <Image src={bg} alt="Logo" h="100vh" mx="auto" mt="5dp" />
 
       <Box
         maxW={{ base: "90%", sm: "80%", md: "300vh" }}
@@ -187,7 +196,6 @@ function AddStudent() {
           // left="10%"
           mt="6"
           fontSize="50px"
-          // fontWeight="bold"
           color="#1A237E"
           w="720px"
           h="55px"
@@ -204,10 +212,7 @@ function AddStudent() {
           mt={25}
         >
           <Stack spacing={25} direction={["row"]}>
-            <Stack
-            // spacing={8}
-            // direction={['row']}
-            >
+            <Stack>
               <Input
                 type="text"
                 focusBorderColor="#1A237E"
@@ -269,10 +274,7 @@ function AddStudent() {
                 </Stack>
               </RadioGroup>
             </Stack>
-            <Stack
-            // spacing={8}
-            // direction={['row']}
-            >
+            <Stack>
               <Input
                 type="text"
                 focusBorderColor="#1A237E"
@@ -324,10 +326,7 @@ function AddStudent() {
                 onChange={onChange}
               />
             </Stack>
-            <Stack
-            // spacing={6}
-            // direction={['row']}
-            >
+            <Stack>
               <Input
                 type="tel"
                 focusBorderColor="#1A237E"

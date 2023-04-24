@@ -1,4 +1,3 @@
-// import React from "react";
 import {
   Box,
   Button,
@@ -13,20 +12,19 @@ import {
   Text,
   VStack,
 } from "@chakra-ui/react";
-import background from "../images/background.png"; // replace with your own image
+import bg from "../images/background.png";
 import { useState } from "react";
 import ViewQueries from "./ViewQueries";
+import background from "../images/animation.gif";
 
-import {
-  useGetAllEmployeesQuery,
-} from "../service/amsSlice";
+import { useGetAllEmployeesQuery } from "../service/amsSlice";
 
 function SelectDetailsQueries() {
   const { data: getAllEmployees, isLoading: isEmployeeDataLoading } =
     useGetAllEmployeesQuery();
 
   const [isRender, setIsRender] = useState(false);
-  
+
   const [employeeid, setEmployeeid] = useState(0);
 
   const onChangeEmployee = (e) => {
@@ -35,13 +33,17 @@ function SelectDetailsQueries() {
   };
 
   if (isEmployeeDataLoading) {
-    return <h1>Loading..</h1>;
+    return (
+      <Box bg="white" h="100vh" w="223vh" overflow="hidden">
+        <Image src={background} alt="loader" h="100vh" ml="27%" mt="5dp" />
+      </Box>
+    );
   }
   return (
     <Box bg="#1A237E" h="100vh" w="206vh" overflow="hidden">
       <Box bg="#1A237E" h="100vh" overflow="hidden">
         <Image
-          src={background}
+          src={bg}
           alt="Logo"
           w="691dp"
           h="100vh"

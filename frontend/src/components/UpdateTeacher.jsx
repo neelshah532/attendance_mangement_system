@@ -11,7 +11,7 @@ import {
   InputGroup,
 } from "@chakra-ui/react";
 import { Radio, RadioGroup } from "@chakra-ui/react";
-import background from "../images/background.png";
+import bg from "../images/background.png";
 import curveBackground from "../images/Rectangle 9.png";
 import { useLocation } from "react-router-dom";
 import { useGetAllDetailsEmployeesQuery } from "../service/amsSlice";
@@ -19,13 +19,15 @@ import { useState } from "react";
 import { skipToken } from "@reduxjs/toolkit/dist/query";
 import { useUpdateEmployeeMutation } from "../service/amsSlice";
 import { useToast } from "@chakra-ui/react";
+import background from "../images/animation.gif";
 
 function UpdateTeacher() {
   const [show, setShow] = useState(false);
   const handleClick = () => setShow(!show);
-  const [updateEmployee,{isLoading:isUpdateLoding}] = useUpdateEmployeeMutation()
+  const [updateEmployee, { isLoading: isUpdateLoding }] =
+    useUpdateEmployeeMutation();
   const location = useLocation();
-  const toast =useToast()
+  const toast = useToast();
   const {
     data,
     isSuccess,
@@ -64,10 +66,10 @@ function UpdateTeacher() {
     password,
   } = employee;
 
-  const [selected,setSelected]=useState(employee.gender)
+  const [selected, setSelected] = useState(employee.gender);
 
-  const onChange = (e,value) => {
-    setSelected(value)
+  const onChange = (e, value) => {
+    setSelected(value);
     setEmployeeDetails((prevState) => ({
       ...prevState,
       [e.target.name]: e.target.value,
@@ -88,39 +90,49 @@ function UpdateTeacher() {
   }, [data]);
 
   const onUpdate = (e) => {
-    e.preventDefault()
-    updateEmployee(employee).unwrap().then((response)=>{
-      if(response.success==true){
-        toast({
-          title: response.messege,
-          status: "success",
-          duration: 9000,
-          isClosable: true,
-          colorScheme: "blue",
-        })
-      }else{
-        toast({
-          title: response.messege,
-          status: "warning",
-          duration: 9000,
-          isClosable: true,
-          colorScheme: "blue",
-        });
-      }
-    })
+    e.preventDefault();
+    updateEmployee(employee)
+      .unwrap()
+      .then((response) => {
+        if (response.success == true) {
+          toast({
+            title: response.messege,
+            status: "success",
+            duration: 9000,
+            isClosable: true,
+            colorScheme: "blue",
+          });
+        } else {
+          toast({
+            title: response.messege,
+            status: "warning",
+            duration: 9000,
+            isClosable: true,
+            colorScheme: "blue",
+          });
+        }
+      });
   };
 
   if (isDetailsLoading) {
-    return <h1>Loading..</h1>;
+    return (
+      <Box bg="white" h="100vh" w="223vh" overflow="hidden">
+        <Image src={background} alt="loader" h="100vh" ml="27%" mt="5dp" />
+      </Box>
+    );
   }
-  if(isUpdateLoding){
-    return <h1>Loading</h1>
+  if (isUpdateLoding) {
+    return (
+      <Box bg="white" h="100vh" w="223vh" overflow="hidden">
+        <Image src={bg} alt="loader" h="100vh" ml="27%" mt="5dp" />
+      </Box>
+    );
   }
   return (
     <>
       <Box bg="#1A237E" h="100vh" w="206vh" overflow="hidden">
         <Image
-          src={background}
+          src={bg}
           alt="Logo"
           w="691dp"
           h="100vh"
@@ -255,10 +267,7 @@ function UpdateTeacher() {
                   </Text>
                 </Stack>
               </Stack>
-              <Stack
-              // spacing={8}
-              // direction={['row']}
-              >
+              <Stack>
                 <Input
                   type="text"
                   focusBorderColor="#1A237E"

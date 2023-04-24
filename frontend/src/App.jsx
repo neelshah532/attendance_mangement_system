@@ -2,7 +2,8 @@ import React, { useEffect, useLayoutEffect, useState } from "react";
 import { ChakraProvider } from "@chakra-ui/react";
 import Login from "./pages/Login";
 import Pages from "./components/Pages";
-
+import background from "../src/images/animation.gif";
+import {Box,Image} from "@chakra-ui/react"
 function App() {
   const [isLoggedIn,setIsLoggedIn] = useState(false);
   const [isLoading,setIsLoading] = useState(true);
@@ -16,7 +17,12 @@ function App() {
   }, []);
   
   if(isLoading){
-    return <h1> Loading...</h1>
+    return(
+    <Box bg="white" h="100vh" w="223vh" overflow="hidden">
+        <Image src={background}  alt="loader" h="100vh" ml="27%" mt="5dp"/>
+    </Box>
+    
+    )
   }
 
   return (

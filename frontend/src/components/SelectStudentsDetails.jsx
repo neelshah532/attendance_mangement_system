@@ -14,7 +14,7 @@ import ViewStudent from "./ViewStudent";
 function SelectDetails() {
   const [selectedDivision, setSelectedDivision] = useState("");
   const [selectedSemester, setSelectedSemester] = useState("");
-  const [isRenderReady,setIsRenderReady]=useState(false);
+  const [isRenderReady, setIsRenderReady] = useState(false);
 
   const onChangeSemester = (e) => {
     setSelectedSemester(e.target.value);
@@ -23,9 +23,9 @@ function SelectDetails() {
     setSelectedDivision(e.target.value);
   };
 
-  const onDisplay=(e)=>{
-    setIsRenderReady(true)  
-  }
+  const onDisplay = (e) => {
+    setIsRenderReady(true);
+  };
 
   return (
     <Box
@@ -53,12 +53,10 @@ function SelectDetails() {
         left="13%"
       >
         <Text
-          // left="10%"
           mt="-33px"
           mx="230px"
           mb="10"
           fontSize="5xl"
-          // fontWeight="bold"
           color="white"
           w="680px"
           h="62px"
@@ -76,7 +74,6 @@ function SelectDetails() {
           align="center"
           mx="80px"
         >
-          
           <Select
             marginBottom={10}
             width={500}
@@ -121,12 +118,20 @@ function SelectDetails() {
             fontFamily={"noto-serif"}
             borderRadius={50}
             fontSize={20}
-            onClick={onDisplay}>
+            onClick={onDisplay}
+          >
             View
           </Button>
-          {
-            isRenderReady ? (<ViewStudent division={selectedDivision} semester={selectedSemester}/>) : (<><h1>No Data Found</h1 ></>)
-          }
+          {isRenderReady ? (
+            <ViewStudent
+              division={selectedDivision}
+              semester={selectedSemester}
+            />
+          ) : (
+            <>
+              <h1>No Data Found</h1>
+            </>
+          )}
         </Box>
       </Box>
     </Box>

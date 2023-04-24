@@ -12,12 +12,12 @@ import {
   InputGroup,
 } from "@chakra-ui/react";
 import { Radio, RadioGroup } from "@chakra-ui/react";
-import background from "../images/background.png";
+import bg from "../images/background.png";
 import curveBackground from "../images/Rectangle 9.png";
 import { useToast } from "@chakra-ui/react";
 import { useState } from "react";
 import { useAddStudentMutation } from "../service/amsSlice";
-
+import background from "../images/animation.gif";
 function AddStudent() {
   const [students, setStudentsDetails] = useState({
     enrollmentno: "",
@@ -36,7 +36,7 @@ function AddStudent() {
     password: "",
     division: "",
     semester: "",
-    programid:1
+    programid: 1,
   });
 
   const {
@@ -67,7 +67,7 @@ function AddStudent() {
   const [selectedProgram, setSelectedProgram] = useState("");
 
   const [selected, setSelected] = useState("male");
-  const [addStudent,{isLoading}]=useAddStudentMutation()
+  const [addStudent, { isLoading }] = useAddStudentMutation();
 
   const onChange = (e) => {
     setStudentsDetails((prevState) => ({
@@ -108,32 +108,41 @@ function AddStudent() {
     }));
   };
 
-  const addStundentData=(e)=>{
-    e.preventDefault()
-    addStudent(students).unwrap().then((response)=>{
-        if(response.success==true){
-            toast({
-                title: response.messege,
-                status: "success",
-                duration: 9000,
-                isClosable: true,
-                colorScheme: "blue",
-            });
-        }else{
-            toast({
-                title: response.messege,
-                status: "warning",
-                duration: 9000,
-                isClosable: true,
-                colorScheme: "blue",
-            });
+  const addStundentData = (e) => {
+    e.preventDefault();
+    addStudent(students)
+      .unwrap()
+      .then((response) => {
+        if (response.success == true) {
+          toast({
+            title: response.messege,
+            status: "success",
+            duration: 9000,
+            isClosable: true,
+            colorScheme: "blue",
+          });
+        } else {
+          toast({
+            title: response.messege,
+            status: "warning",
+            duration: 9000,
+            isClosable: true,
+            colorScheme: "blue",
+          });
         }
-    })
-  }
+      });
+    if (isLoading) {
+      return (
+        <Box bg="white" h="100vh" w="223vh" overflow="hidden">
+          <Image src={background} alt="loader" h="100vh" ml="27%" mt="5dp" />
+        </Box>
+      );
+    }
+  };
 
   return (
     <Box bg="#1A237E" h="100vh" w="206vh" overflow="hidden">
-      <Image src={background} alt="Logo" h="100vh" mx="auto" mt="5dp" />
+      <Image src={bg} alt="Logo" h="100vh" mx="auto" mt="5dp" />
 
       <Box
         maxW={{ base: "90%", sm: "80%", md: "300vh" }}

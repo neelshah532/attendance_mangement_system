@@ -11,11 +11,11 @@ import {
   Image,
   Text,
 } from "@chakra-ui/react";
-// import { Box, Image} from "@chakra-ui/react";
-import background from "../images/background.png";
+import bg from "../images/background.png";
 import { useGetAllSubjectsQuery } from "../service/amsSlice";
-import {useState} from 'react'
-import ViewAttendance from '../components/ViewAttendance'
+import { useState } from "react";
+import ViewAttendance from "../components/ViewAttendance";
+import background from "../images/animation.gif"
 
 function SelectDetailAttendance() {
   const { data: getAllSubjects, isLoading: isSubjectLoading } =
@@ -27,19 +27,23 @@ function SelectDetailAttendance() {
   const [subject, setSubject] = useState("");
 
   const onChange = (e) => {
-    setSubject(e.target.value)
+    setSubject(e.target.value);
   };
 
-  const onViewClick =(e)=>{
-    setIsRender(true)
-  }
+  const onViewClick = (e) => {
+    setIsRender(true);
+  };
   if (isSubjectLoading) {
-    return <h1>Loading..</h1>;
+    return (
+      <Box bg="white" h="100vh" w="223vh" overflow="hidden">
+        <Image src={background} alt="loader" h="100vh" ml="27%" mt="5dp" />
+      </Box>
+    );
   }
   return (
     <Box bg="#1A237E" h="100vh" w="206vh" overflow={"hidden"}>
       <Image
-        src={background}
+        src={bg}
         alt="Logo"
         w="91dp"
         h="100vh"
@@ -86,7 +90,9 @@ function SelectDetailAttendance() {
             <VStack>
               <Input
                 placeholder="Enrollment no"
-                onChange={(e)=>{setEnrollmentno(e.target.value)}}
+                onChange={(e) => {
+                  setEnrollmentno(e.target.value);
+                }}
                 color="#1A237E"
                 focusBorderColor="#1A237E"
                 fontFamily={"noto-serif"}

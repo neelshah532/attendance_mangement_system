@@ -1,21 +1,16 @@
 import React from "react";
-import {
-  Box,
-  Button,
-  Radio,
-  RadioGroup,
-  Stack,
-  Image,
-  Text,
-  HStack,
-} from "@chakra-ui/react";
+import { Box, Button, Stack, Image, Text, HStack } from "@chakra-ui/react";
 
-import { Checkbox, CheckboxGroup } from "@chakra-ui/react";
-import background from "../images/background.png"; // replace with your own image
+import { Checkbox } from "@chakra-ui/react";
+import bg from "../images/background.png"; // replace with your own image
 import { useState } from "react";
-import { useGetAllAttendanceQuery, useUpdateAttendanceMutation } from "../service/amsSlice";
+import {
+  useGetAllAttendanceQuery,
+  useUpdateAttendanceMutation,
+} from "../service/amsSlice";
 import { useEffect } from "react";
 import { useToast } from "@chakra-ui/react";
+import background from "../images/animation.gif";
 
 function ViewAttendance({ subject, enrollmentno }) {
   const {
@@ -25,8 +20,9 @@ function ViewAttendance({ subject, enrollmentno }) {
   } = useGetAllAttendanceQuery({ subject, enrollmentno });
 
   const [checkedState, setCheckedState] = useState({});
-  const [updateAttendance,{isLoading:isUpdateLoding}]=useUpdateAttendanceMutation();
-  const toast=useToast()
+  const [updateAttendance, { isLoading: isUpdateLoding }] =
+    useUpdateAttendanceMutation();
+  const toast = useToast();
   const handleCheckboxChange = (event) => {
     const { name, checked } = event.target;
     setCheckedState({
@@ -46,12 +42,12 @@ function ViewAttendance({ subject, enrollmentno }) {
     }
   }, [isSuccess, getAllAttendance]);
 
-  const onUpdateAttendance = (date,checked) => {
+  const onUpdateAttendance = (date, checked) => {
     var attend;
-    if(checked==true){
-      attend=1
-    }else{
-      attend=0
+    if (checked == true) {
+      attend = 1;
+    } else {
+      attend = 0;
     }
     const details = {
       subject: subject,
@@ -59,32 +55,48 @@ function ViewAttendance({ subject, enrollmentno }) {
       enrollmentno: enrollmentno,
       attend: attend,
     };
-    updateAttendance(details).unwrap().then((response)=>{
-      if(response.success==true){
-        toast({
-          title: response.messege,
-          status: "success",
-          duration: 9000,
-          isClosable: true,
-          colorScheme: "blue",
-        })
-      }else{
-        toast({
-          title: response.messege,
-          status: "success",
-          duration: 9000,
-          isClosable: true,
-          colorScheme: "blue",
-        })
-      }
-      if(isUpdateLoding){
-        return <h1>Loading</h1>
-      }
-    })
+    updateAttendance(details)
+      .unwrap()
+      .then((response) => {
+        if (response.success == true) {
+          toast({
+            title: response.messege,
+            status: "success",
+            duration: 9000,
+            isClosable: true,
+            colorScheme: "blue",
+          });
+        } else {
+          toast({
+            title: response.messege,
+            status: "success",
+            duration: 9000,
+            isClosable: true,
+            colorScheme: "blue",
+          });
+        }
+        if (isUpdateLoding) {
+          return (
+            <Box bg="white" h="100vh" w="223vh" overflow="hidden">
+              <Image
+                src={background}
+                alt="loader"
+                h="100vh"
+                ml="27%"
+                mt="5dp"
+              />
+            </Box>
+          );
+        }
+      });
   };
 
   if (isAttendanceLoading) {
-    return <h1>Loading</h1>;
+    return (
+      <Box bg="white" h="100vh" w="223vh" overflow="hidden">
+        <Image src={background} alt="loader" h="100vh" ml="27%" mt="5dp" />
+      </Box>
+    );
   }
   return (
     <Box
@@ -95,7 +107,7 @@ function ViewAttendance({ subject, enrollmentno }) {
       overflow="hidden"
     >
       <Image
-        src={background}
+        src={bg}
         alt="Logo"
         w="691dp"
         h="100vh"
@@ -165,7 +177,7 @@ function ViewAttendance({ subject, enrollmentno }) {
                   h={10}
                   fontSize={18}
                   onClick={() => {
-                    onUpdateAttendance(key,isChecked);
+                    onUpdateAttendance(key, isChecked);
                   }}
                 >
                   Update

@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { redirect, useNavigate } from "react-router-dom";
 import { useLoginMutation } from "../service/amsSlice";
+import background from "../images/animation.gif";
+
 import {
   Box,
   Button,
@@ -18,8 +20,6 @@ import logo from "../images/logo.png";
 import bglogo from "../images/Group 85.png";
 
 function Login({ setIsLoggedIn }) {
-  const navigate = useNavigate();
-
   const [user, setCredentials] = useState({
     data: "",
     password: "",
@@ -64,11 +64,14 @@ function Login({ setIsLoggedIn }) {
         });
       } else {
         if (user.data.includes("admin")) {
-          const result =login(user);
+          const result = login(user);
           result.unwrap().then((response) => {
             if (response.success == true) {
-              sessionStorage.setItem("user",JSON.stringify(response.credentials))
-              setIsLoggedIn(true)
+              sessionStorage.setItem(
+                "user",
+                JSON.stringify(response.credentials)
+              );
+              setIsLoggedIn(true);
             } else {
               toast({
                 title: response.messege,
@@ -91,9 +94,12 @@ function Login({ setIsLoggedIn }) {
       }
     }
   };
-
   if (isLoading) {
-    return <h1>Loading</h1>;
+    return (
+      <Box bg="white" h="100vh" w="223vh" overflow="hidden">
+        <Image src={background} alt="loader" h="100vh" ml="27%" mt="5dp" />
+      </Box>
+    );
   }
   return (
     <Grid

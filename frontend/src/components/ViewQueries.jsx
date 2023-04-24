@@ -13,16 +13,21 @@ import {
   Text,
   VStack,
 } from "@chakra-ui/react";
-import background from "../images/background.png"; // replace with your own image
+import bg from "../images/background.png"; // replace with your own image
 import { useState } from "react";
 import { useGetAllQueriesQuery } from "../service/amsSlice";
+import background from "../images/animation.gif";
 
 function ViewQueries({ employeeid }) {
   const { data: getAllQueries, isLoading: isQueriesDataLoading } =
     useGetAllQueriesQuery(employeeid);
 
   if (isQueriesDataLoading) {
-    return <h1>Loading..</h1>;
+    return (
+      <Box bg="white" h="100vh" w="223vh" overflow="hidden">
+        <Image src={bg} alt="loader" h="100vh" ml="27%" mt="5dp" />
+      </Box>
+    );
   }
   return (
     <Box bg="#1A237E" h="100vh" w="206vh" overflow="hidden">
@@ -52,7 +57,11 @@ function ViewQueries({ employeeid }) {
                 color="#1A237E"
                 fontSize={20}
               >
-                {items.firstname+" "+items.middlename+" "+items.lastname}
+                {items.firstname +
+                  " " +
+                  items.middlename +
+                  " " +
+                  items.lastname}
               </Text>
               <Text
                 p={3}

@@ -13,12 +13,13 @@ import {
   VStack,
   useToast,
 } from "@chakra-ui/react";
-import background from "../images/background.png"; // replace with your own image
+import bg from "../images/background.png"; // replace with your own image
 import { useState } from "react";
+import background from "../images/animation.gif"
+
 import {
   useGetAllSubjectsQuery,
   useDeleteSubjectMutation,
-  useAddEmployeeMutation,
   useAddSubjectMutation,
 } from "../service/amsSlice";
 
@@ -78,7 +79,11 @@ function ManagePrograme() {
         }
       });
     if (isAddSubjectLoading) {
-      return <h1>Loading...</h1>;
+      return (
+        <Box bg="white" h="100vh" w="223vh" overflow="hidden">
+          <Image src={background} alt="loader" h="100vh" ml="27%" mt="5dp" />
+        </Box>
+      );
     }
   };
 
@@ -105,17 +110,25 @@ function ManagePrograme() {
         }
       });
     if (isDeleteSubjectLoading) {
-      return <h1>Loading...</h1>;
+      return (
+        <Box bg="white" h="100vh" w="223vh" overflow="hidden">
+          <Image src={bg} alt="loader" h="100vh" ml="27%" mt="5dp" />
+        </Box>
+      );
     }
   };
 
   if (isLoading) {
-    return <h1>Loading..</h1>;
+    return (
+      <Box bg="white" h="100vh" w="223vh" overflow="hidden">
+        <Image src={bg} alt="loader" h="100vh" ml="27%" mt="5dp" />
+      </Box>
+    );
   }
   return (
     <Box bg="#1A237E" h="100vh" w="206vh" overflow="hidden">
       <Image
-        src={background}
+        src={bg}
         alt="Logo"
         w="691dp"
         h="100vh"

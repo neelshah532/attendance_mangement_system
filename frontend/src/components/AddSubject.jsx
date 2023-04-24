@@ -15,15 +15,17 @@ import {
   VStack,
 } from "@chakra-ui/react";
 // import { Box, Image} from "@chakra-ui/react";
-import background from "../images/background.png";
+import bg from "../images/background.png";
 import curveBackground from "../images/Rectangle 9.png";
+import {useState} from "react"
+import background from "../images/animation.gif";
 
 function AddSubject() {
-  const [value, setValue] = React.useState("1");
+  const [value, setValue] = useState("1");
   return (
     <Box bg="#1A237E" h="100vh" w="206vh" overflow={"hidden"}>
       <Image
-        src={background}
+        src={bg}
         alt="Logo"
         w="691dp"
         h="100vh"

@@ -12,11 +12,12 @@ import {
   InputGroup,
 } from "@chakra-ui/react";
 import { Radio, RadioGroup } from "@chakra-ui/react";
-import background from "../images/background.png";
+import bg from "../images/background.png";
 import curveBackground from "../images/Rectangle 9.png";
 import { useState } from "react";
 import {useAddEmployeeMutation} from '../service/amsSlice'
 import { useToast } from "@chakra-ui/react";
+import background from "../images/animation.gif"
 
 function UpdateTeacher() {
   const [show, setShow] = useState(false);
@@ -74,7 +75,6 @@ function UpdateTeacher() {
 
   const onAddData=(e)=>{
     e.preventDefault()
-    console.log(employee)
     addEmployee(employee).unwrap().then((response)=>{
       if(response.success==true){
         toast({
@@ -96,13 +96,17 @@ function UpdateTeacher() {
     })
   }
   if(isLoading){
-    return <h1>Loading..</h1>
+    return (
+      <Box bg="white" h="100vh" w="223vh" overflow="hidden">
+        <Image src={background} alt="loader" h="100vh" ml="27%" mt="5dp" />
+      </Box>
+    );
   }
   return (
     <>
       <Box bg="#1A237E" h="100vh" w="206vh" overflow="hidden">
         <Image
-          src={background}
+          src={bg}
           alt="Logo"
           w="691dp"
           h="100vh"

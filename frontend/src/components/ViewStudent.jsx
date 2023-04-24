@@ -8,16 +8,18 @@ import {
   HStack,
   Select,
 } from "@chakra-ui/react";
-import background from "../images/background.png"; // replace with your own image
+import bg from "../images/background.png"; // replace with your own image
 import {
   useGetAllStudentBySemesterAndDivisionQuery,
   useDeleteDataMutation,
 } from "../service/amsSlice";
 import { useNavigate } from "react-router-dom";
 import { useToast } from "@chakra-ui/react";
+import background from "../images/animation.gif";
+
 function ViewStudent({ division, semester }) {
   const navigate = useNavigate();
-  const toast=useToast();
+  const toast = useToast();
   const [deleteData, { isLoading: isStudentDeleteLoading }] =
     useDeleteDataMutation();
   const { data, isLoading } = useGetAllStudentBySemesterAndDivisionQuery({
@@ -49,13 +51,27 @@ function ViewStudent({ division, semester }) {
           });
         }
         if (isStudentDeleteLoading) {
-          return <h1>Loading...</h1>;
+          return (
+            <Box bg="white" h="100vh" w="223vh" overflow="hidden">
+              <Image
+                src={background}
+                alt="loader"
+                h="100vh"
+                ml="27%"
+                mt="5dp"
+              />
+            </Box>
+          );
         }
       });
   };
 
   if (isLoading) {
-    return <h1>Loading...</h1>;
+    return (
+      <Box bg="white" h="100vh" w="223vh" overflow="hidden">
+        <Image src={background} alt="loader" h="100vh" ml="27%" mt="5dp" />
+      </Box>
+    );
   }
 
   return (
