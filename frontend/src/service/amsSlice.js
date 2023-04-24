@@ -25,6 +25,13 @@ export const amsSlice = createApi({
                 body: details,
             }),
         }),
+        updateAttendance: builder.mutation({
+            query: (details) => ({
+                url: '/superAdmin/updateAttendance',
+                method: 'PUT',
+                body: details,
+            }),
+        }),
         addEmployee: builder.mutation({
             query: (details) => ({
                 url: '/admin/manageEmployee/ADD',
@@ -64,6 +71,9 @@ export const amsSlice = createApi({
         getAllQueries: builder.query({
             query: (employeeid) => `/superAdmin/queries/${employeeid}`,
         }),
+        getAllAttendance: builder.query({
+            query: ({ enrollmentno, subject }) => `/superAdmin/getAttendance/${enrollmentno}/${subject}`,
+        }),
         deleteData: builder.mutation({
             query: ({ id, type }) => ({
                 url: `/admin/manage/delete/${id}/${type}`,
@@ -93,5 +103,7 @@ export const {
     useGetAllSubjectsQuery,
     useDeleteSubjectMutation,
     useAddSubjectMutation,
-    useGetAllQueriesQuery
+    useGetAllQueriesQuery,
+    useGetAllAttendanceQuery,
+    useUpdateAttendanceMutation
 } = amsSlice

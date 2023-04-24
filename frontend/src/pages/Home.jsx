@@ -60,7 +60,7 @@ function Home(){
               Manage Student And TeachingStaff
             </Text>
           </Box>
-          <Box bg="#D9D9D9" w="226px" h="170px" borderRadius="10px" onClick={()=>{navigate('/')}}>
+          <Box bg="#D9D9D9" w="226px" h="170px" borderRadius="10px" onClick={()=>{navigate('/SelectDetailAttendance')}}>
             <Image
               src={icon2}
               alt="Icon 2"

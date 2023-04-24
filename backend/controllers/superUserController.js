@@ -3,11 +3,11 @@ const { connectDb } = require('../config/db')
 const con = connectDb()
 
 const getAttendanceStudents = asyncHandler(async(req, res) => {
+    console.log(req.params)
     const { enrollmentno, subject } = req.params
     if (!req.params)
         return res.send({ success: false, messege: "Please Send Data Properly" })
 
-    console.log(enrollmentno)
     var getColumnNamesQuery = `SHOW COLUMNS FROM ${subject}`;
     const getColumnNames = await new Promise((resolve) => {
         con.query(getColumnNamesQuery, (err, names) => {
@@ -27,7 +27,6 @@ const getAttendanceStudents = asyncHandler(async(req, res) => {
     })
     var promises = []
     for (const dates of getColumnNames) {
-        console.log(dates)
         var checkNullDataQuery = `SELECT ${dates} FROM ${subject} WHERE enrollmentno=?`
         var promise = await new Promise((resolve) => {
             con.query(checkNullDataQuery, [enrollmentno], (err, counter) => {
@@ -46,25 +45,36 @@ const updateAttendance = asyncHandler(async(req, res) => {
         con.query(
             getStudentAttendancetillnow, [enrollmentno],
             (err, results) => {
-                var data = JSON.parse(JSON.stringify(results))
-                resolve(data[0])
+                if (err)
+                    return res.send({ success: false, messege: "Something Went Wrong" })
+
+                if (results === undefined) {
+                    resolve(null)
+                } else {
+                    var data = JSON.parse(JSON.stringify(results))
+                    resolve(data[0])
+                }
             }
         );
-    })
-    var newTotalAttendAttendance
-    if (attend === 1) {
-        newTotalAttendAttendance = attendTillNow.Totalstudentattendtillnow + 1
-    } else {
-        newTotalAttendAttendance = attendTillNow.Totalstudentattendtillnow - 1
-    }
+    });
 
-    var updateAttendanceSql = `UPDATE ${subject} SET ${date}=?,Totalstudentattendtillnow=? WHERE enrollmentno=?`
-    con.query(updateAttendanceSql, [attend, newTotalAttendAttendance, enrollmentno], (err) => {
-        if (err) {
-            return res.send({ success: false, messege: "Something Went Wrong" })
+    if (attendTillNow == null) {
+        return res.send({ success: false, messege: "No Attendance or Wrong Enrollmentno" })
+    } else {
+        var newTotalAttendAttendance
+        if (attend === 1) {
+            newTotalAttendAttendance = attendTillNow.Totalstudentattendtillnow + 1
         } else {
-            res.send({ success: true, messege: "Student Attendance Updated" })
+            newTotalAttendAttendance = attendTillNow.Totalstudentattendtillnow - 1
         }
-    })
+        var updateAttendanceSql = `UPDATE ${subject} SET ${date}=?,Totalstudentattendtillnow=? WHERE enrollmentno=?`
+        con.query(updateAttendanceSql, [attend, newTotalAttendAttendance, enrollmentno], (err) => {
+            if (err) {
+                return res.send({ success: false, messege: "Something Went Wrong" })
+            } else {
+                res.send({ success: true, messege: "Student Attendance Updated" })
+            }
+        })
+    }
 })
 module.exports = { getAttendanceStudents, updateAttendance }

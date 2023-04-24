@@ -16,6 +16,8 @@ import SelectStudentDetails from "../components/SelectStudentsDetails"
 import UpdateStudent from "../components/UpdateStudent"
 import SelectDetailsQueries from "../components/SelectDetailsQueries"
 import ViewQueries from "../components/ViewQueries"
+import SelectDetailAttendance from "../components/SelectDetailAttendance"
+import ViewAttendance from "../components/ViewAttendance"
 
 function Pages() {
   return (
@@ -37,6 +39,8 @@ function Pages() {
         <Route exact path={"/UpdateStudent"} element={<UpdateStudent />} />
         <Route exact path={"/SelectDetailsQueries"} element={<SelectDetailsQueries />} />
         <Route exact path={"/ViewQueries"} element={<ViewQueries />} />
+        <Route exact path={"/SelectDetailAttendance"} element={<SelectDetailAttendance />} />
+        <Route exact path={"/ViewAttendance"} element={<ViewAttendance />} />
       </Routes>
     </>
   );
