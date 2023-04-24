@@ -61,6 +61,9 @@ export const amsSlice = createApi({
         getAllSubjects: builder.query({
             query: () => `/admin/subjects/getSubjects`,
         }),
+        getAllQueries: builder.query({
+            query: (employeeid) => `/superAdmin/queries/${employeeid}`,
+        }),
         deleteData: builder.mutation({
             query: ({ id, type }) => ({
                 url: `/admin/manage/delete/${id}/${type}`,
@@ -89,5 +92,6 @@ export const {
     useAddStudentMutation,
     useGetAllSubjectsQuery,
     useDeleteSubjectMutation,
-    useAddSubjectMutation
+    useAddSubjectMutation,
+    useGetAllQueriesQuery
 } = amsSlice

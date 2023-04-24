@@ -87,7 +87,7 @@ function Home(){
               Manage Subject
             </Text>
           </Box>
-          <Box bg="#D9D9D9" w="226px" h="170px" borderRadius="10px" onClick={()=>{navigate('/ManageSubject')}}>
+          <Box bg="#D9D9D9" w="226px" h="170px" borderRadius="10px" onClick={()=>{navigate('/SelectDetailsQueries')}}>
             <Image
               src={icon6}
               alt="Icon 6"
@@ -97,7 +97,7 @@ function Home(){
               mt="35px"
             />
             <Text ml="2" p="10" color="#1A237E" fontSize="md">
-              Manage Queries
+              View Queries
             </Text>
           </Box>
         </Grid>

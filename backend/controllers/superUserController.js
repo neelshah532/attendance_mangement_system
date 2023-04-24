@@ -36,7 +36,7 @@ const getAttendanceStudents = asyncHandler(async(req, res) => {
         })
         promises.push(promise)
     }
-    res.send(promises)
+    res.send({ success: true, attendance: promises })
 })
 
 module.exports = { getAttendanceStudents }

@@ -14,6 +14,8 @@ import ViewStudent from "../components/ViewStudent";
 import ViewTeacher from "../components/ViewTeacher";
 import SelectStudentDetails from "../components/SelectStudentsDetails"
 import UpdateStudent from "../components/UpdateStudent"
+import SelectDetailsQueries from "../components/SelectDetailsQueries"
+import ViewQueries from "../components/ViewQueries"
 
 function Pages() {
   return (
@@ -33,6 +35,8 @@ function Pages() {
         <Route exact path={"/ViewTeacher"} element={<ViewTeacher />} />
         <Route exact path={"/SelectDetails"} element={<SelectStudentDetails />} />
         <Route exact path={"/UpdateStudent"} element={<UpdateStudent />} />
+        <Route exact path={"/SelectDetailsQueries"} element={<SelectDetailsQueries />} />
+        <Route exact path={"/ViewQueries"} element={<ViewQueries />} />
       </Routes>
     </>
   );

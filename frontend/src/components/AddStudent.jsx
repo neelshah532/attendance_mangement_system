@@ -108,9 +108,8 @@ function AddStudent() {
     }));
   };
 
-  const addStudentData=(e)=>{
+  const addStundentData=(e)=>{
     e.preventDefault()
-    console.log(students)
     addStudent(students).unwrap().then((response)=>{
         if(response.success==true){
             toast({
@@ -395,7 +394,7 @@ function AddStudent() {
           h="49px"
           alignSelf="center"
           left="20%"
-          onClick={addStudentData}
+          onClick={addStundentData}
         >
           ADD Student
         </Button>
