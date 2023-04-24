@@ -17,6 +17,6 @@ router.delete('/deleteData/:id/:type', deleteData)
 
 router.get('/queries/:employeeid', getAllQuery)
 
-router.get('/getAttendance/:date/:enrollmentno/:subject', getAttendanceStudents)
+router.get('/getAttendance/:enrollmentno/:subject', getAttendanceStudents)
 
 module.exports = router
