@@ -191,8 +191,6 @@ const updateStudentAttendance = asyncHandler(async(req, res) => {
         }
         Promise.all(promises).then((results) => {
             let finalSubtractedAttendance = []
-            console.log(attendance)
-            console.log(results)
             for (let i = 0; i < results.length; i++) {
                 const item1 = results[i];
                 const item2 = attendance.find((item) => item.enrollmentno === item1.enrollmentno);
