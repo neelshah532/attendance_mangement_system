@@ -55,6 +55,7 @@
         enrollmentno: enrollmentno,
         attend: attend,
       };
+      console.log(details)
       updateAttendance(details)
         .unwrap()
         .then((response) => {

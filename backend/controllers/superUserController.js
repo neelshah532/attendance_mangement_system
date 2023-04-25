@@ -46,7 +46,7 @@ const getAttendanceStudents = asyncHandler(async(req, res) => {
 
 const updateAttendance = asyncHandler(async(req, res) => {
     const { subject, date, enrollmentno, attend } = req.body
-    if (!subject || !date || !enrollmentno || !attend)
+    if (!subject && !date && !enrollmentno && !attend)
         return res.send({ success: false, messege: "Please Send Proper Data" })
 
     var getStudentAttendancetillnow = `Select enrollmentno,Totalstudentattendtillnow from ${subject} WHERE enrollmentno=?`;
