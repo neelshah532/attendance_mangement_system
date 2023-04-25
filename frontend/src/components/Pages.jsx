@@ -16,7 +16,6 @@ import SelectDetailsQueries from "../components/SelectDetailsQueries"
 import ViewQueries from "../components/ViewQueries"
 import SelectDetailAttendance from "../components/SelectDetailAttendance"
 import ViewAttendance from "../components/ViewAttendance"
-
 function Pages() {
   return (
     <>

@@ -1,4 +1,5 @@
-import React from "react";
+import React, { useEffect } from "react";
+import axios from "axios";
 
 import {
   Stack,
@@ -12,27 +13,51 @@ import {
   Text,
 } from "@chakra-ui/react";
 import bg from "../images/background.png";
-import { useGetAllSubjectsQuery } from "../service/amsSlice";
+import {
+  useGetAllSubjectsQuery,
+} from "../service/amsSlice";
 import { useState } from "react";
 import ViewAttendance from "../components/ViewAttendance";
-import background from "../images/animation.gif"
-
+import background from "../images/animation.gif";
+import { useToast } from "@chakra-ui/react";
 function SelectDetailAttendance() {
   const { data: getAllSubjects, isLoading: isSubjectLoading } =
     useGetAllSubjectsQuery();
 
-  const [isRender, setIsRender] = useState(false);
-
+  const toast = useToast();
   const [enrollmentno, setEnrollmentno] = useState("");
   const [subject, setSubject] = useState("");
+  const [isRender, setIsRender] = useState(false);
 
-  const onChange = (e) => {
+  const onSubjectChange = (e) => {
     setSubject(e.target.value);
   };
 
-  const onViewClick = (e) => {
-    setIsRender(true);
+  const onEnrollmentChange = (e) => {
+    setEnrollmentno(e.target.value);
   };
+  const [attendance,setAttendance]=useState([])
+
+  const baseURL = "http://localhost:5000/ams/superAdmin/getAttendance";
+  
+  const onViewClick = () => {
+    axios.get(`${baseURL}/${enrollmentno}/${subject}`).then((response) => {
+      if(response.data.success==false){
+        toast({
+          title: response.data.messege,
+          status: "success",
+          duration: 9000,
+          isClosable: true,
+          colorScheme: "blue",
+        });
+      }else{
+        setAttendance(response.data)
+      }
+    });  
+    setIsRender(true)
+  };
+  useEffect(onViewClick,[])
+
   if (isSubjectLoading) {
     return (
       <Box bg="white" h="100vh" w="223vh" overflow="hidden">
@@ -40,6 +65,7 @@ function SelectDetailAttendance() {
       </Box>
     );
   }
+  
   return (
     <Box bg="#1A237E" h="100vh" w="206vh" overflow={"hidden"}>
       <Image
@@ -91,9 +117,7 @@ function SelectDetailAttendance() {
             <VStack>
               <Input
                 placeholder="Enrollment no"
-                onChange={(e) => {
-                  setEnrollmentno(e.target.value);
-                }}
+                onChange={onEnrollmentChange}
                 ml="5"
                 color="#1A237E"
                 focusBorderColor="#1A237E"
@@ -108,7 +132,7 @@ function SelectDetailAttendance() {
                 placeholder="Subjects"
                 fontFamily={"noto-serif"}
                 color="#1A237E"
-                onChange={onChange}
+                onChange={onSubjectChange}
                 _placeholder={{ color: "#1A237E", fontFamily: "noto-serif" }}
                 width="300px"
               >
@@ -143,13 +167,8 @@ function SelectDetailAttendance() {
           </Button>
         </Box>
       </Grid>
-      {isRender ? (
-        <ViewAttendance subject={subject} enrollmentno={enrollmentno} />
-      ) : (
-        <>
-          <h1>No Data Found</h1>
-        </>
-      )}
+      {attendance&&<ViewAttendance subject={subject} enrollmentno={enrollmentno} studentAttendance={attendance}/>
+      }
     </Box>
   );
 }

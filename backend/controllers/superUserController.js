@@ -26,14 +26,21 @@ const getAttendanceStudents = asyncHandler(async(req, res) => {
         })
     })
     if (getColumnNames.length === 0)
-        return res.send({ success: false, messege: "You Had Enter Invalid Subject" })
+        return res.send({ success: false, messege: "No Data in this Subject" })
 
     var promises = []
     for (const dates of getColumnNames) {
         var checkNullDataQuery = `SELECT ${dates} FROM ${subject} WHERE enrollmentno=?`
         var promise = await new Promise((resolve) => {
             con.query(checkNullDataQuery, [enrollmentno], (err, counter) => {
-                resolve(counter[0])
+                if (err)
+                    return res.send({ success: false, messege: "No Attendance Records Found Yet" })
+
+                if (counter[0] === undefined) {
+                    return res.send({ success: false, messege: "Invalid Username" })
+                } else {
+                    resolve(counter[0])
+                }
             })
         })
         promises.push(promise)

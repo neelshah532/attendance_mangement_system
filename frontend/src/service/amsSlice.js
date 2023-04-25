@@ -104,6 +104,6 @@ export const {
     useDeleteSubjectMutation,
     useAddSubjectMutation,
     useGetAllQueriesQuery,
-    useGetAllAttendanceQuery,
+    useLazyGetAllAttendanceQuery,
     useUpdateAttendanceMutation
 } = amsSlice
