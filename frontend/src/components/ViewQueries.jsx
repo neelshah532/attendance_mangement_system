@@ -30,16 +30,21 @@ function ViewQueries({ employeeid }) {
     );
   }
   return (
-    <Box bg="#1A237E" h="100vh" w="206vh" overflow="hidden">
+    <Box bg="Transparent" paddingTop={32} overflow="hidden">
+      <Box
+        mt={10}
+        ml={4}
+           style={{ overflowY:"scroll", height: "50vh" }}
+         > 
       {getAllQueries.queries.map((items) => {
         return (
           <Box
             bgColor="white"
-            width={650}
+            width={950}
             borderRadius={15}
-            m={2}
+            mt={2}
             align="center"
-            mx="222px"
+            mx="40px"
           >
             <HStack gap={8}>
               <Text
@@ -52,7 +57,7 @@ function ViewQueries({ employeeid }) {
                 {items.enrollmentno}
               </Text>
               <Text
-                p={3}
+                w={250}
                 fontFamily={"noto-serif"}
                 color="#1A237E"
                 fontSize={20}
@@ -64,7 +69,7 @@ function ViewQueries({ employeeid }) {
                   items.lastname}
               </Text>
               <Text
-                p={3}
+                w={150}
                 fontFamily={"noto-serif"}
                 color="#1A237E"
                 fontSize={20}
@@ -72,7 +77,7 @@ function ViewQueries({ employeeid }) {
                 {items.description}
               </Text>
               <Text
-                p={3}
+              w={180}
                 fontFamily={"noto-serif"}
                 color="#1A237E"
                 fontSize={20}
@@ -83,6 +88,7 @@ function ViewQueries({ employeeid }) {
           </Box>
         );
       })}
+    </Box>
     </Box>
   );
 }

@@ -39,7 +39,7 @@ function Manage() {
           alignItems="center"
           position="absolute"
           top="50%"
-          left="50%"
+          left="50.5%"
           transform="translate(-50%, -50%)"
         >
           <Box bg="#D9D9D9" w="226px" h="170px" borderRadius="10px" onClick={()=>{navigate('/AddTeacher')}}>

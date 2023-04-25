@@ -138,20 +138,19 @@ function ManagePrograme() {
       />
 
       <Box
-        maxW={{ base: "90%", sm: "80%", md: "250vh" }}
-        maxH={{ base: "90%", sm: "80%", md: "150vh" }}
+        maxW={{ base: "90%", sm: "80%", md: "206vh" }}
+        maxH={{ base: "90%", sm: "80%", md: "100vh" }}
         justifyContent="center"
         alignItems="center"
         position="absolute"
         top="10%"
-        left="23%"
+        left="26%"
       >
-        <Text
+        {/* <Text
           // left="10%"
           mt="-15px"
           mx="180px"
           fontSize="4xl"
-          left="-50%"
           color="white"
           w="399px"
           h="62px"
@@ -159,8 +158,8 @@ function ManagePrograme() {
           fontFamily={"noto-serif"}
         >
           Manage Subject
-        </Text>
-        <Box bgColor="white" width={800} borderRadius={15}>
+        </Text> */}
+        <Box bgColor="white" paddingBottom="5%" width={800} borderRadius={15}>
           <Text
             mt="120"
             fontSize="45px"
@@ -169,18 +168,19 @@ function ManagePrograme() {
             w="250px"
             h="50px"
             textAlign="center"
-            transform="translateX(85%)"
+            transform="translateX(97%)"
             margin={10}
           >
             Add Subject
           </Text>
-          <Stack direction={"row"}>
-            <VStack>
+          <Stack direction={"column"}>
+            <HStack>
               <Input
                 placeholder="Subject Name"
                 name="subjectName"
+                left={50}
+                marginEnd={60}
                 value={subjectName}
-                align={"end"}
                 color="#1A237E"
                 focusBorderColor="#1A237E"
                 fontFamily={"noto-serif"}
@@ -197,15 +197,16 @@ function ManagePrograme() {
                   <Radio value="Elective">Elective</Radio>
                 </Stack>
               </RadioGroup>
-              <Button
+            </HStack>
+            <Button
                 type="submit"
                 bg="#1A237E"
                 color="white"
+                top={5}
                 _hover={{ bg: " #202A9A" }}
-                left="45%"
+                left="42%"
                 rounded={"lg"}
                 fontFamily={"noto-serif"}
-                p={3}
                 w={150}
                 h={8}
                 fontSize={18}
@@ -213,18 +214,21 @@ function ManagePrograme() {
               >
                 ADD SUBJECTS
               </Button>
-            </VStack>
           </Stack>
         </Box>
+        <Box
+        mt={10}
+           style={{ overflowY:"scroll", height: "50vh" }}
+         > 
         {data.subjects.map((items) => {
           return (
             <Box
               bgColor="white"
-              width={430}
+              width={460}
               borderRadius={15}
               m={2}
               align="center"
-              mx="155px"
+              mx="175px"
               key={items.subjectid}
             >
               <HStack gap={5}>
@@ -232,6 +236,7 @@ function ManagePrograme() {
                   mx={2}
                   left="20%"
                   p={3}
+                  w={300}
                   fontFamily={"noto-serif"}
                   color="#1A237E"
                   fontSize={20}
@@ -244,7 +249,6 @@ function ManagePrograme() {
                   bg="#1A237E"
                   color="white"
                   _hover={{ bg: " #202A9A" }}
-                  left="45%"
                   rounded={"lg"}
                   fontFamily={"noto-serif"}
                   p={3}
@@ -261,6 +265,7 @@ function ManagePrograme() {
             </Box>
           );
         })}
+        </Box>
       </Box>
     </Box>
   );

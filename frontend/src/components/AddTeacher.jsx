@@ -133,10 +133,9 @@ function UpdateTeacher() {
           maxH={{ base: "90%", sm: "80%", md: "200vh" }}
           justifyContent="center"
           position="relative"
-          top="3%"
-          left="31%"
+          top="-12%"
+          left="35.5%"
           transform="translate(-7%, -150%)"
-          zIndex="10"
         >
           <Text
             mt="3"
@@ -357,7 +356,7 @@ function UpdateTeacher() {
             h="35px"
             fontWeight={"normal"}
             alignItem="center"
-            left="22%"
+            left="18.5%"
             fontFamily={"noto-serif"}
             borderRadius={50}
             fontSize={20}

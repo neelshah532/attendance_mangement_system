@@ -82,8 +82,11 @@ function ViewStudent({ division, semester }) {
       alignItems="center"
       position="absolute"
       top="120%"
-      left="5%"
+      left="0%"
     >
+       <Box
+           style={{ overflowY:"scroll", height: "29vh" }}
+         > 
       {data.students.map((items) => {
         return (
           <Box
@@ -109,20 +112,12 @@ function ViewStudent({ division, semester }) {
               <Text
                 left="26%"
                 p={3}
+                w={230}
                 fontFamily={"noto-serif"}
                 color="#1A237E"
                 fontSize={20}
               >
-                {items.firstname + " " + items.middlename + "" + items.lastname}
-              </Text>
-              <Text
-                left="26%"
-                p={3}
-                fontFamily={"noto-serif"}
-                color="#1A237E"
-                fontSize={20}
-              >
-                {items.semester}
+                {items.firstname + " " + items.middlename + " " + items.lastname}
               </Text>
               <Text
                 left="20%"
@@ -138,11 +133,12 @@ function ViewStudent({ division, semester }) {
                 bg="#1A237E"
                 color="white"
                 _hover={{ bg: " #202A9A" }}
-                left="8.5%"
+                left="14%"
                 rounded={"lg"}
                 fontFamily={"noto-serif"}
                 p={3}
                 h={10}
+                w={100}
                 fontSize={18}
                 name="update"
                 onClick={() => {
@@ -159,7 +155,8 @@ function ViewStudent({ division, semester }) {
                 bg="#1A237E"
                 color="white"
                 _hover={{ bg: " #202A9A" }}
-                left="8%"
+                left="14%"
+                w={100}
                 rounded={"lg"}
                 fontFamily={"noto-serif"}
                 h={10}
@@ -175,6 +172,7 @@ function ViewStudent({ division, semester }) {
           </Box>
         );
       })}
+      </Box>
     </Box>
   );
 }

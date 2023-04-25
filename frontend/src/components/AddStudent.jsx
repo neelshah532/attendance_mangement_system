@@ -142,7 +142,7 @@ function AddStudent() {
 
   return (
     <Box bg="#1A237E" h="100vh" w="206vh" overflow="hidden">
-      <Image src={bg} alt="Logo" h="100vh" mx="auto" mt="5dp" />
+      <Image src={bg} alt="Logo" h="100vh" mx="auto" mt="5dp" opacity={0.2} />
 
       <Box
         maxW={{ base: "90%", sm: "80%", md: "300vh" }}
@@ -162,24 +162,22 @@ function AddStudent() {
         justifyContent="center"
         alignItems="center"
         position="relative"
-        top="15%"
-        left="30%"
+        top="-5%"
+        left="34%"
         transform="translate(-7%, -160%)"
-        zIndex="10"
       >
         <Text
           // mx="auto"
           // left="10%"
-          mt="6"
           fontSize="50px"
+          fontFamily="noto-sherif"
           // fontWeight="bold"
           color="#1A237E"
-          w="720px"
+          w="820px"
           h="55px"
+          
           textAlign="center"
-        >
-          ADD Students
-        </Text>
+        >ADD Students</Text>
         <Grid
           templateColumns={{
             base: "repeat(1, 1fr)",
@@ -195,6 +193,7 @@ function AddStudent() {
             >
               <Input
                 type="text"
+                fontFamily="noto-sherif"
                 focusBorderColor="#1A237E"
                 placeholder="Enrollment No."
                 _placeholder={{ color: "#1A237E" }}
@@ -208,6 +207,7 @@ function AddStudent() {
                 placeholder="First Name"
                 focusBorderColor="#1A237E"
                 _placeholder={{ color: "#1A237E" }}
+                fontFamily="noto-sherif"
                 color="#1A237E"
                 name="firstname"
                 value={firstname}
@@ -219,6 +219,7 @@ function AddStudent() {
                 placeholder="Middle Name"
                 _placeholder={{ color: "#1A237E" }}
                 color="#1A237E"
+                fontFamily="noto-sherif"
                 name="middlename"
                 value={middlename}
                 onChange={onChange}
@@ -228,6 +229,7 @@ function AddStudent() {
                 focusBorderColor="#1A237E"
                 placeholder="Last Name"
                 _placeholder={{ color: "#1A237E" }}
+                fontFamily="noto-sherif"
                 color="#1A237E"
                 name="lastname"
                 value={lastname}
@@ -237,22 +239,38 @@ function AddStudent() {
                 type="text"
                 focusBorderColor="#1A237E"
                 placeholder="Date Of Birth"
+                fontFamily="noto-sherif"
                 _placeholder={{ color: "#1A237E" }}
                 color="#1A237E"
                 name="dob"
                 value={dob}
                 onChange={onChange}
               />
-              <RadioGroup
-                onChange={(value) => handleGenderChange(value)}
-                value={gender}
-              >
-                <Stack direction="row">
-                  <Radio value="male">Male</Radio>
-                  <Radio value="female">Female</Radio>
-                  <Radio value="other">Other</Radio>
+              <Stack direction="row" fontFamily={"noto-serif"}>
+                  <Text
+                    fontFamily={"noto-serif"}
+                    color="#1A237E"
+                    fontSize={18}
+                    textAlign="center"
+                    w={250}
+                  >
+                    Gender
+                    <RadioGroup
+                      onChange={(value) => handleGenderChange(value)}
+                      value={gender}
+                    >
+                      <Radio value="male" m={1}>
+                        Male
+                      </Radio>
+                      <Radio value="female" m={1}>
+                        Female
+                      </Radio>
+                      <Radio value="other" m={1}>
+                        Other
+                      </Radio>
+                    </RadioGroup>
+                  </Text>
                 </Stack>
-              </RadioGroup>
             </Stack>
             <Stack
             // spacing={8}
@@ -264,6 +282,7 @@ function AddStudent() {
                 placeholder="Flat No."
                 _placeholder={{ color: "#1A237E" }}
                 color="#1A237E"
+                fontFamily="noto-sherif"
                 name="flatno"
                 value={flatno}
                 onChange={onChange}
@@ -271,6 +290,7 @@ function AddStudent() {
               <Input
                 type="text"
                 focusBorderColor="#1A237E"
+                fontFamily="noto-sherif"
                 placeholder="Area"
                 _placeholder={{ color: "#1A237E" }}
                 color="#1A237E"
@@ -283,6 +303,7 @@ function AddStudent() {
                 focusBorderColor="#1A237E"
                 placeholder="City"
                 _placeholder={{ color: "#1A237E" }}
+                fontFamily="noto-sherif"
                 color="#1A237E"
                 name="city"
                 value={city}
@@ -293,6 +314,7 @@ function AddStudent() {
                 focusBorderColor="#1A237E"
                 placeholder="State"
                 _placeholder={{ color: "#1A237E" }}
+                fontFamily="noto-sherif"
                 color="#1A237E"
                 name="state"
                 value={state}
@@ -304,6 +326,7 @@ function AddStudent() {
                 placeholder="Pincode"
                 _placeholder={{ color: "#1A237E" }}
                 color="#1A237E"
+                fontFamily="noto-sherif"
                 name="pincode"
                 value={pincode}
                 onChange={onChange}
@@ -319,6 +342,7 @@ function AddStudent() {
                 placeholder="Phone No."
                 _placeholder={{ color: "#1A237E" }}
                 color="#1A237E"
+                fontFamily="noto-sherif"
                 name="phone"
                 value={phone}
                 onChange={onChange}
@@ -329,6 +353,7 @@ function AddStudent() {
                 placeholder="Email"
                 _placeholder={{ color: "#1A237E" }}
                 color="#1A237E"
+                fontFamily="noto-sherif"
                 name="email"
                 value={email}
                 onChange={onChange}
@@ -340,7 +365,8 @@ function AddStudent() {
                   focusBorderColor="#1A237E"
                   _placeholder={{ color: "#1A237E" }}
                   color="#1A237E"
-                  name="password"
+                fontFamily="noto-sherif"
+                name="password"
                   value={password}
                   onChange={onChange}
                 />
@@ -353,6 +379,7 @@ function AddStudent() {
 
               <Select
                 placeholder="Semester"
+                fontFamily="noto-sherif"
                 color="#1A237E"
                 focusBorderColor="#1A237E"
                 _placeholder={{ color: "#1A237E" }}
@@ -368,6 +395,7 @@ function AddStudent() {
               </Select>
               <Select
                 placeholder="Programe"
+                fontFamily="noto-sherif"
                 color="#1A237E"
                 focusBorderColor="#1A237E"
                 _placeholder={{ color: "#1A237E" }}
@@ -380,6 +408,7 @@ function AddStudent() {
               </Select>
               <Select
                 placeholder="Division"
+                fontFamily="noto-sherif"
                 color="#1A237E"
                 focusBorderColor="#1A237E"
                 _placeholder={{ color: "#1A237E" }}
@@ -399,10 +428,15 @@ function AddStudent() {
           bg="#1A237E"
           color="white"
           _hover={{ bg: " #202A9A" }}
-          w="150px"
-          h="49px"
-          alignSelf="center"
-          left="20%"
+          w="100px"
+          h="35px"
+          fontWeight={"normal"}
+          alignItem="center"
+          left="20.5%"
+          fontFamily={"noto-serif"}
+          borderRadius={50}
+          fontSize={15}
+          mb="-110px"
           onClick={addStundentData}
         >
           ADD Student

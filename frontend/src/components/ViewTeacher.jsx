@@ -78,37 +78,40 @@ function ViewTeacher() {
       <Image src={bg} alt="Logo" h="100vh" mx="auto" mt="5dp" opacity={0.5} />
 
       <Box
-        maxW={{ base: "90%", sm: "80%", md: "250vh" }}
+        maxW={{ base: "90%", sm: "80%", md: "450vh" }}
         maxH={{ base: "90%", sm: "80%", md: "150vh" }}
         justifyContent="center"
         alignItems="center"
         position="absolute"
         top="10%"
-        left="10%"
+        left="19%"
       >
         <Text
           mt="-15px"
-          mx="210px"
+          mx="150px"
           fontSize="4xl"
           color="white"
-          w="680px"
+          w="780px"
           h="62px"
           textAlign="center"
           fontFamily={"noto-serif"}
         >
           View Teachers
         </Text>
-
+        <Box
+           style={{ overflowY:"scroll", height: "80vh" }}
+         >  
         {data.employees.map((items) => {
           return (
+            
             <Box
               bgColor="white"
-              width={800}
+              width={900}
               borderRadius={15}
               m={2}
               left="10%"
               align="center"
-              mx="155px"
+              mx="60px"
               key={items.employeeid}
             >
               <HStack gap={5}>
@@ -116,6 +119,7 @@ function ViewTeacher() {
                   mx={2}
                   left="20%"
                   p={3}
+                  w={300}
                   fontFamily={"noto-serif"}
                   color="#1A237E"
                   fontSize={20}
@@ -125,6 +129,7 @@ function ViewTeacher() {
                 <Text
                   left="20%"
                   p={3}
+                  w={200}
                   fontFamily={"noto-serif"}
                   color="#1A237E"
                   fontSize={20}
@@ -138,6 +143,7 @@ function ViewTeacher() {
                 <Text
                   left="20%"
                   p={3}
+                  w={100}
                   fontFamily={"noto-serif"}
                   color="#1A237E"
                   fontSize={20}
@@ -149,7 +155,6 @@ function ViewTeacher() {
                   bg="#1A237E"
                   color="white"
                   _hover={{ bg: " #202A9A" }}
-                  left="15%"
                   rounded={"lg"}
                   fontFamily={"noto-serif"}
                   p={3}
@@ -168,7 +173,6 @@ function ViewTeacher() {
                   bg="#1A237E"
                   color="white"
                   _hover={{ bg: " #202A9A" }}
-                  left="15%"
                   rounded={"lg"}
                   fontFamily={"noto-serif"}
                   p={3}
@@ -183,7 +187,9 @@ function ViewTeacher() {
               </HStack>
             </Box>
           );
-        })}
+})}
+            </Box>
+
       </Box>
     </Box>
   );

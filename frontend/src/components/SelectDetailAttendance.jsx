@@ -54,10 +54,11 @@ function SelectDetailAttendance() {
       <Box
         h="35vh"
         w="110vh"
+        borderRadius="20"
         alignItems="center"
         position="absolute"
         top="5%"
-        left="22%"
+        left="22.5%"
         bg="white"
       ></Box>
       <Grid
@@ -77,7 +78,7 @@ function SelectDetailAttendance() {
             fontSize="45px"
             fontFamily={"noto-serif"}
             color="#1A237E"
-            w="350px"
+            w="360px"
             h="50px"
             mb="5"
             mt="5"
@@ -93,6 +94,7 @@ function SelectDetailAttendance() {
                 onChange={(e) => {
                   setEnrollmentno(e.target.value);
                 }}
+                ml="5"
                 color="#1A237E"
                 focusBorderColor="#1A237E"
                 fontFamily={"noto-serif"}
@@ -129,7 +131,7 @@ function SelectDetailAttendance() {
             w="120px"
             h="38px"
             alignSelf="center"
-            left="18%"
+            left="24%"
             fontFamily={"noto-serif"}
             transform="translateX(120%)"
             mt="20"
@@ -137,7 +139,7 @@ function SelectDetailAttendance() {
             borderRadius={50}
             onClick={onViewClick}
           >
-            View Attendance
+            View
           </Button>
         </Box>
       </Grid>

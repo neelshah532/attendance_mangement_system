@@ -58,7 +58,7 @@ function SelectDetailsQueries() {
           alignItems="center"
           position="absolute"
           top="10%"
-          left="10%"
+          left="17.5%"
         >
           <Text
             mt="-15px"
@@ -77,30 +77,14 @@ function SelectDetailsQueries() {
             justifyContent="center"
             alignItems="center"
             position="absolute"
-            top="30%"
-            left="42%"
+            top="20%"
+            left="44%"
             transform="translate(-42%, -45%)"
-            m={50}
           >
-            <Text
-              mt="-120"
-              fontSize="45px"
-              fontFamily={"noto-serif"}
-              color="#1A237E"
-              w="250px"
-              h="50px"
-              textAlign="center"
-              transform="translateX(85%)"
-            >
-              Add Subject
-            </Text>
             <Box
               bgColor="white"
               width={800}
               borderRadius={15}
-              m={2}
-              align="center"
-              mx="222px"
             >
               <Stack direction={"row"} margin={5} spacing={100}>
                 <VStack>
@@ -136,7 +120,7 @@ function SelectDetailsQueries() {
             <ViewQueries employeeid={employeeid} />
           ) : (
             <>
-              <h1>No Data Found</h1>
+                <h1>No Data Found</h1>
             </>
           )}
         </Box>

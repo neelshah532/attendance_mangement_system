@@ -50,7 +50,7 @@ function SelectDetails() {
         alignItems="center"
         position="absolute"
         top="10%"
-        left="13%"
+        left="16%"
       >
         <Text
           mt="-33px"
@@ -73,11 +73,13 @@ function SelectDetails() {
           left="10%"
           align="center"
           mx="80px"
+          paddingTop={5}
         >
           <Select
             marginBottom={10}
             width={500}
             placeholder="Semester"
+            fontFamily="noto-sherif"
             color="#1A237E"
             focusBorderColor="#1A237E"
             _placeholder={{ color: "#1A237E" }}
@@ -94,6 +96,7 @@ function SelectDetails() {
           <Select
             placeholder="Division"
             width={500}
+            fontFamily="noto-sherif"
             name="division"
             color="#1A237E"
             focusBorderColor="#1A237E"
@@ -110,10 +113,9 @@ function SelectDetails() {
             _hover={{ bg: " #202A9A" }}
             w="100px"
             h="35px"
-            mt="2%"
+            mt="5%"
             fontWeight={"normal"}
             alignItem="center"
-            left="22%"
             mb="5%"
             fontFamily={"noto-serif"}
             borderRadius={50}
@@ -129,7 +131,12 @@ function SelectDetails() {
             />
           ) : (
             <>
-              <h1>No Data Found</h1>
+              <Text fontSize="3xl"
+          color="#1A237E"
+          w="680px"
+          h="62px"
+          textAlign="center"
+          fontFamily={"noto-serif"}>No Data Found</Text>
             </>
           )}
         </Box>

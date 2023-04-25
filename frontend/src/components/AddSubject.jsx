@@ -57,6 +57,7 @@ function AddSubject() {
       <Box
         maxW={{ base: "90%", sm: "80%", md: "560vh" }}
         maxH={{ base: "90%", sm: "80%", md: "150vh" }}
+        justifyContent="center"
       >
         <Grid
           gap={{ base: "90%", sm: "80%", md: "110px" }}
@@ -64,7 +65,7 @@ function AddSubject() {
           alignItems="center"
           position="absolute"
           top="30%"
-          left="42%"
+          left="45%"
           transform="translate(-42%, -45%)"
           m={50}
         >

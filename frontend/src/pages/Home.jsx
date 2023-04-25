@@ -38,6 +38,7 @@ function Home(){
           position="absolute"
           top="50%"
           left="50%"  
+          paddingStart="20"
           transform="translate(-50%, -50%)"
         >
           <Box
@@ -45,6 +46,7 @@ function Home(){
             alignItems={"center"}
             w="226px"
             h="170px"
+            ml="-20"
             borderRadius="10px"
             onClick={()=>{ navigate('/Manage')} }
           >
@@ -60,7 +62,7 @@ function Home(){
               Manage Student And TeachingStaff
             </Text>
           </Box>
-          <Box bg="#D9D9D9" w="226px" h="170px" borderRadius="10px" onClick={()=>{navigate('/SelectDetailAttendance')}}>
+          <Box  bg="#D9D9D9" ml="-300" w="226px" h="170px" borderRadius="10px" onClick={()=>{navigate('/SelectDetailAttendance')}}>
             <Image
               src={icon2}
               alt="Icon 2"
@@ -74,7 +76,7 @@ function Home(){
             </Text>
           </Box>
           
-          <Box bg="#D9D9D9" w="226px" h="170px" borderRadius="10px" onClick={()=>{navigate('/ManageSubject')}}>
+          <Box bg="#D9D9D9" ml="-49" w="226px" h="170px" borderRadius="10px" onClick={()=>{navigate('/ManageSubject')}}>
             <Image
               src={icon5}
               alt="Icon 5"
@@ -87,7 +89,7 @@ function Home(){
               Manage Subject
             </Text>
           </Box>
-          <Box bg="#D9D9D9" w="226px" h="170px" borderRadius="10px" onClick={()=>{navigate('/SelectDetailsQueries')}}>
+          <Box bg="#D9D9D9" ml="230" w="226px" h="170px" borderRadius="10px" onClick={()=>{navigate('/SelectDetailsQueries')}}>
             <Image
               src={icon6}
               alt="Icon 6"
