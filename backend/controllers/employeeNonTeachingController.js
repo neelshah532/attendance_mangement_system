@@ -452,6 +452,8 @@ const addProgram = asyncHandler(async(req, res) => {
 //@method GET
 //@PATH /ams/employees/query/:id
 const getAllQuery = asyncHandler(async(req, res) => {
+    if (!req.params)
+        return res.send({ success: false, messege: "Invalid User" })
     var studentsQueryDetails =
         "SELECT students.enrollmentno,subjects.subjectname,queries.description,employees.firstname,employees.middlename,employees.lastname FROM queries INNER JOIN students ON queries.enrollmentno=students.enrollmentno INNER JOIN subjects ON queries.subjectid=subjects.subjectid INNER JOIN employees ON queries.employeeid=employees.employeeid WHERE employees.employeeid=?";
     var queries = await new Promise((resolve) => {
@@ -461,6 +463,9 @@ const getAllQuery = asyncHandler(async(req, res) => {
             resolve(result);
         });
     });
+    if (queries.length === 0)
+        return res.send({ success: false, messege: "No Queries Records Found Yet" })
+
     res.send({ success: true, queries });
 });
 

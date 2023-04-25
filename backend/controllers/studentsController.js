@@ -80,6 +80,9 @@ const getStudentsById = asyncHandler(async(req, res) => {
 //@desc GET students Attendance
 //@PATH /ams/students/getAttendance
 const attendanceOfStudent = asyncHandler(async(req, res) => {
+    if (!req.params)
+        return res.send({ success: false, messege: "Please Send Proper Credentials" })
+
     const { subject, enrollmentNumber } = req.params;
     var getStudentAttendance = `SELECT TotalLecturestillnow,Totalstudentattendtillnow FROM ${subject} WHERE enrollmentno=? `;
     var attendance = await new Promise((resolve) => {
@@ -87,20 +90,16 @@ const attendanceOfStudent = asyncHandler(async(req, res) => {
             getStudentAttendance, [enrollmentNumber],
             (err, result) => {
                 if (err) res.send({ success: false, messege: "Something Went Wrong" });
-                console.log(result)
-                if (result === undefined) {
-                    resolve(null)
-                } else {
-                    var jsonData = JSON.parse(JSON.stringify(result));
-                    resolve(jsonData);
-                }
+                var jsonData = JSON.parse(JSON.stringify(result));
+                resolve(jsonData);
             }
         );
     });
 
-    if (attendance == null) {
+    if (attendance.length === 0) {
         res.send({
-            success: false
+            success: false,
+            messege: "No Attendance Found"
         });
     } else {
         var percentage =
@@ -145,12 +144,12 @@ const monthlyAttendanceOfStudent = asyncHandler(async(req, res) => {
             }
         })
     })
-
-    if (getColumnNames == null) {
+    if (getColumnNames.length === 0) {
         res.send({
             success: false
         })
     } else {
+        var countMonth = 0;
         for (var attendance of getColumnNames) {
             let d = JSON.stringify(attendance)
             if (d.includes(month)) {
@@ -168,29 +167,32 @@ const monthlyAttendanceOfStudent = asyncHandler(async(req, res) => {
                 }
             );
         });
+        if (getAttendance.length === 0) {
+            res.send({ success: false, messege: "Incorrect Username or No Data Found" })
+        } else {
+            let Totalstudentattendtillnow = getAttendance[0]["Totalstudentattendtillnow"]
 
-        let Totalstudentattendtillnow = getAttendance[0]["Totalstudentattendtillnow"]
-
-        for (let i = 0; i < getAttendance.length; i++) {
-            let keysToRemove = [];
-            for (let key in getAttendance[i]) {
-                if (!key.includes(month)) {
-                    keysToRemove.push(key);
+            for (let i = 0; i < getAttendance.length; i++) {
+                let keysToRemove = [];
+                for (let key in getAttendance[i]) {
+                    if (!key.includes(month)) {
+                        keysToRemove.push(key);
+                    }
                 }
+                keysToRemove.forEach(key => delete getAttendance[i][key]);
             }
-            keysToRemove.forEach(key => delete getAttendance[i][key]);
+
+            var percentage =
+                (Totalstudentattendtillnow / countMonth) *
+                100;
+
+            res.send({
+                success: true,
+                TotalNumberOfLectures: countMonth,
+                studentAttendLecture: Totalstudentattendtillnow,
+                attendancePercentage: percentage,
+            });
         }
-
-        var percentage =
-            (Totalstudentattendtillnow / countMonth) *
-            100;
-
-        res.send({
-            success: true,
-            TotalNumberOfLectures: countMonth,
-            studentAttendLecture: Totalstudentattendtillnow,
-            attendancePercentage: percentage,
-        });
     }
 })
 
@@ -209,6 +211,8 @@ const getDailyAttendance = asyncHandler(async(req, res) => {
             resolve(result);
         });
     });
+    if (semester.length === 0)
+        return res.send({ success: false, messege: "Incorrect Username" })
 
     var semesterSubjectsQuery = `SELECT subjects.subjectname FROM subjects INNER JOIN semesters ON subjects.semesterid=semesters.semesterid WHERE semesters.semestername=? && subjects.type=?`
     var getStudentSubjects = await new Promise((resolve) => {
@@ -233,28 +237,33 @@ const getDailyAttendance = asyncHandler(async(req, res) => {
         })
         getAllSubjectAttendance.push(promise)
     }
+    if (getAllSubjectAttendance.length === 0) {
+        res.send({ success: false, messege: "No Attendance Record Yet" })
+    } else {
+        const keysToRemove = ['id', 'employeeid', 'enrollmentno', 'TotalLecturestillnow', 'Totalstudentattendtillnow'];
 
-    const keysToRemove = ['id', 'employeeid', 'enrollmentno', 'TotalLecturestillnow', 'Totalstudentattendtillnow'];
+        const modifiedData = getAllSubjectAttendance.map(arr => arr.map(obj => {
+            keysToRemove.forEach(key => delete obj[key]);
+            if (Object.keys(obj).length === 0) return null; // add this check to remove empty objects
+            return obj;
+        }).filter(obj => obj !== null));
 
-    const modifiedData = getAllSubjectAttendance.map(arr => arr.map(obj => {
-        keysToRemove.forEach(key => delete obj[key]);
-        if (Object.keys(obj).length === 0) return null; // add this check to remove empty objects
-        return obj;
-    }).filter(obj => obj !== null));
+        const newArray = modifiedData.map((element, index) => {
+            const newObject = {};
+            newObject[getStudentSubjects[index]] = element[0];
+            return newObject;
+        });
 
-    const newArray = modifiedData.map((element, index) => {
-        const newObject = {};
-        newObject[getStudentSubjects[index]] = element[0];
-        return newObject;
-    });
-
-    res.send({ success: true, dailyAttendance: newArray })
+        res.send({ success: true, dailyAttendance: newArray })
+    }
 })
 
 //@desc Take attendance of students
 //@method GET
 //@PATH /ams/students/query/:id
 const getQuery = asyncHandler(async(req, res) => {
+    if (!req.params)
+        return res.send({ success: false, messege: "Invalid Credentials" })
 
     var studentsQueryDetails =
         "SELECT semesters.semestername,subjects.subjectName,queries.description,employees.firstname,employees.middlename,employees.lastname FROM queries INNER JOIN employees ON queries.employeeid=employees.employeeid INNER JOIN subjects ON queries.subjectid=subjects.subjectid INNER JOIN semesters ON queries.semesterid=semesters.semesterid WHERE queries.enrollmentno=?;";
@@ -265,13 +274,20 @@ const getQuery = asyncHandler(async(req, res) => {
             resolve(result);
         });
     });
-    res.send({ success: true, queries });
+    if (queries.length === 0) {
+        res.send({ success: false, messege: "No Query Records Yet" });
+    } else {
+        res.send({ success: true, queries });
+    }
 });
 
 //@desc Get Student Subjects
 //@method GET
 //@PATH /ams/students/getSubjects/:id
 const getStudentSubjects = asyncHandler(async(req, res) => {
+    if (!req.params)
+        return res.send({ success: false, messege: "Send Proper Data Found" })
+
     var studentsQueryDetails =
         "SELECT semester FROM students WHERE enrollmentno=?";
     var semester = await new Promise((resolve) => {
@@ -280,16 +296,19 @@ const getStudentSubjects = asyncHandler(async(req, res) => {
             resolve(result);
         });
     });
-
-    var semesterSubjectsQuery = `SELECT semesters.semesterid,subjects.subjectid,subjects.subjectname FROM subjects INNER JOIN semesters ON subjects.semesterid=semesters.semesterid WHERE semesters.semestername=? && subjects.type=?`
-    var getStudentSubjects = await new Promise((resolve) => {
-        con.query(semesterSubjectsQuery, [semester[0]['semester'], 'Regular'], (err, results) => {
-            if (err)
-                return res.send({ success: false, messege: "Something Went Wrong" })
-            resolve(results)
+    if (semester.length === 0) {
+        res.send({ success: false, messege: "Invalid User" })
+    } else {
+        var semesterSubjectsQuery = `SELECT semesters.semesterid,subjects.subjectid,subjects.subjectname FROM subjects INNER JOIN semesters ON subjects.semesterid=semesters.semesterid WHERE semesters.semestername=? && subjects.type=?`
+        var getStudentSubjects = await new Promise((resolve) => {
+            con.query(semesterSubjectsQuery, [semester[0]['semester'], 'Regular'], (err, results) => {
+                if (err)
+                    return res.send({ success: false, messege: "Something Went Wrong" })
+                resolve(results)
+            })
         })
-    })
-    res.send({ success: true, subjects: getStudentSubjects });
+        res.send({ success: true, subjects: getStudentSubjects });
+    }
 });
 
 //@desc Get Student Subjects

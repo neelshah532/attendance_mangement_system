@@ -37,6 +37,8 @@ const getEmployeesById = asyncHandler(async(req, res) => {
 //@desc Get Employee
 //@PATH /ams/employees/
 const getAllEmployees = asyncHandler(async(req, res) => {
+    if (!req.params)
+        return res.send({ success: false })
     var getAllEmployees =
         "SELECT employeeid, firstname,middlename,lastname,gender,email FROM employees WHERE type=?";
     con.query(getAllEmployees, [req.params.type], (err, result) => {
@@ -267,6 +269,9 @@ const responseQueryToStudent = asyncHandler(async(req, res) => {
 //@method GET
 //@PATH /ams/employees/query/:id
 const getStudentsQuery = asyncHandler(async(req, res) => {
+    if (!req.params)
+        return res.send({ success: false, messege: "Invalid Username" })
+
     var studentsQueryDetails =
         "SELECT subjects.subjectname,queries.description,students.firstname,students.middlename,students.lastname FROM queries INNER JOIN students ON queries.enrollmentno=students.enrollmentno INNER JOIN subjects ON queries.subjectid=subjects.subjectid WHERE employeeid=?";
     var queries = await new Promise((resolve) => {
@@ -275,6 +280,9 @@ const getStudentsQuery = asyncHandler(async(req, res) => {
             resolve(result);
         });
     });
+    if (queries.length === 0)
+        return res.send({ success: false, messege: "No Queries Found Yet" });
+
     res.send({ success: true, queries });
 });
 
@@ -282,6 +290,9 @@ const getStudentsQuery = asyncHandler(async(req, res) => {
 //@desc GET students By Division
 //@PATH /ams/getStudentsByDivision/:division
 const getStudentsByDivision = asyncHandler(async(req, res) => {
+    if (!req.params)
+        return res.send({ success: false, messege: "Invalid Username" })
+
     const { subject, id } = req.params;
     const selectDataQuery = `SELECT ${subject}.enrollmentno,students.firstname,students.middlename,students.lastname FROM ${subject} INNER JOIN students ON ${subject}.enrollmentno=students.enrollmentno WHERE ${subject}.employeeid=?`;
     con.query(selectDataQuery, [id], (error, results) => {
@@ -318,8 +329,8 @@ const getStudentsAttendance = asyncHandler(async(req, res) => {
             }
         );
     });
-    if (getAttendance == null) {
-        res.send({ success: false })
+    if (getAttendance.length === 0) {
+        res.send({ success: false, messege: "No Attendnace Records Found Yet" })
     } else {
         var percentage =
             (getAttendance[0]["Totalstudentattendtillnow"] /
@@ -359,6 +370,8 @@ const getAllTakenAttendances = asyncHandler(async(req, res) => {
             resolve(columnsNames)
         })
     })
+    if (getColumnNames.length === 0)
+        return res.send({ success: false })
 
     var promises = []
     for (var date of getColumnNames) {
@@ -370,25 +383,28 @@ const getAllTakenAttendances = asyncHandler(async(req, res) => {
         })
         promises.push(promise)
     }
-
-    const lectureByDate = {};
-    promises.forEach((arr) => {
-        arr.forEach((obj) => {
-            const key = obj && Object.keys(obj)[0];
-            if (key && obj[key]) {
-                const date = key.substring(0, key.length - 2);
-                const subKey = key.substring(key.length - 2);
-                if (!lectureByDate[date]) {
-                    lectureByDate[date] = [];
+    if (promises.length === 0) {
+        res.send({ success: false, messege: "No Attendance Records Found" })
+    } else {
+        const lectureByDate = {};
+        promises.forEach((arr) => {
+            arr.forEach((obj) => {
+                const key = obj && Object.keys(obj)[0];
+                if (key && obj[key]) {
+                    const date = key.substring(0, key.length - 2);
+                    const subKey = key.substring(key.length - 2);
+                    if (!lectureByDate[date]) {
+                        lectureByDate[date] = [];
+                    }
+                    if (!lectureByDate[date].includes(subKey)) {
+                        lectureByDate[date].push(subKey);
+                    }
                 }
-                if (!lectureByDate[date].includes(subKey)) {
-                    lectureByDate[date].push(subKey);
-                }
-            }
+            });
         });
-    });
 
-    res.send({ success: true, Dates: lectureByDate })
+        res.send({ success: true, Dates: lectureByDate })
+    }
 })
 
 //@desc Get Attendance By Date
@@ -410,7 +426,8 @@ const getAttendanceByDate = asyncHandler(async(req, res) => {
             }
         );
     });
-
+    if (getAttendance.length === 0)
+        return res.send({ success: false, messege: "No Attendance Records Found Yet" })
     res.send({ success: true, attendance: getAttendance })
 })
 

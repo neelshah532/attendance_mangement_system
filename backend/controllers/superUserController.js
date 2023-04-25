@@ -3,10 +3,10 @@ const { connectDb } = require('../config/db')
 const con = connectDb()
 
 const getAttendanceStudents = asyncHandler(async(req, res) => {
-    console.log(req.params)
-    const { enrollmentno, subject } = req.params
     if (!req.params)
         return res.send({ success: false, messege: "Please Send Data Properly" })
+
+    const { enrollmentno, subject } = req.params
 
     var getColumnNamesQuery = `SHOW COLUMNS FROM ${subject}`;
     const getColumnNames = await new Promise((resolve) => {
@@ -25,6 +25,9 @@ const getAttendanceStudents = asyncHandler(async(req, res) => {
             resolve(columnsNames)
         })
     })
+    if (getColumnNames.length === 0)
+        return res.send({ success: false, messege: "You Had Enter Invalid Subject" })
+
     var promises = []
     for (const dates of getColumnNames) {
         var checkNullDataQuery = `SELECT ${dates} FROM ${subject} WHERE enrollmentno=?`
@@ -35,11 +38,17 @@ const getAttendanceStudents = asyncHandler(async(req, res) => {
         })
         promises.push(promise)
     }
+    if (promise.length === 0)
+        return res.send({ success: false, messege: "No Attendance Records Found Yet" })
+
     res.send({ success: true, attendance: promises })
 })
 
 const updateAttendance = asyncHandler(async(req, res) => {
     const { subject, date, enrollmentno, attend } = req.body
+    if (!subject || !date || !enrollmentno || !attend)
+        return res.send({ success: false, messege: "Please Send Proper Data" })
+
     var getStudentAttendancetillnow = `Select enrollmentno,Totalstudentattendtillnow from ${subject} WHERE enrollmentno=?`;
     var attendTillNow = await new Promise((resolve) => {
         con.query(
@@ -58,7 +67,7 @@ const updateAttendance = asyncHandler(async(req, res) => {
         );
     });
 
-    if (attendTillNow == null) {
+    if (attendTillNow.length === 0) {
         return res.send({ success: false, messege: "No Attendance or Wrong Enrollmentno" })
     } else {
         var newTotalAttendAttendance
