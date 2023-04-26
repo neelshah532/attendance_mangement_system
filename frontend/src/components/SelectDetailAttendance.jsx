@@ -37,6 +37,8 @@ function SelectDetailAttendance() {
     setEnrollmentno(e.target.value);
   };
   const [attendance,setAttendance]=useState([])
+  
+  const [success,setSuccess]=useState(false)
 
   const baseURL = "http://localhost:5000/ams/superAdmin/getAttendance";
   
@@ -52,6 +54,7 @@ function SelectDetailAttendance() {
         });
       }else{
         setAttendance(response.data)
+        setSuccess(response.data.success)
       }
     });  
     setIsRender(true)
@@ -167,7 +170,7 @@ function SelectDetailAttendance() {
           </Button>
         </Box>
       </Grid>
-      {attendance&&<ViewAttendance subject={subject} enrollmentno={enrollmentno} studentAttendance={attendance}/>
+      {success&&<ViewAttendance subject={subject} enrollmentno={enrollmentno} studentAttendance={attendance}/>
       }
     </Box>
   );
