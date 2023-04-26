@@ -338,7 +338,8 @@ const getStudentsAttendance = asyncHandler(async(req, res) => {
             100;
         res.send({
             success: true,
-            lectureDetails: getAttendance[0],
+            TotalNumberOfLectures:getAttendance[0]["TotalLecturestillnow"],
+            studentAttendLecture: getAttendance[0]["Totalstudentattendtillnow"],
             attendancePercentage: percentage,
         });
     }

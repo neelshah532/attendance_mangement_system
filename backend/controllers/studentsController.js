@@ -95,8 +95,7 @@ const attendanceOfStudent = asyncHandler(async(req, res) => {
             }
         );
     });
-
-    if (attendance.length === 0) {
+    if (attendance[0]["Totalstudentattendtillnow"] === 0 && attendance[0]["TotalLecturestillnow"]===0) {
         res.send({
             success: false,
             messege: "No Attendance Found"
@@ -108,7 +107,8 @@ const attendanceOfStudent = asyncHandler(async(req, res) => {
             100;
         res.send({
             success: true,
-            lectureDetails: attendance[0],
+            TotalNumberOfLectures: attendance[0]["TotalLecturestillnow"],
+            studentAttendLecture:attendance[0]["Totalstudentattendtillnow"],
             attendancePercentage: percentage,
         });
     }
@@ -181,17 +181,21 @@ const monthlyAttendanceOfStudent = asyncHandler(async(req, res) => {
                 }
                 keysToRemove.forEach(key => delete getAttendance[i][key]);
             }
-
-            var percentage =
-                (Totalstudentattendtillnow / countMonth) *
-                100;
-
-            res.send({
-                success: true,
-                TotalNumberOfLectures: countMonth,
-                studentAttendLecture: Totalstudentattendtillnow,
-                attendancePercentage: percentage,
-            });
+            console.log(percentage,countMonth)
+            if(percentage===undefined && countMonth===0){
+                return res.send({ success: false, messege: "No Data Found" })
+            }else{
+                var percentage =
+                    (Totalstudentattendtillnow / countMonth) *
+                    100;
+    
+                res.send({
+                    success: true,
+                    TotalNumberOfLectures: countMonth,
+                    studentAttendLecture: Totalstudentattendtillnow,
+                    attendancePercentage: percentage,
+                });
+            }
         }
     }
 })
