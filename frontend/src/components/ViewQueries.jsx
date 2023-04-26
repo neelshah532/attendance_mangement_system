@@ -15,36 +15,28 @@ import {
 } from "@chakra-ui/react";
 import bg from "../images/background.png"; // replace with your own image
 import { useState } from "react";
-import { useGetAllQueriesQuery } from "../service/amsSlice";
 import background from "../images/animation.gif";
+import "../index.css"
 
-function ViewQueries({ employeeid }) {
-  const { data: getAllQueries, isLoading: isQueriesDataLoading } =
-    useGetAllQueriesQuery(employeeid);
-
-  if (isQueriesDataLoading) {
-    return (
-      <Box bg="white" h="100vh" w="223vh" overflow="hidden">
-        <Image src={bg} alt="loader" h="100vh" ml="27%" mt="5dp" />
-      </Box>
-    );
-  }
+function ViewQueries({ queries }) {
+  console.log(queries)
   return (
     <Box bg="Transparent" paddingTop={32} overflow="hidden">
       <Box
-        mt={10}
-        ml={4}
-           style={{ overflowY:"scroll", height: "50vh" }}
+        mt={-5}
+        ml={20}
+        className="scrollview"
          > 
-      {getAllQueries.queries.map((items) => {
+      {queries.queries.map((items) => {
         return (
           <Box
             bgColor="white"
             width={950}
             borderRadius={15}
+            ml="86"
             mt={2}
             align="center"
-            mx="40px"
+            key={items.enrollmentno}
           >
             <HStack gap={8}>
               <Text

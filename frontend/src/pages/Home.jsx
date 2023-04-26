@@ -58,7 +58,7 @@ function Home(){
               mx="auto"
               mt="35px"
             />
-            <Text ml="2" p="10" color="#1A237E" fontSize="md">
+            <Text ml="2.5" textAlign="center" p="10" color="#1A237E"fontFamily="noto-sherif" fontSize="lg">
               Manage Student And TeachingStaff
             </Text>
           </Box>
@@ -71,7 +71,7 @@ function Home(){
               mx="auto"
               mt="35px"
             />
-            <Text p="10" color="#1A237E" fontSize="md">
+            <Text p="10" color="#1A237E" textAlign="center"fontFamily="noto-sherif" fontSize="lg">
               Manage Attendance
             </Text>
           </Box>
@@ -85,7 +85,7 @@ function Home(){
               mx="auto"
               mt="35px"
             />
-            <Text ml="2" p="10" fontSize="md" color="#1A237E">
+            <Text ml="6" fontFamily="noto-sherif" p="10" color="#1A237E" fontSize="lg">
               Manage Subject
             </Text>
           </Box>
@@ -98,7 +98,7 @@ function Home(){
               mx="auto"
               mt="35px"
             />
-            <Text ml="2" p="10" color="#1A237E" fontSize="md">
+            <Text ml="6" fontFamily="noto-sherif" p="10" color="#1A237E" fontSize="lg">
               View Queries
             </Text>
           </Box>

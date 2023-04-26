@@ -192,7 +192,7 @@ function AddStudent() {
             // direction={['row']}
             >
               <Input
-                type="text"
+                type="number"
                 fontFamily="noto-sherif"
                 focusBorderColor="#1A237E"
                 placeholder="Enrollment No."
@@ -390,8 +390,6 @@ function AddStudent() {
                 <option value="Semester-2">Semester 2</option>
                 <option value="Semester-3">Semester 3</option>
                 <option value="Semester-4">Semester 4</option>
-                <option value="Semester-5">Semester 5</option>
-                <option value="Semester-6">Semester 6</option>
               </Select>
               <Select
                 placeholder="Programe"
@@ -403,8 +401,6 @@ function AddStudent() {
                 onChange={onChangeProgram}
               >
                 <option value="MCA">MCA</option>
-                <option value="MscIT">MscIT</option>
-                <option value="BCA">BCA</option>
               </Select>
               <Select
                 placeholder="Division"
@@ -418,7 +414,6 @@ function AddStudent() {
                 <option value="A">A</option>
                 <option value="B">B</option>
                 <br></br>
-                <option value="C">C</option>
               </Select>
             </Stack>
           </Stack>

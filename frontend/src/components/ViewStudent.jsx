@@ -16,7 +16,7 @@ import {
 import { useNavigate } from "react-router-dom";
 import { useToast } from "@chakra-ui/react";
 import background from "../images/animation.gif";
-
+import "../index.css"
 function ViewStudent({ division, semester }) {
   const navigate = useNavigate();
   const toast = useToast();
@@ -85,7 +85,8 @@ function ViewStudent({ division, semester }) {
       left="0%"
     >
        <Box
-           style={{ overflowY:"scroll", height: "29vh" }}
+           className="scrollview"
+           height="30vh"
          > 
       {data.students.map((items) => {
         return (

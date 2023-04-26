@@ -11,6 +11,7 @@ import {
 import { useEffect } from "react";
 import { useToast } from "@chakra-ui/react";
 import background from "../images/animation.gif";
+import "../index.css"
 
 function ViewAttendance({enrollmentno,subject,studentAttendance}) {
   const [checkedState, setCheckedState] = useState({});
@@ -112,7 +113,10 @@ function ViewAttendance({enrollmentno,subject,studentAttendance}) {
         top="50%"
         left="18%"
       >
-        <Box style={{ overflowY: "scroll", height: "50vh" }}>
+        <Box className="scrollview"
+          height="50vh"
+          >
+            
           {studentAttendance.attendance.map((items, index) => {
             const key = Object.keys(items)[0];
             const isChecked = checkedState[key];

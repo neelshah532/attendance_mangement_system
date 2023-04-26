@@ -112,7 +112,7 @@ function UpdateTeacher() {
           h="100vh"
           mx="auto"
           mt="5px"
-          opacity={0.5}
+          opacity={0.3}
         />
 
         <Box

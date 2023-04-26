@@ -311,7 +311,6 @@ const deleteData = asyncHandler(async(req, res) => {
 //@desc ADD Subjects
 //@PATH /ams/admin/subjects/add
 const addSubjects = asyncHandler(async(req, res) => {
-    console.log(req.body)
     const { type, subjectName } = req.body;
     if (!type || !subjectName)
         return res.send({ success: true, messege: "Please Fill Proper Data" });

@@ -17,6 +17,7 @@ import {
 } from "@chakra-ui/react";
 import { useEffect } from "react";
 import background from "../images/animation.gif";
+import "../index.css"
 
 function ViewTeacher() {
   const { data, isLoading } = useGetAllEmployeesQuery();
@@ -99,7 +100,8 @@ function ViewTeacher() {
           View Teachers
         </Text>
         <Box
-           style={{ overflowY:"scroll", height: "80vh" }}
+            className="scrollview"
+            height="80vh"
          >  
         {data.employees.map((items) => {
           return (

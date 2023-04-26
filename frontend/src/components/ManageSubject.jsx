@@ -14,9 +14,9 @@ import {
   useToast,
 } from "@chakra-ui/react";
 import bg from "../images/background.png"; // replace with your own image
-import { useState } from "react";
-import background from "../images/animation.gif"
-
+import { useEffect, useState } from "react";
+import background from "../images/animation.gif";
+import "../index.css";
 import {
   useGetAllSubjectsQuery,
   useDeleteSubjectMutation,
@@ -31,11 +31,14 @@ function ManagePrograme() {
   const { subjectName, type } = subject;
 
   const [selected, setSelected] = useState("");
+  const [isPageLoad, setIsPageLoad] = useState(false);
 
   const [deleteSubject, { isLoading: isDeleteSubjectLoading }] =
     useDeleteSubjectMutation();
-  const [addSubject, { isLoading: isAddSubjectLoading }] =
+
+  const [addSubject] =
     useAddSubjectMutation();
+
   const toast = useToast();
 
   const handleTypeChange = (value) => {
@@ -53,10 +56,9 @@ function ManagePrograme() {
     }));
   };
 
-  const { data, isLoading } = useGetAllSubjectsQuery();
+  const { data: getAllQueries, isLoading } = useGetAllSubjectsQuery();
 
-  const onAddSubject = (e) => {
-    e.preventDefault();
+  const onAddSubject = () => {
     addSubject(subject)
       .unwrap()
       .then((response) => {
@@ -78,16 +80,11 @@ function ManagePrograme() {
           });
         }
       });
-    if (isAddSubjectLoading) {
-      return (
-        <Box bg="white" h="100vh" w="223vh" overflow="hidden">
-          <Image src={background} alt="loader" h="100vh" ml="27%" mt="5dp" />
-        </Box>
-      );
-    }
-  };
-
-  const deleteSubjectOnClick = (e, id, subjectname) => {
+      setIsPageLoad(true);
+      window.location.reload();
+    };
+    
+  const deleteSubjectOnClick = (id, subjectname) => {
     deleteSubject({ subjectname, id })
       .unwrap()
       .then((response) => {
@@ -109,22 +106,31 @@ function ManagePrograme() {
           });
         }
       });
-    if (isDeleteSubjectLoading) {
-      return (
-        <Box bg="white" h="100vh" w="223vh" overflow="hidden">
-          <Image src={bg} alt="loader" h="100vh" ml="27%" mt="5dp" />
-        </Box>
-      );
-    }
   };
 
   if (isLoading) {
     return (
       <Box bg="white" h="100vh" w="223vh" overflow="hidden">
-        <Image src={bg} alt="loader" h="100vh" ml="27%" mt="5dp" />
+        <Image src={background} alt="loader" h="100vh" ml="27%" mt="5dp" />
       </Box>
     );
   }
+  if (isPageLoad) {
+    return (
+      <Box bg="white" h="100vh" w="223vh" overflow="hidden">
+        <Image src={background} alt="loader" h="100vh" ml="27%" mt="5dp" />
+      </Box>
+    );
+  }
+  if (isDeleteSubjectLoading) {
+    window.location.reload()
+    return (
+      <Box bg="white" h="100vh" w="223vh" overflow="hidden">
+        <Image src={background} alt="loader" h="100vh" ml="27%" mt="5dp" />
+      </Box>
+    );
+  }
+  
   return (
     <Box bg="#1A237E" h="100vh" w="206vh" overflow="hidden">
       <Image
@@ -146,19 +152,6 @@ function ManagePrograme() {
         top="10%"
         left="26%"
       >
-        {/* <Text
-          // left="10%"
-          mt="-15px"
-          mx="180px"
-          fontSize="4xl"
-          color="white"
-          w="399px"
-          h="62px"
-          textAlign="center"
-          fontFamily={"noto-serif"}
-        >
-          Manage Subject
-        </Text> */}
         <Box bgColor="white" paddingBottom="5%" width={800} borderRadius={15}>
           <Text
             mt="120"
@@ -199,72 +192,72 @@ function ManagePrograme() {
               </RadioGroup>
             </HStack>
             <Button
-                type="submit"
-                bg="#1A237E"
-                color="white"
-                top={5}
-                _hover={{ bg: " #202A9A" }}
-                left="42%"
-                rounded={"lg"}
-                fontFamily={"noto-serif"}
-                w={150}
-                h={8}
-                fontSize={18}
-                onClick={onAddSubject}
-              >
-                ADD SUBJECTS
-              </Button>
+              type="submit"
+              bg="#1A237E"
+              color="white"
+              top={5}
+              _hover={{ bg: " #202A9A" }}
+              left="42%"
+              rounded={"lg"}
+              fontFamily={"noto-serif"}
+              w={150}
+              h={8}
+              fontSize={18}
+              onClick={onAddSubject}
+            >
+              ADD SUBJECTS
+            </Button>
           </Stack>
         </Box>
-        <Box
-        mt={10}
-           style={{ overflowY:"scroll", height: "50vh" }}
-         > 
-        {data.subjects.map((items) => {
-          return (
-            <Box
-              bgColor="white"
-              width={460}
-              borderRadius={15}
-              m={2}
-              align="center"
-              mx="175px"
-              key={items.subjectid}
-            >
-              <HStack gap={5}>
-                <Text
-                  mx={2}
-                  left="20%"
-                  p={3}
-                  w={300}
-                  fontFamily={"noto-serif"}
-                  color="#1A237E"
-                  fontSize={20}
-                >
-                  {items.subjectname}
-                </Text>
+        <Box mt={10} className="scrollview" height="50vh">
+          {getAllQueries.subjects.map((items) => {
+            return (
+              <Box
+                bgColor="white"
+                width={460}
+                borderRadius={15}
+                m={2}
+                align="center"
+                mx="175px"
+                key={items.subjectid}
+              >
+                <HStack gap={5}>
+                  <Text
+                    mx={2}
+                    left="20%"
+                    p={3}
+                    w={300}
+                    fontFamily={"noto-serif"}
+                    color="#1A237E"
+                    fontSize={20}
+                  >
+                    {items.subjectname}
+                  </Text>
 
-                <Button
-                  type="submit"
-                  bg="#1A237E"
-                  color="white"
-                  _hover={{ bg: " #202A9A" }}
-                  rounded={"lg"}
-                  fontFamily={"noto-serif"}
-                  p={3}
-                  w={110}
-                  h={8}
-                  fontSize={18}
-                  onClick={(e) => {
-                    deleteSubjectOnClick(e, items.subjectid, items.subjectname);
-                  }}
-                >
-                  Delete
-                </Button>
-              </HStack>
-            </Box>
-          );
-        })}
+                  <Button
+                    type="submit"
+                    bg="#1A237E"
+                    color="white"
+                    _hover={{ bg: " #202A9A" }}
+                    rounded={"lg"}
+                    fontFamily={"noto-serif"}
+                    p={3}
+                    w={110}
+                    h={8}
+                    fontSize={18}
+                    onClick={(e) => {
+                      deleteSubjectOnClick(
+                        items.subjectid,
+                        items.subjectname
+                      );
+                    }}
+                  >
+                    Delete
+                  </Button>
+                </HStack>
+              </Box>
+            );
+          })}
         </Box>
       </Box>
     </Box>

@@ -13,11 +13,11 @@ import {
   VStack,
 } from "@chakra-ui/react";
 import bg from "../images/background.png";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import ViewQueries from "./ViewQueries";
 import background from "../images/animation.gif";
-
-import { useGetAllEmployeesQuery } from "../service/amsSlice";
+import { useToast } from "@chakra-ui/react";
+import { useGetAllEmployeesQuery,useLazyGetAllQueriesQuery } from "../service/amsSlice";
 
 function SelectDetailsQueries() {
   const { data: getAllEmployees, isLoading: isEmployeeDataLoading } =
@@ -26,12 +26,34 @@ function SelectDetailsQueries() {
   const [isRender, setIsRender] = useState(false);
 
   const [employeeid, setEmployeeid] = useState(0);
+  
+  const [queries,setQueries]=useState([])
 
-  const onChangeEmployee = (e) => {
-    setEmployeeid(e.target.value);
-    setIsRender(true);
+  const [success,setSuccess]=useState(false)
+  
+  const toast=useToast()
+  const [setDataForQueries,{data: getAllQueries,isSuccess, isLoading: isQueriesDataLoading}] =
+  useLazyGetAllQueriesQuery();
+
+  const onViewClick = (e) => {
+    setDataForQueries(employeeid)
   };
-
+  useEffect(()=>{
+   if(isSuccess){
+     if(getAllQueries.success==false){
+       toast({
+         title: getAllQueries.messege,
+         status: "success",
+         duration: 9000,
+         isClosable: true,
+         colorScheme: "blue",
+       });
+     }else{
+      setQueries(getAllQueries)
+      setSuccess(true)
+    }
+   }
+  },[getAllQueries])
   if (isEmployeeDataLoading) {
     return (
       <Box bg="white" h="100vh" w="223vh" overflow="hidden">
@@ -41,7 +63,6 @@ function SelectDetailsQueries() {
   }
   return (
     <Box bg="#1A237E" h="100vh" w="206vh" overflow="hidden">
-      <Box bg="#1A237E" h="100vh" overflow="hidden">
         <Image
           src={bg}
           alt="Logo"
@@ -49,8 +70,19 @@ function SelectDetailsQueries() {
           h="100vh"
           mx="auto"
           mt="5dp"
-          opacity={0.5}
+          opacity={0.3}
         />
+        <Grid
+            gap={{ base: "90%", sm: "80%", md: "110px" }}
+            justifyContent="center"
+            alignItems="center"
+            position="absolute"
+            top="5%"
+            left="10%"
+            transform="translate(-42%, -45%)"
+            mt={10}
+            ml={8}
+          >
         <Box
           maxW={{ base: "90%", sm: "80%", md: "250vh" }}
           maxH={{ base: "90%", sm: "80%", md: "150vh" }}
@@ -67,24 +99,19 @@ function SelectDetailsQueries() {
             color="white"
             w="680px"
             h="62px"
+            ml="23%"
             textAlign="center"
             fontFamily={"noto-serif"}
           >
             View Queries
           </Text>
-          <Grid
-            gap={{ base: "90%", sm: "80%", md: "110px" }}
-            justifyContent="center"
-            alignItems="center"
-            position="absolute"
-            top="20%"
-            left="44%"
-            transform="translate(-42%, -45%)"
-          >
             <Box
               bgColor="white"
-              width={800}
+              h={140}
+              width={350}
               borderRadius={15}
+              align="center"
+              mx="478px"
             >
               <Stack direction={"row"} margin={5} spacing={100}>
                 <VStack>
@@ -93,11 +120,12 @@ function SelectDetailsQueries() {
                     placeholder="Employee Name"
                     fontFamily={"noto-serif"}
                     color="#1A237E"
+                    mt={7}
                     _placeholder={{
                       color: "#1A237E",
                       fontFamily: "noto-serif",
                     }}
-                    onChange={onChangeEmployee}
+                    onChange={(e)=>{setEmployeeid(e.target.value)}}
                     width="300px"
                   >
                     {getAllEmployees.employees.map((items) => {
@@ -114,17 +142,27 @@ function SelectDetailsQueries() {
                   </Select>
                 </VStack>
               </Stack>
+              <Button
+            type="submit"
+            bg="#1A237E"
+            color="white"
+            _hover={{ bg: " #202A9A" }}
+            w="120px"
+            h="38px"
+            alignSelf="center"
+            fontFamily={"noto-serif"}
+            size="md"
+            borderRadius={50}
+            onClick={onViewClick}
+          >
+            ViewQueries
+          </Button>
             </Box>
-          </Grid>
-          {isRender ? (
-            <ViewQueries employeeid={employeeid} />
-          ) : (
-            <>
-                <h1>No Data Found</h1>
-            </>
-          )}
+          {success && (
+            <ViewQueries queries={queries} />
+          ) }
         </Box>
-      </Box>
+        </Grid>
     </Box>
   );
 }
