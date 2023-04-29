@@ -31,12 +31,11 @@ function ManagePrograme() {
   const { subjectName, type } = subject;
 
   const [selected, setSelected] = useState("");
-  const [isPageLoad, setIsPageLoad] = useState(false);
 
   const [deleteSubject, { isLoading: isDeleteSubjectLoading }] =
     useDeleteSubjectMutation();
 
-  const [addSubject] =
+  const [addSubject, { isLoading: isAddSubjectLoading }] =
     useAddSubjectMutation();
 
   const toast = useToast();
@@ -56,7 +55,7 @@ function ManagePrograme() {
     }));
   };
 
-  const { data: getAllQueries, isLoading } = useGetAllSubjectsQuery();
+  const { data: getAllQueries, isLoading, refetch } = useGetAllSubjectsQuery();
 
   const onAddSubject = () => {
     addSubject(subject)
@@ -70,6 +69,7 @@ function ManagePrograme() {
             isClosable: true,
             colorScheme: "blue",
           });
+          refetch();
         } else {
           toast({
             title: response.messege,
@@ -80,10 +80,10 @@ function ManagePrograme() {
           });
         }
       });
-      setIsPageLoad(true);
-      window.location.reload();
-    };
-    
+    setIsPageLoad(true);
+    window.location.reload();
+  };
+
   const deleteSubjectOnClick = (id, subjectname) => {
     deleteSubject({ subjectname, id })
       .unwrap()
@@ -96,6 +96,7 @@ function ManagePrograme() {
             isClosable: true,
             colorScheme: "blue",
           });
+          refetch();
         } else {
           toast({
             title: response.messege,
@@ -108,29 +109,13 @@ function ManagePrograme() {
       });
   };
 
-  if (isLoading) {
+  if (isLoading || isAddSubjectLoading || isDeleteSubjectLoading) {
     return (
       <Box bg="white" h="100vh" w="223vh" overflow="hidden">
         <Image src={background} alt="loader" h="100vh" ml="27%" mt="5dp" />
       </Box>
     );
   }
-  if (isPageLoad) {
-    return (
-      <Box bg="white" h="100vh" w="223vh" overflow="hidden">
-        <Image src={background} alt="loader" h="100vh" ml="27%" mt="5dp" />
-      </Box>
-    );
-  }
-  if (isDeleteSubjectLoading) {
-    window.location.reload()
-    return (
-      <Box bg="white" h="100vh" w="223vh" overflow="hidden">
-        <Image src={background} alt="loader" h="100vh" ml="27%" mt="5dp" />
-      </Box>
-    );
-  }
-  
   return (
     <Box bg="#1A237E" h="100vh" w="206vh" overflow="hidden">
       <Image
@@ -246,10 +231,7 @@ function ManagePrograme() {
                     h={8}
                     fontSize={18}
                     onClick={(e) => {
-                      deleteSubjectOnClick(
-                        items.subjectid,
-                        items.subjectname
-                      );
+                      deleteSubjectOnClick(items.subjectid, items.subjectname);
                     }}
                   >
                     Delete
