@@ -80,8 +80,6 @@ function ManagePrograme() {
           });
         }
       });
-    setIsPageLoad(true);
-    window.location.reload();
   };
 
   const deleteSubjectOnClick = (id, subjectname) => {
