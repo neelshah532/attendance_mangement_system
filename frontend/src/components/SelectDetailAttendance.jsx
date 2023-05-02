@@ -142,7 +142,7 @@ function SelectDetailAttendance() {
                 {getAllSubjects.subjects.map((items) => {
                   return (
                     <option key={items.subjectid} value={items.subjectname}>
-                      {items.subjectname}
+                      {items.subjectname.split(" ").map(([firstChar,...rest])=>firstChar.toUpperCase()+rest.join("").toLowerCase()).join(" ")}
                     </option>
                   );
                 })}

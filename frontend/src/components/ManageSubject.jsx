@@ -51,12 +51,12 @@ function ManagePrograme() {
   const onChange = (e) => {
     setSubject((prevState) => ({
       ...prevState,
-      [e.target.name]: e.target.value,
+      [e.target.name]: e.target.value.split(" ").join("").toLowerCase(),
     }));
   };
 
   const { data: getAllQueries, isLoading, refetch } = useGetAllSubjectsQuery();
-
+  
   const onAddSubject = () => {
     addSubject(subject)
       .unwrap()
@@ -214,7 +214,7 @@ function ManagePrograme() {
                     color="#1A237E"
                     fontSize={20}
                   >
-                    {items.subjectname}
+                    {items.subjectname.split(" ").map(([firstChar,...rest])=>firstChar.toUpperCase()+rest.join("").toLowerCase()).join(" ")}
                   </Text>
 
                   <Button

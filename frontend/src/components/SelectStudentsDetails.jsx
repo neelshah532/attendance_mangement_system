@@ -1,11 +1,8 @@
 import {
-  Box,
-  Grid,
-  GridItem,
+  Box, 
   Image,
   Text,
   Button,
-  HStack,
   Select,
 } from "@chakra-ui/react";
 import background from "../images/background.png"; // replace with your own image
@@ -124,20 +121,11 @@ function SelectDetails() {
           >
             View
           </Button>
-          {isRenderReady ? (
+          {isRenderReady && (
             <ViewStudent
               division={selectedDivision}
               semester={selectedSemester}
             />
-          ) : (
-            <>
-              <Text fontSize="3xl"
-          color="#1A237E"
-          w="680px"
-          h="62px"
-          textAlign="center"
-          fontFamily={"noto-serif"}>No Data Found</Text>
-            </>
           )}
         </Box>
       </Box>
