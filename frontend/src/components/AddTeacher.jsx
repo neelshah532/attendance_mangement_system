@@ -18,12 +18,15 @@ import { useState } from "react";
 import {useAddEmployeeMutation} from '../service/amsSlice'
 import { useToast } from "@chakra-ui/react";
 import background from "../images/animation.gif"
+import { useNavigate } from "react-router-dom";
+
 
 function UpdateTeacher() {
   const [show, setShow] = useState(false);
   const handleClick = () => setShow(!show);
   const [selected,setSelected]=useState('')
   const toast =useToast()
+  const navigate=useNavigate()
   const [employee, setEmployeeDetails] = useState({
     firstname: "",
     middlename: "",
@@ -84,6 +87,7 @@ function UpdateTeacher() {
           isClosable: true,
           colorScheme: "blue",
         });
+        navigate('/')
       }else{
         toast({
           title: response.messege,

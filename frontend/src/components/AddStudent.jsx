@@ -11,6 +11,7 @@ import {
   InputRightElement,
   InputGroup,
 } from "@chakra-ui/react";
+import { useNavigate } from "react-router-dom";
 import { Radio, RadioGroup } from "@chakra-ui/react";
 import bg from "../images/background.png";
 import curveBackground from "../images/Rectangle 9.png";
@@ -60,6 +61,7 @@ function AddStudent() {
   } = students;
 
   const toast = useToast();
+  const navigate=useNavigate()
   const [show, setShow] = useState(false);
   const handleClick = () => setShow(!show);
   const [selectedDivision, setSelectedDivision] = useState("");
@@ -121,6 +123,7 @@ function AddStudent() {
             isClosable: true,
             colorScheme: "blue",
           });
+          navigate('/')
         } else {
           toast({
             title: response.messege,
